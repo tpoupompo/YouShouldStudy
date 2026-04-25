@@ -4,24 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>勉強しろ</title>
-    
     <link rel="apple-touch-icon" href="images/icons-192.png">
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="勉強タイマー">
- 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { silent: true }</script>
     <style>
         .timer-display { font-variant-numeric: tabular-nums; }
         .hidden { display: none; }
         button { -webkit-tap-highlight-color: transparent; }
+        input[type=range] { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 9999px; outline: none; cursor: pointer; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #4f46e5; cursor: pointer; }
+        input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #4f46e5; cursor: pointer; border: none; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
     <main class="max-w-md mx-auto p-6 pb-32">
- 
-        <section id="page-timer" class="text-center">
+
+        <!-- ===================== ホーム ===================== -->
+        <section id="page-home">
+            <div class="flex justify-between items-start mb-8">
+                <h1 class="text-2xl font-bold text-slate-700">ホーム</h1>
+                <span class="text-[10px] font-bold text-slate-300 mt-1">v1.1.0</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="showPage('timer')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-black text-slate-700">タイマー</span>
+                </button>
+
+                <button onclick="showPage('settings')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
+                    <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-black text-slate-700">設定</span>
+                </button>
+            </div>
+
+            <div class="mt-6 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">累計勉強時間</p>
+                <p id="home-total-display" class="text-3xl font-black text-indigo-600">0時間00分</p>
+            </div>
+        </section>
+
+        <!-- ===================== タイマー ===================== -->
+        <section id="page-timer" class="text-center hidden">
             <div class="flex justify-between items-start mb-8">
                 <h1 class="text-2xl font-bold text-slate-700">タイマー</h1>
                 <span class="text-[10px] font-bold text-slate-300 mt-1">v1.0.10</span>
@@ -34,16 +72,15 @@
                     <button id="reset-btn" class="w-full text-slate-400 py-2 text-sm hover:text-slate-600">リセット</button>
                 </div>
             </div>
- 
+
             <div class="mt-6 text-slate-500 text-sm">
                 現在のセット:
                 <span id="set-count" class="font-bold text-indigo-600">0</span>
                 /
                 <span id="sets-goal" class="font-bold text-slate-400">4</span>
             </div>
- 
+
             <div class="mt-8 text-left bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
- 
                 <div class="flex items-center justify-between mb-5 pb-5 border-b border-slate-100">
                     <div>
                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">累計勉強時間</p>
@@ -51,14 +88,13 @@
                     </div>
                     <button id="reset-total-btn" class="text-xs text-slate-300 hover:text-red-400 font-bold transition-colors py-2 px-3 rounded-lg border border-slate-100 hover:border-red-200">リセット</button>
                 </div>
- 
                 <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest">今日の記録</h3>
                 <ul id="study-logs" class="space-y-3"></ul>
- 
                 <button id="clear-logs-btn" class="mt-5 w-full text-xs text-slate-300 hover:text-red-400 font-bold transition-colors py-2 px-3 rounded-lg border border-slate-100 hover:border-red-200">記録をすべて削除</button>
             </div>
         </section>
- 
+
+        <!-- ===================== 設定 ===================== -->
         <section id="page-settings" class="hidden">
             <h1 class="text-2xl font-bold mb-8 text-slate-700">設定</h1>
             <div class="bg-white p-6 rounded-3xl shadow-lg space-y-6">
@@ -79,16 +115,31 @@
                     <label class="block text-sm font-medium text-slate-600 mb-2">長い休憩時間 (分)</label>
                     <input type="number" id="input-long-break" value="15" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg">
                 </div>
-                <button id="save-settings" class="w-full bg-slate-800 text-white py-4 rounded-xl font-bold shadow-md active:scale-95 transition-all">設定を保存してリセット</button>
                 <hr class="border-slate-100">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <label class="text-sm font-medium text-slate-600">通知音量</label>
+                        <span id="volume-label" class="text-sm font-black text-indigo-600">80%</span>
+                    </div>
+                    <input type="range" id="input-volume" min="0" max="100" value="80" class="w-full bg-slate-200">
+                </div>
+                <hr class="border-slate-100">
+                <button id="save-settings" class="w-full bg-slate-800 text-white py-4 rounded-xl font-bold shadow-md active:scale-95 transition-all">設定を保存してリセット</button>
                 <button id="update-btn" class="w-full text-slate-400 py-3 text-sm font-bold hover:text-indigo-600 border border-slate-100 rounded-xl transition-colors">アップデートを確認</button>
             </div>
         </section>
- 
+
     </main>
- 
+
+    <!-- ===================== ナビゲーション ===================== -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-slate-200 flex justify-around py-4 shadow-2xl">
-        <button onclick="showPage('timer')" id="nav-timer" class="flex flex-col items-center text-indigo-600">
+        <button onclick="showPage('home')" id="nav-home" class="flex flex-col items-center text-indigo-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span class="text-[10px] mt-1 font-bold">ホーム</span>
+        </button>
+        <button onclick="showPage('timer')" id="nav-timer" class="flex flex-col items-center text-slate-400">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -102,75 +153,108 @@
             <span class="text-[10px] mt-1 font-bold">設定</span>
         </button>
     </nav>
- 
+
     <script>
         // =====================
-        // 状態の復元（localStorage）
+        // 状態の復元
         // =====================
-        let workMinutes        = parseInt(localStorage.getItem('workMinutes'))        || 25;
-        let breakMinutes       = parseInt(localStorage.getItem('breakMinutes'))       || 5;
-        let longBreakMinutes   = parseInt(localStorage.getItem('longBreakMinutes'))   || 15;
+        let workMinutes         = parseInt(localStorage.getItem('workMinutes'))         || 25;
+        let breakMinutes        = parseInt(localStorage.getItem('breakMinutes'))        || 5;
+        let longBreakMinutes    = parseInt(localStorage.getItem('longBreakMinutes'))    || 15;
         let setsBeforeLongBreak = parseInt(localStorage.getItem('setsBeforeLongBreak')) || 4;
-        let completedSets      = parseInt(localStorage.getItem('completedSets'))      || 0;
-        let totalStudyMinutes  = parseInt(localStorage.getItem('totalStudyMinutes'))  || 0;
-        let isWorking          = localStorage.getItem('isWorking') !== 'false';
-        let isLongBreak        = localStorage.getItem('isLongBreak') === 'true';
- 
-        // タイマーが動いていたか確認し、経過時間を計算
-        const wasRunning        = localStorage.getItem('timerRunning') === 'true';
-        const savedStartTime    = parseInt(localStorage.getItem('timerStartTime'))    || null;
-        const savedStartTimeLeft= parseInt(localStorage.getItem('timerStartTimeLeft'))|| null;
- 
+        let completedSets       = parseInt(localStorage.getItem('completedSets'))       || 0;
+        let totalStudyMinutes   = parseInt(localStorage.getItem('totalStudyMinutes'))   || 0;
+        let volume              = parseInt(localStorage.getItem('volume'))              || 80;
+        let isWorking           = localStorage.getItem('isWorking') !== 'false';
+        let isLongBreak         = localStorage.getItem('isLongBreak') === 'true';
+
+        const wasRunning         = localStorage.getItem('timerRunning') === 'true';
+        const savedStartTime     = parseInt(localStorage.getItem('timerStartTime'))     || null;
+        const savedStartTimeLeft = parseInt(localStorage.getItem('timerStartTimeLeft')) || null;
+
         let timeLeft;
         if (wasRunning && savedStartTime && savedStartTimeLeft != null) {
             const elapsed = Math.floor((Date.now() - savedStartTime) / 1000);
             timeLeft = Math.max(0, savedStartTimeLeft - elapsed);
         } else {
             timeLeft = parseInt(localStorage.getItem('timeLeft'));
-            if (isNaN(timeLeft) || timeLeft == null) {
-                timeLeft = workMinutes * 60;
-            }
+            if (isNaN(timeLeft) || timeLeft == null) timeLeft = workMinutes * 60;
         }
- 
-        let timerId      = null;
-        let startTime    = null;
+
+        let timerId       = null;
+        let startTime     = null;
         let startTimeLeft = 0;
- 
+
         // =====================
         // 要素の取得
         // =====================
-        const timerDisplay   = document.getElementById('timer-display');
-        const statusDisplay  = document.getElementById('status');
-        const startBtn       = document.getElementById('start-btn');
-        const resetBtn       = document.getElementById('reset-btn');
-        const setCountDisplay= document.getElementById('set-count');
-        const setsGoalDisplay= document.getElementById('sets-goal');
-        const inputWork      = document.getElementById('input-work');
-        const inputBreak     = document.getElementById('input-break');
-        const inputLongBreak = document.getElementById('input-long-break');
-        const inputSets      = document.getElementById('input-sets');
-        const saveBtn        = document.getElementById('save-settings');
- 
+        const timerDisplay    = document.getElementById('timer-display');
+        const statusDisplay   = document.getElementById('status');
+        const startBtn        = document.getElementById('start-btn');
+        const resetBtn        = document.getElementById('reset-btn');
+        const setCountDisplay = document.getElementById('set-count');
+        const setsGoalDisplay = document.getElementById('sets-goal');
+        const inputWork       = document.getElementById('input-work');
+        const inputBreak      = document.getElementById('input-break');
+        const inputLongBreak  = document.getElementById('input-long-break');
+        const inputSets       = document.getElementById('input-sets');
+        const inputVolume     = document.getElementById('input-volume');
+        const volumeLabel     = document.getElementById('volume-label');
+        const saveBtn         = document.getElementById('save-settings');
+
+        // 初期値をスライダーに反映
+        inputVolume.value = volume;
+        volumeLabel.textContent = volume + '%';
+
         // =====================
         // 状態保存
         // =====================
         function saveState() {
-            localStorage.setItem('timeLeft',        timeLeft);
-            localStorage.setItem('isWorking',       isWorking);
-            localStorage.setItem('isLongBreak',     isLongBreak);
-            localStorage.setItem('completedSets',   completedSets);
+            localStorage.setItem('timeLeft',      timeLeft);
+            localStorage.setItem('isWorking',     isWorking);
+            localStorage.setItem('isLongBreak',   isLongBreak);
+            localStorage.setItem('completedSets', completedSets);
         }
- 
+
         // =====================
-        // 記録の表示
+        // 音
+        // =====================
+        function playSound(type) {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const vol = volume / 100;
+            const patterns = {
+                work:      [{ f: 880, t: 0,    d: 0.15 }, { f: 1100, t: 0.2,  d: 0.25 }],
+                break:     [{ f: 660, t: 0,    d: 0.2  }, { f: 528,  t: 0.25, d: 0.3  }],
+                longBreak: [{ f: 660, t: 0,    d: 0.15 }, { f: 528,  t: 0.2,  d: 0.15 }, { f: 440, t: 0.4, d: 0.3 }],
+            };
+            (patterns[type] || patterns.work).forEach(({ f, t, d }) => {
+                const osc  = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = f;
+                osc.type = 'sine';
+                gain.gain.setValueAtTime(vol, ctx.currentTime + t);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + d);
+                osc.start(ctx.currentTime + t);
+                osc.stop(ctx.currentTime + t + d + 0.05);
+            });
+        }
+
+        // =====================
+        // 累計時間表示
         // =====================
         function displayTotalTime() {
             const h = Math.floor(totalStudyMinutes / 60);
             const m = totalStudyMinutes % 60;
-            document.getElementById('total-time-display').textContent =
-                `${h}時間${String(m).padStart(2, '0')}分`;
+            const text = `${h}時間${String(m).padStart(2, '0')}分`;
+            document.getElementById('total-time-display').textContent = text;
+            document.getElementById('home-total-display').textContent = text;
         }
- 
+
+        // =====================
+        // 記録の表示
+        // =====================
         function displayLogs() {
             const list = document.getElementById('study-logs');
             if (!list) return;
@@ -192,7 +276,7 @@
                 </li>
             `).join('');
         }
- 
+
         // =====================
         // 記録の保存
         // =====================
@@ -203,44 +287,14 @@
             const logs = JSON.parse(localStorage.getItem('studyLogs') || '[]');
             logs.unshift({ time: timeString, type: label, duration });
             localStorage.setItem('studyLogs', JSON.stringify(logs.slice(0, 5)));
- 
-            // 集中セッションのみ累計に加算
             if (type === 'work') {
                 totalStudyMinutes += duration;
                 localStorage.setItem('totalStudyMinutes', totalStudyMinutes);
                 displayTotalTime();
             }
- 
             displayLogs();
         }
- 
-        // =====================
-        // 通知音（Web Audio API）
-        // =====================
-        function playSound(type) {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
- 
-            // 音のパターン定義
-            const patterns = {
-                work:      [{ f: 880, t: 0, d: 0.15 }, { f: 1100, t: 0.2, d: 0.25 }],
-                break:     [{ f: 660, t: 0, d: 0.2  }, { f: 528,  t: 0.25, d: 0.3 }],
-                longBreak: [{ f: 660, t: 0, d: 0.15 }, { f: 528, t: 0.2, d: 0.15 }, { f: 440, t: 0.4, d: 0.3 }],
-            };
- 
-            (patterns[type] || patterns.work).forEach(({ f, t, d }) => {
-                const osc  = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.frequency.value = f;
-                osc.type = 'sine';
-                gain.gain.setValueAtTime(1.0, ctx.currentTime + t);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + d);
-                osc.start(ctx.currentTime + t);
-                osc.stop(ctx.currentTime + t + d + 0.05);
-            });
-        }
- 
+
         // =====================
         // 画面の更新
         // =====================
@@ -251,7 +305,7 @@
             setCountDisplay.textContent = completedSets;
             setsGoalDisplay.textContent = setsBeforeLongBreak;
         }
- 
+
         function updateStatus() {
             if (isWorking) {
                 statusDisplay.textContent = "集中タイム";
@@ -264,13 +318,12 @@
                 statusDisplay.className = "text-xl font-bold mb-4 text-green-500";
             }
         }
- 
+
         // =====================
-        // タイマー開始・一時停止
+        // タイマー
         // =====================
         function startTimer() {
             if (timerId) {
-                // 一時停止
                 clearInterval(timerId);
                 timerId = null;
                 startBtn.textContent = '再開';
@@ -278,179 +331,155 @@
                 localStorage.setItem('timerRunning', 'false');
                 localStorage.setItem('timeLeft', timeLeft);
             } else {
-                // 開始・再開
                 startBtn.textContent = '一時停止';
                 startBtn.classList.replace('bg-indigo-600', 'bg-red-500');
- 
                 startTime     = Date.now();
                 startTimeLeft = timeLeft;
- 
                 localStorage.setItem('timerRunning',       'true');
                 localStorage.setItem('timerStartTime',     startTime);
                 localStorage.setItem('timerStartTimeLeft', startTimeLeft);
- 
+
                 timerId = setInterval(() => {
                     const elapsed = Math.floor((Date.now() - startTime) / 1000);
                     timeLeft = startTimeLeft - elapsed;
- 
+
                     if (timeLeft <= 0) {
                         timeLeft = 0;
                         updateDisplay();
                         clearInterval(timerId);
                         timerId = null;
                         localStorage.setItem('timerRunning', 'false');
- 
+
                         if (isWorking) {
-                            // 集中終了
                             saveLog('work', workMinutes);
                             completedSets++;
- 
                             if (completedSets % setsBeforeLongBreak === 0) {
-                                // 長い休憩へ
                                 playSound('longBreak');
-                                isWorking   = false;
-                                isLongBreak = true;
-                                timeLeft    = longBreakMinutes * 60;
+                                isWorking = false; isLongBreak = true;
+                                timeLeft  = longBreakMinutes * 60;
                             } else {
-                                // 通常休憩へ
                                 playSound('break');
-                                isWorking   = false;
-                                isLongBreak = false;
-                                timeLeft    = breakMinutes * 60;
+                                isWorking = false; isLongBreak = false;
+                                timeLeft  = breakMinutes * 60;
                             }
                         } else {
-                            // 休憩終了
                             playSound('work');
                             saveLog(isLongBreak ? 'longBreak' : 'break', isLongBreak ? longBreakMinutes : breakMinutes);
-                            isWorking   = true;
-                            isLongBreak = false;
-                            timeLeft    = workMinutes * 60;
+                            isWorking = true; isLongBreak = false;
+                            timeLeft  = workMinutes * 60;
                         }
- 
+
                         saveState();
                         updateDisplay();
                         updateStatus();
-                        // 次のタイマーを自動スタート
                         startTimer();
                         return;
                     }
- 
+
                     saveState();
                     updateDisplay();
                 }, 500);
             }
         }
- 
+
         // =====================
         // リセット
         // =====================
         function resetTimer() {
             clearInterval(timerId);
-            timerId     = null;
-            isWorking   = true;
-            isLongBreak = false;
-            completedSets = 0;
-            timeLeft    = workMinutes * 60;
- 
+            timerId = null; isWorking = true; isLongBreak = false;
+            completedSets = 0; timeLeft = workMinutes * 60;
             localStorage.setItem('timerRunning', 'false');
             localStorage.removeItem('timerStartTime');
             localStorage.removeItem('timerStartTimeLeft');
             saveState();
- 
             startBtn.textContent = 'スタート';
             startBtn.className = "w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";
             updateDisplay();
             updateStatus();
         }
- 
+
+        // =====================
+        // ページ切り替え
+        // =====================
+        function showPage(pageId) {
+            ['home', 'timer', 'settings'].forEach(id => {
+                document.getElementById(`page-${id}`).classList.add('hidden');
+                const nav = document.getElementById(`nav-${id}`);
+                nav.classList.remove('text-indigo-600');
+                nav.classList.add('text-slate-400');
+            });
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            activeNav.classList.add('text-indigo-600');
+            activeNav.classList.remove('text-slate-400');
+
+            if (pageId === 'settings') {
+                inputWork.value      = workMinutes;
+                inputBreak.value     = breakMinutes;
+                inputLongBreak.value = longBreakMinutes;
+                inputSets.value      = setsBeforeLongBreak;
+                inputVolume.value    = volume;
+                volumeLabel.textContent = volume + '%';
+            }
+        }
+
         // =====================
         // イベント登録
         // =====================
         startBtn.addEventListener('click', startTimer);
         resetBtn.addEventListener('click', resetTimer);
- 
+
+        inputVolume.addEventListener('input', () => {
+            volume = parseInt(inputVolume.value);
+            volumeLabel.textContent = volume + '%';
+        });
+
         document.getElementById('reset-total-btn').addEventListener('click', () => {
             if (!confirm('累計勉強時間をリセットしますか？')) return;
             totalStudyMinutes = 0;
             localStorage.setItem('totalStudyMinutes', 0);
             displayTotalTime();
         });
- 
+
         document.getElementById('clear-logs-btn').addEventListener('click', () => {
             if (!confirm('記録をすべて削除しますか？\n（累計勉強時間は削除されません）')) return;
             localStorage.removeItem('studyLogs');
             displayLogs();
         });
- 
+
         document.getElementById('update-btn').addEventListener('click', () => {
-            if ('serviceWorker' in navigator) {
-                caches.keys().then(function(keyList) {
-                    return Promise.all(keyList.map(function(key) {
-                        return caches.delete(key);
-                    }));
-                }).then(function() {
-                    window.location.reload();
-                });
-            } else {
-                window.location.reload();
-            }
+            caches.keys()
+                .then(keys => Promise.all(keys.map(k => caches.delete(k))))
+                .then(() => window.location.reload());
         });
- 
+
         saveBtn.addEventListener('click', () => {
             let w  = parseInt(inputWork.value);
             let b  = parseInt(inputBreak.value);
             let lb = parseInt(inputLongBreak.value);
             let s  = parseInt(inputSets.value);
+            let v  = parseInt(inputVolume.value);
             if (isNaN(w)  || w  < 1) w  = 1;
             if (isNaN(b)  || b  < 1) b  = 1;
             if (isNaN(lb) || lb < 1) lb = 1;
             if (isNaN(s)  || s  < 1) s  = 1;
- 
-            workMinutes         = w;
-            breakMinutes        = b;
-            longBreakMinutes    = lb;
-            setsBeforeLongBreak = s;
- 
+            if (isNaN(v)) v = 80;
+
+            workMinutes = w; breakMinutes = b;
+            longBreakMinutes = lb; setsBeforeLongBreak = s; volume = v;
+
             localStorage.setItem('workMinutes',         workMinutes);
             localStorage.setItem('breakMinutes',        breakMinutes);
             localStorage.setItem('longBreakMinutes',    longBreakMinutes);
             localStorage.setItem('setsBeforeLongBreak', setsBeforeLongBreak);
- 
+            localStorage.setItem('volume',              volume);
+
             resetTimer();
             alert("設定を保存しました");
             showPage('timer');
         });
- 
-        // =====================
-        // ページ切り替え
-        // =====================
-        function showPage(pageId) {
-            document.getElementById('page-timer').classList.add('hidden');
-            document.getElementById('page-settings').classList.add('hidden');
-            document.getElementById(`page-${pageId}`).classList.remove('hidden');
- 
-            const navTimer    = document.getElementById('nav-timer');
-            const navSettings = document.getElementById('nav-settings');
- 
-            if (pageId === 'timer') {
-                navTimer.classList.add('text-indigo-600');
-                navTimer.classList.remove('text-slate-400');
-                navSettings.classList.add('text-slate-400');
-                navSettings.classList.remove('text-indigo-600');
-            } else {
-                // 設定ページを開くとき現在値を入力欄にセット
-                inputWork.value      = workMinutes;
-                inputBreak.value     = breakMinutes;
-                inputLongBreak.value = longBreakMinutes;
-                inputSets.value      = setsBeforeLongBreak;
- 
-                navSettings.classList.add('text-indigo-600');
-                navSettings.classList.remove('text-slate-400');
-                navTimer.classList.add('text-slate-400');
-                navTimer.classList.remove('text-indigo-600');
-            }
-        }
- 
+
         // =====================
         // 初期化
         // =====================
@@ -458,21 +487,19 @@
         updateDisplay();
         displayLogs();
         displayTotalTime();
- 
-        // タイマーが動いていた場合は自動再開
+
         if (wasRunning && timeLeft > 0) {
+            showPage('timer');
             startTimer();
         }
     </script>
- 
+
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./sw.js').then(function(reg) {
-                    console.log('SW success');
-                }).catch(function(err) {
-                    console.log('SW fail');
-                });
+                navigator.serviceWorker.register('./sw.js')
+                    .then(() => console.log('SW success'))
+                    .catch(() => console.log('SW fail'));
             });
         }
     </script>
