@@ -1,34 +1,36 @@
 {
-  "id": "/YouShouldStudy/",
+  "id": "YouShouldStudy",
   "short_name": "勉強しろ",
   "name": "勉強をするためのツール",
   "description": "勉強するためのツールです。",
   "icons": [
     {
-      "src": "images/icons-192.png",
+      "src": "./images/icons-192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
-      "src": "images/icons-512.png",
+      "src": "./images/icons-512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any"
     }
   ],
-  "start_url": "/YouShouldStudy/",
-  "scope": "/YouShouldStudy/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#3367D6",
   "theme_color": "#3367D6",
   "screenshots": [
     {
-      "src": "images/screenshot1.jpg",
+      "src": "./images/screenshot1.jpg",
       "type": "image/jpeg",
       "sizes": "720x540",
       "form_factor": "wide"
     },
     {
-      "src": "images/screenshot2.jpg",
+      "src": "./images/screenshot2.jpg",
       "type": "image/jpeg",
       "sizes": "540x720",
       "form_factor": "narrow"
