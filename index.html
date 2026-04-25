@@ -8,10 +8,8 @@
     <link rel="apple-touch-icon" href="images/icons-192.png">
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="勉強タイマー">
- 
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { silent: true }</script>
     <style>
@@ -22,9 +20,12 @@
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
     <main class="max-w-md mx-auto p-6 pb-32">
- 
+
         <section id="page-timer" class="text-center">
-            <h1 class="text-2xl font-bold mb-8 text-slate-700">タイマー</h1>
+            <div class="flex justify-between items-start mb-8">
+                <h1 class="text-2xl font-bold text-slate-700">タイマー</h1>
+                <span class="text-[10px] font-bold text-slate-300 mt-1">Ver1.0.8</span>
+            </div>
             <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
                 <h2 id="status" class="text-xl font-bold mb-4 text-orange-500">集中タイム</h2>
                 <div id="timer-display" class="timer-display text-6xl font-black mb-8 text-slate-800">25:00</div>
@@ -33,18 +34,18 @@
                     <button id="reset-btn" class="w-full text-slate-400 py-2 text-sm hover:text-slate-600">リセット</button>
                 </div>
             </div>
- 
+
             <div class="mt-6 text-slate-500 text-sm">
                 現在のセット:
                 <span id="set-count" class="font-bold text-indigo-600">0</span>
                 /
                 <span id="sets-goal" class="font-bold text-slate-400">4</span>
             </div>
- 
+
             <div class="mt-8 text-left bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
                 <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest">今日の記録</h3>
                 <ul id="study-logs" class="space-y-3"></ul>
- 
+
                 <div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
                     <div>
                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">累計勉強時間</p>
@@ -54,7 +55,7 @@
                 </div>
             </div>
         </section>
- 
+
         <section id="page-settings" class="hidden">
             <h1 class="text-2xl font-bold mb-8 text-slate-700">設定</h1>
             <div class="bg-white p-6 rounded-3xl shadow-lg space-y-6">
@@ -78,9 +79,9 @@
                 <button id="save-settings" class="w-full bg-slate-800 text-white py-4 rounded-xl font-bold shadow-md active:scale-95 transition-all">設定を保存してリセット</button>
             </div>
         </section>
- 
+
     </main>
- 
+
     <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-slate-200 flex justify-around py-4 shadow-2xl">
         <button onclick="showPage('timer')" id="nav-timer" class="flex flex-col items-center text-indigo-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -96,7 +97,7 @@
             <span class="text-[10px] mt-1 font-bold">設定</span>
         </button>
     </nav>
- 
+
     <script>
         // =====================
         // 状態の復元（localStorage）
@@ -109,12 +110,12 @@
         let totalStudyMinutes  = parseInt(localStorage.getItem('totalStudyMinutes'))  || 0;
         let isWorking          = localStorage.getItem('isWorking') !== 'false';
         let isLongBreak        = localStorage.getItem('isLongBreak') === 'true';
- 
+
         // タイマーが動いていたか確認し、経過時間を計算
         const wasRunning        = localStorage.getItem('timerRunning') === 'true';
         const savedStartTime    = parseInt(localStorage.getItem('timerStartTime'))    || null;
         const savedStartTimeLeft= parseInt(localStorage.getItem('timerStartTimeLeft'))|| null;
- 
+
         let timeLeft;
         if (wasRunning && savedStartTime && savedStartTimeLeft != null) {
             const elapsed = Math.floor((Date.now() - savedStartTime) / 1000);
@@ -125,11 +126,11 @@
                 timeLeft = workMinutes * 60;
             }
         }
- 
+
         let timerId      = null;
         let startTime    = null;
         let startTimeLeft = 0;
- 
+
         // =====================
         // 要素の取得
         // =====================
@@ -144,7 +145,7 @@
         const inputLongBreak = document.getElementById('input-long-break');
         const inputSets      = document.getElementById('input-sets');
         const saveBtn        = document.getElementById('save-settings');
- 
+
         // =====================
         // 状態保存
         // =====================
@@ -154,7 +155,7 @@
             localStorage.setItem('isLongBreak',     isLongBreak);
             localStorage.setItem('completedSets',   completedSets);
         }
- 
+
         // =====================
         // 記録の表示
         // =====================
@@ -164,7 +165,7 @@
             document.getElementById('total-time-display').textContent =
                 `${h}時間${String(m).padStart(2, '0')}分`;
         }
- 
+
         function displayLogs() {
             const list = document.getElementById('study-logs');
             if (!list) return;
@@ -186,7 +187,7 @@
                 </li>
             `).join('');
         }
- 
+
         // =====================
         // 記録の保存
         // =====================
@@ -197,30 +198,30 @@
             const logs = JSON.parse(localStorage.getItem('studyLogs') || '[]');
             logs.unshift({ time: timeString, type: label, duration });
             localStorage.setItem('studyLogs', JSON.stringify(logs.slice(0, 5)));
- 
+
             // 集中セッションのみ累計に加算
             if (type === 'work') {
                 totalStudyMinutes += duration;
                 localStorage.setItem('totalStudyMinutes', totalStudyMinutes);
                 displayTotalTime();
             }
- 
+
             displayLogs();
         }
- 
+
         // =====================
         // 通知音（Web Audio API）
         // =====================
         function playSound(type) {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
- 
+
             // 音のパターン定義
             const patterns = {
                 work:      [{ f: 880, t: 0, d: 0.15 }, { f: 1100, t: 0.2, d: 0.25 }],
                 break:     [{ f: 660, t: 0, d: 0.2  }, { f: 528,  t: 0.25, d: 0.3 }],
                 longBreak: [{ f: 660, t: 0, d: 0.15 }, { f: 528, t: 0.2, d: 0.15 }, { f: 440, t: 0.4, d: 0.3 }],
             };
- 
+
             (patterns[type] || patterns.work).forEach(({ f, t, d }) => {
                 const osc  = ctx.createOscillator();
                 const gain = ctx.createGain();
@@ -228,13 +229,13 @@
                 gain.connect(ctx.destination);
                 osc.frequency.value = f;
                 osc.type = 'sine';
-                gain.gain.setValueAtTime(0.4, ctx.currentTime + t);
+                gain.gain.setValueAtTime(1.0, ctx.currentTime + t);
                 gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + d);
                 osc.start(ctx.currentTime + t);
                 osc.stop(ctx.currentTime + t + d + 0.05);
             });
         }
- 
+
         // =====================
         // 画面の更新
         // =====================
@@ -245,7 +246,7 @@
             setCountDisplay.textContent = completedSets;
             setsGoalDisplay.textContent = setsBeforeLongBreak;
         }
- 
+
         function updateStatus() {
             if (isWorking) {
                 statusDisplay.textContent = "集中タイム";
@@ -258,7 +259,7 @@
                 statusDisplay.className = "text-xl font-bold mb-4 text-green-500";
             }
         }
- 
+
         // =====================
         // タイマー開始・一時停止
         // =====================
@@ -275,30 +276,30 @@
                 // 開始・再開
                 startBtn.textContent = '一時停止';
                 startBtn.classList.replace('bg-indigo-600', 'bg-red-500');
- 
+
                 startTime     = Date.now();
                 startTimeLeft = timeLeft;
- 
+
                 localStorage.setItem('timerRunning',       'true');
                 localStorage.setItem('timerStartTime',     startTime);
                 localStorage.setItem('timerStartTimeLeft', startTimeLeft);
- 
+
                 timerId = setInterval(() => {
                     const elapsed = Math.floor((Date.now() - startTime) / 1000);
                     timeLeft = startTimeLeft - elapsed;
- 
+
                     if (timeLeft <= 0) {
                         timeLeft = 0;
                         updateDisplay();
                         clearInterval(timerId);
                         timerId = null;
                         localStorage.setItem('timerRunning', 'false');
- 
+
                         if (isWorking) {
                             // 集中終了
                             saveLog('work', workMinutes);
                             completedSets++;
- 
+
                             if (completedSets % setsBeforeLongBreak === 0) {
                                 // 長い休憩へ
                                 playSound('longBreak');
@@ -320,7 +321,7 @@
                             isLongBreak = false;
                             timeLeft    = workMinutes * 60;
                         }
- 
+
                         saveState();
                         updateDisplay();
                         updateStatus();
@@ -328,13 +329,13 @@
                         startTimer();
                         return;
                     }
- 
+
                     saveState();
                     updateDisplay();
                 }, 500);
             }
         }
- 
+
         // =====================
         // リセット
         // =====================
@@ -345,31 +346,31 @@
             isLongBreak = false;
             completedSets = 0;
             timeLeft    = workMinutes * 60;
- 
+
             localStorage.setItem('timerRunning', 'false');
             localStorage.removeItem('timerStartTime');
             localStorage.removeItem('timerStartTimeLeft');
             saveState();
- 
+
             startBtn.textContent = 'スタート';
             startBtn.className = "w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";
             updateDisplay();
             updateStatus();
         }
- 
+
         // =====================
         // イベント登録
         // =====================
         startBtn.addEventListener('click', startTimer);
         resetBtn.addEventListener('click', resetTimer);
- 
+
         document.getElementById('reset-total-btn').addEventListener('click', () => {
             if (!confirm('累計勉強時間をリセットしますか？')) return;
             totalStudyMinutes = 0;
             localStorage.setItem('totalStudyMinutes', 0);
             displayTotalTime();
         });
- 
+
         saveBtn.addEventListener('click', () => {
             let w  = parseInt(inputWork.value);
             let b  = parseInt(inputBreak.value);
@@ -379,22 +380,22 @@
             if (isNaN(b)  || b  < 1) b  = 1;
             if (isNaN(lb) || lb < 1) lb = 1;
             if (isNaN(s)  || s  < 1) s  = 1;
- 
+
             workMinutes         = w;
             breakMinutes        = b;
             longBreakMinutes    = lb;
             setsBeforeLongBreak = s;
- 
+
             localStorage.setItem('workMinutes',         workMinutes);
             localStorage.setItem('breakMinutes',        breakMinutes);
             localStorage.setItem('longBreakMinutes',    longBreakMinutes);
             localStorage.setItem('setsBeforeLongBreak', setsBeforeLongBreak);
- 
+
             resetTimer();
             alert("設定を保存しました");
             showPage('timer');
         });
- 
+
         // =====================
         // ページ切り替え
         // =====================
@@ -402,10 +403,10 @@
             document.getElementById('page-timer').classList.add('hidden');
             document.getElementById('page-settings').classList.add('hidden');
             document.getElementById(`page-${pageId}`).classList.remove('hidden');
- 
+
             const navTimer    = document.getElementById('nav-timer');
             const navSettings = document.getElementById('nav-settings');
- 
+
             if (pageId === 'timer') {
                 navTimer.classList.add('text-indigo-600');
                 navTimer.classList.remove('text-slate-400');
@@ -417,14 +418,14 @@
                 inputBreak.value     = breakMinutes;
                 inputLongBreak.value = longBreakMinutes;
                 inputSets.value      = setsBeforeLongBreak;
- 
+
                 navSettings.classList.add('text-indigo-600');
                 navSettings.classList.remove('text-slate-400');
                 navTimer.classList.add('text-slate-400');
                 navTimer.classList.remove('text-indigo-600');
             }
         }
- 
+
         // =====================
         // 初期化
         // =====================
@@ -432,13 +433,13 @@
         updateDisplay();
         displayLogs();
         displayTotalTime();
- 
+
         // タイマーが動いていた場合は自動再開
         if (wasRunning && timeLeft > 0) {
             startTimer();
         }
     </script>
- 
+
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
