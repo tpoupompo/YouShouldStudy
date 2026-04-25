@@ -164,16 +164,18 @@
                 startBtn.classList.replace('bg-indigo-600', 'bg-red-500');
 
                 startTime = Date.now();
-                startTimeLeft = timeLeft; // 一時停止時の残り時間を記録
+                startTimeLeft = timeLeft;
 
                 timerId = setInterval(() => {
-                    timeLeft--;
-                    updateDisplay();
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    timeLeft = startTimeLeft - elapsed;
 
                     if (timeLeft <= 0) {
+                        timeLeft = 0;
+                        updateDisplay();
                         clearInterval(timerId);
                         timerId = null;
-                        
+
                         saveLog(isWorking ? 'work' : 'break');
 
                         if (isWorking) {
@@ -184,22 +186,22 @@
                         const message = isWorking ? "休憩しましょう！" : "集中を始めましょう！";
                         isWorking = !isWorking;
                         timeLeft = (isWorking ? workMinutes : breakMinutes) * 60;
-                        
+
                         statusDisplay.textContent = isWorking ? "集中タイム" : "休憩タイム";
-                        statusDisplay.className = isWorking ? "text-xl font-bold mb-4 text-orange-500" : "text-xl font-bold mb-4 text-green-500";
-                        
+                        statusDisplay.className = isWorking
+                            ? "text-xl font-bold mb-4 text-orange-500"
+                            : "text-xl font-bold mb-4 text-green-500";
+
                         startBtn.textContent = 'スタート';
                         startBtn.classList.replace('bg-red-500', 'bg-indigo-600');
                         updateDisplay();
 
-                        setTimeout(() => {
-                            alert(message);
-                        }, 100);
+                        setTimeout(() => { alert(message); }, 100);
+                        return;
                     }
-                }, 1000);
 
                     updateDisplay();
-                }, 500); // 500msにして取りこぼしを減らす
+                }, 500);
             }
         }
         function resetTimer() {
