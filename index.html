@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>勉強しろ</title>
+    
+    <link rel="apple-touch-icon" href="images/icons-192.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="勉強タイマー">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { silent: true }</script>
+    <style>
+        .timer-display { font-variant-numeric: tabular-nums; }
+        .hidden { display: none; }
+        button { -webkit-tap-highlight-color: transparent; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen pb-24">
+    <main class="max-w-md mx-auto p-6 pb-32">
+        
+        <section id="page-timer" class="text-center">
+            <h1 class="text-2xl font-bold mb-8 text-slate-700">タイマー</h1>
+            <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
+                <h2 id="status" class="text-xl font-bold mb-4 text-orange-500">集中タイム</h2>
+                <div id="timer-display" class="timer-display text-6xl font-black mb-8 text-slate-800">25:00</div>
+                
+                <div class="space-y-4">
+                    <button id="start-btn" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">スタート</button>
+                    <button id="reset-btn" class="w-full text-slate-400 py-2 text-sm hover:text-slate-600">リセット</button>
+                </div>
+            </div>
+
+            <div class="mt-6 text-slate-500 text-sm">
+                現在のセット: <span id="set-count" class="font-bold text-indigo-600">0</span>
+            </div>
+            <div class="mt-8 text-left bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest">今日の記録</h3>
+                <ul id="study-logs" class="space-y-3">
+                    </ul>
+            </div>
+        </section> 
+
+        <section id="page-settings" class="hidden">
+            <h1 class="text-2xl font-bold mb-8 text-slate-700">設定</h1>
+            <div class="bg-white p-6 rounded-3xl shadow-lg space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">集中時間 (分)</label>
+                    <input type="number" id="input-work" value="25" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">休憩時間 (分)</label>
+                    <input type="number" id="input-break" value="5" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg">
+                </div>
+                <button id="save-settings" class="w-full bg-slate-800 text-white py-4 rounded-xl font-bold shadow-md active:scale-95 transition-all">設定を保存してリセット</button>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-slate-200 flex justify-around py-4 shadow-2xl">
+        <button onclick="showPage('timer')" id="nav-timer" class="flex flex-col items-center text-indigo-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-[10px] mt-1 font-bold">タイマー</span>
+        </button>
+        <button onclick="showPage('settings')" id="nav-settings" class="flex flex-col items-center text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="text-[10px] mt-1 font-bold">設定</span>
+        </button>
+    </nav>
+
+    <script>
+        console.log('test')
+
+        // --- 状態管理 ---
+        let workMinutes = 25;
+        let breakMinutes = 5;
+        let timeLeft = workMinutes * 60;
+        let timerId = null;
+        let isWorking = true;
+        let completedSets = 0;
+        let startTime = null;
+    let startTimeLeft = 0;
+
+        // --- 要素の取得 ---
+        const timerDisplay = document.getElementById('timer-display');
+        const statusDisplay = document.getElementById('status');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const setCountDisplay = document.getElementById('set-count');
+        const inputWork = document.getElementById('input-work');
+        const inputBreak = document.getElementById('input-break');
+        const saveBtn = document.getElementById('save-settings');
+        const studyLogsList = document.getElementById('study-logs');
+
+        // --- 記録を表示する関数 ---
+        function displayLogs() {
+            const studyLogsList = document.getElementById('study-logs');
+            if (!studyLogsList) return; 
+
+            const rawData = localStorage.getItem('studyLogs');
+            const logs = rawData ? JSON.parse(rawData) : [];
+
+            if (logs.length === 0) {
+                // 0件のときに「空の枠」を表示
+                studyLogsList.innerHTML = `
+                    <li class="py-10 text-center border-2 border-dashed border-slate-100 rounded-2xl">
+                        <p class="text-xs font-bold text-slate-300 italic">No records yet</p>
+                    </li>`;
+                return;
+            }
+
+            studyLogsList.innerHTML = logs.map(log => `
+                <li class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-bold text-slate-400 leading-none mb-1">${log.time}</span>
+                        <span class="text-sm font-black text-slate-700">${log.type}終了</span>
+                    </div>
+                    <span class="text-xs font-black text-slate-500 bg-white px-3 py-1 rounded-lg border border-slate-100">${log.duration}分</span>
+                </li>
+            `).join('');
+        }
+
+        // --- 記録を保存する関数 ---
+        function saveLog(type) {
+            const now = new Date();
+            const timeString = now.getHours() + ":" + String(now.getMinutes()).padStart(2, '0');
+            
+            const newLog = {
+                time: timeString,
+                type: type === 'work' ? '集中' : '休憩',
+                duration: type === 'work' ? workMinutes : breakMinutes
+            };
+
+            const logs = JSON.parse(localStorage.getItem('studyLogs') || '[]');
+            logs.unshift(newLog);
+            localStorage.setItem('studyLogs', JSON.stringify(logs.slice(0, 5)));
+            
+            displayLogs();
+        }
+
+        // --- タイマー機能 ---
+        function updateDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+       function startTimer() {
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+                startBtn.textContent = '再開';
+                startBtn.classList.replace('bg-red-500', 'bg-indigo-600');
+            } else {
+                startBtn.textContent = '一時停止';
+                startBtn.classList.replace('bg-indigo-600', 'bg-red-500');
+
+                startTime = Date.now();
+                startTimeLeft = timeLeft; // 一時停止時の残り時間を記録
+
+                timerId = setInterval(() => {
+                    timeLeft--;
+                    updateDisplay();
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timerId);
+                        timerId = null;
+                        
+                        saveLog(isWorking ? 'work' : 'break');
+
+                        if (isWorking) {
+                            completedSets++;
+                            setCountDisplay.textContent = completedSets;
+                        }
+
+                        const message = isWorking ? "休憩しましょう！" : "集中を始めましょう！";
+                        isWorking = !isWorking;
+                        timeLeft = (isWorking ? workMinutes : breakMinutes) * 60;
+                        
+                        statusDisplay.textContent = isWorking ? "集中タイム" : "休憩タイム";
+                        statusDisplay.className = isWorking ? "text-xl font-bold mb-4 text-orange-500" : "text-xl font-bold mb-4 text-green-500";
+                        
+                        startBtn.textContent = 'スタート';
+                        startBtn.classList.replace('bg-red-500', 'bg-indigo-600');
+                        updateDisplay();
+
+                        setTimeout(() => {
+                            alert(message);
+                        }, 100);
+                    }
+                }, 1000);
+
+                    updateDisplay();
+                }, 500); // 500msにして取りこぼしを減らす
+            }
+        }
+        function resetTimer() {
+            clearInterval(timerId);
+            timerId = null;
+            isWorking = true;
+            timeLeft = workMinutes * 60;
+            statusDisplay.textContent = "集中タイム";
+            statusDisplay.className = "text-xl font-bold mb-4 text-orange-500";
+            startBtn.textContent = 'スタート';
+            startBtn.className = "w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";
+            updateDisplay();
+        }
+
+        // --- イベント登録 ---
+        startBtn.addEventListener('click', startTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        saveBtn.addEventListener('click', () => {
+            let w = parseInt(inputWork.value);
+            let b = parseInt(inputBreak.value);
+            if (isNaN(w) || w < 1) w = 1;
+            if (isNaN(b) || b < 1) b = 1;
+
+            workMinutes = w;
+            breakMinutes = b;
+            resetTimer();
+            alert("設定を保存しました");
+            showPage('timer');
+        });
+
+        function showPage(pageId) {
+            document.getElementById('page-timer').classList.add('hidden');
+            document.getElementById('page-settings').classList.add('hidden');
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+
+            const navTimer = document.getElementById('nav-timer');
+            const navSettings = document.getElementById('nav-settings');
+
+            if (pageId === 'timer') {
+                navTimer.classList.add('text-indigo-600');
+                navTimer.classList.remove('text-slate-400');
+                navSettings.classList.add('text-slate-400');
+                navSettings.classList.remove('text-indigo-600');
+            } else {
+                navSettings.classList.add('text-indigo-600');
+                navSettings.classList.remove('text-slate-400');
+                navTimer.classList.add('text-slate-400');
+                navTimer.classList.remove('text-indigo-600');
+            }
+        }
+        
+        // 初期化
+        updateDisplay();
+        displayLogs();
+    </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js').then(function(reg) {
+                    console.log('SW success');
+                }).catch(function(err) {
+                    console.log('SW fail');
+                });
+            });
+        }
+    </script>
+</body>
+</html>
