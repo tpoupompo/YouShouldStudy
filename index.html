@@ -1,3 +1,6 @@
+Index · HTML
+Copy
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -9,7 +12,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="勉強タイマー">
-
+ 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { silent: true }</script>
     <style>
@@ -20,29 +23,31 @@
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
     <main class="max-w-md mx-auto p-6 pb-32">
-        
+ 
         <section id="page-timer" class="text-center">
             <h1 class="text-2xl font-bold mb-8 text-slate-700">タイマー</h1>
             <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
                 <h2 id="status" class="text-xl font-bold mb-4 text-orange-500">集中タイム</h2>
                 <div id="timer-display" class="timer-display text-6xl font-black mb-8 text-slate-800">25:00</div>
-                
                 <div class="space-y-4">
                     <button id="start-btn" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">スタート</button>
                     <button id="reset-btn" class="w-full text-slate-400 py-2 text-sm hover:text-slate-600">リセット</button>
                 </div>
             </div>
-
+ 
             <div class="mt-6 text-slate-500 text-sm">
-                現在のセット: <span id="set-count" class="font-bold text-indigo-600">0</span>
+                現在のセット:
+                <span id="set-count" class="font-bold text-indigo-600">0</span>
+                /
+                <span id="sets-goal" class="font-bold text-slate-400">4</span>
             </div>
+ 
             <div class="mt-8 text-left bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
                 <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest">今日の記録</h3>
-                <ul id="study-logs" class="space-y-3">
-                    </ul>
+                <ul id="study-logs" class="space-y-3"></ul>
             </div>
-        </section> 
-
+        </section>
+ 
         <section id="page-settings" class="hidden">
             <h1 class="text-2xl font-bold mb-8 text-slate-700">設定</h1>
             <div class="bg-white p-6 rounded-3xl shadow-lg space-y-6">
@@ -54,12 +59,21 @@
                     <label class="block text-sm font-medium text-slate-600 mb-2">休憩時間 (分)</label>
                     <input type="number" id="input-break" value="5" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg">
                 </div>
+                <hr class="border-slate-100">
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">長い休憩までのセット数</label>
+                    <input type="number" id="input-sets" value="4" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">長い休憩時間 (分)</label>
+                    <input type="number" id="input-long-break" value="15" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg">
+                </div>
                 <button id="save-settings" class="w-full bg-slate-800 text-white py-4 rounded-xl font-bold shadow-md active:scale-95 transition-all">設定を保存してリセット</button>
             </div>
         </section>
-
+ 
     </main>
-
+ 
     <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-slate-200 flex justify-around py-4 shadow-2xl">
         <button onclick="showPage('timer')" id="nav-timer" class="flex flex-col items-center text-indigo-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,49 +89,79 @@
             <span class="text-[10px] mt-1 font-bold">設定</span>
         </button>
     </nav>
-
+ 
     <script>
-        console.log('test')
-
-        // --- 状態管理 ---
-        let workMinutes = 25;
-        let breakMinutes = 5;
-        let timeLeft = workMinutes * 60;
-        let timerId = null;
-        let isWorking = true;
-        let completedSets = 0;
-        let startTime = null;
-    let startTimeLeft = 0;
-
-        // --- 要素の取得 ---
-        const timerDisplay = document.getElementById('timer-display');
-        const statusDisplay = document.getElementById('status');
-        const startBtn = document.getElementById('start-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        const setCountDisplay = document.getElementById('set-count');
-        const inputWork = document.getElementById('input-work');
-        const inputBreak = document.getElementById('input-break');
-        const saveBtn = document.getElementById('save-settings');
-        const studyLogsList = document.getElementById('study-logs');
-
-        // --- 記録を表示する関数 ---
+        // =====================
+        // 状態の復元（localStorage）
+        // =====================
+        let workMinutes        = parseInt(localStorage.getItem('workMinutes'))        || 25;
+        let breakMinutes       = parseInt(localStorage.getItem('breakMinutes'))       || 5;
+        let longBreakMinutes   = parseInt(localStorage.getItem('longBreakMinutes'))   || 15;
+        let setsBeforeLongBreak = parseInt(localStorage.getItem('setsBeforeLongBreak')) || 4;
+        let completedSets      = parseInt(localStorage.getItem('completedSets'))      || 0;
+        let isWorking          = localStorage.getItem('isWorking') !== 'false';
+        let isLongBreak        = localStorage.getItem('isLongBreak') === 'true';
+ 
+        // タイマーが動いていたか確認し、経過時間を計算
+        const wasRunning        = localStorage.getItem('timerRunning') === 'true';
+        const savedStartTime    = parseInt(localStorage.getItem('timerStartTime'))    || null;
+        const savedStartTimeLeft= parseInt(localStorage.getItem('timerStartTimeLeft'))|| null;
+ 
+        let timeLeft;
+        if (wasRunning && savedStartTime && savedStartTimeLeft != null) {
+            const elapsed = Math.floor((Date.now() - savedStartTime) / 1000);
+            timeLeft = Math.max(0, savedStartTimeLeft - elapsed);
+        } else {
+            timeLeft = parseInt(localStorage.getItem('timeLeft'));
+            if (isNaN(timeLeft) || timeLeft == null) {
+                timeLeft = workMinutes * 60;
+            }
+        }
+ 
+        let timerId      = null;
+        let startTime    = null;
+        let startTimeLeft = 0;
+ 
+        // =====================
+        // 要素の取得
+        // =====================
+        const timerDisplay   = document.getElementById('timer-display');
+        const statusDisplay  = document.getElementById('status');
+        const startBtn       = document.getElementById('start-btn');
+        const resetBtn       = document.getElementById('reset-btn');
+        const setCountDisplay= document.getElementById('set-count');
+        const setsGoalDisplay= document.getElementById('sets-goal');
+        const inputWork      = document.getElementById('input-work');
+        const inputBreak     = document.getElementById('input-break');
+        const inputLongBreak = document.getElementById('input-long-break');
+        const inputSets      = document.getElementById('input-sets');
+        const saveBtn        = document.getElementById('save-settings');
+ 
+        // =====================
+        // 状態保存
+        // =====================
+        function saveState() {
+            localStorage.setItem('timeLeft',        timeLeft);
+            localStorage.setItem('isWorking',       isWorking);
+            localStorage.setItem('isLongBreak',     isLongBreak);
+            localStorage.setItem('completedSets',   completedSets);
+        }
+ 
+        // =====================
+        // 記録の表示
+        // =====================
         function displayLogs() {
-            const studyLogsList = document.getElementById('study-logs');
-            if (!studyLogsList) return; 
-
-            const rawData = localStorage.getItem('studyLogs');
-            const logs = rawData ? JSON.parse(rawData) : [];
-
+            const list = document.getElementById('study-logs');
+            if (!list) return;
+            const logs = JSON.parse(localStorage.getItem('studyLogs') || '[]');
             if (logs.length === 0) {
-                // 0件のときに「空の枠」を表示
-                studyLogsList.innerHTML = `
+                list.innerHTML = `
                     <li class="py-10 text-center border-2 border-dashed border-slate-100 rounded-2xl">
                         <p class="text-xs font-bold text-slate-300 italic">No records yet</p>
                     </li>`;
                 return;
             }
-
-            studyLogsList.innerHTML = logs.map(log => `
+            list.innerHTML = logs.map(log => `
                 <li class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
                     <div class="flex flex-col">
                         <span class="text-[10px] font-bold text-slate-400 leading-none mb-1">${log.time}</span>
@@ -127,138 +171,225 @@
                 </li>
             `).join('');
         }
-
-        // --- 記録を保存する関数 ---
-        function saveLog(type) {
+ 
+        // =====================
+        // 記録の保存
+        // =====================
+        function saveLog(type, duration) {
             const now = new Date();
             const timeString = now.getHours() + ":" + String(now.getMinutes()).padStart(2, '0');
-            
-            const newLog = {
-                time: timeString,
-                type: type === 'work' ? '集中' : '休憩',
-                duration: type === 'work' ? workMinutes : breakMinutes
-            };
-
+            const label = { work: '集中', break: '休憩', longBreak: '長い休憩' }[type] || type;
             const logs = JSON.parse(localStorage.getItem('studyLogs') || '[]');
-            logs.unshift(newLog);
+            logs.unshift({ time: timeString, type: label, duration });
             localStorage.setItem('studyLogs', JSON.stringify(logs.slice(0, 5)));
-            
             displayLogs();
         }
-
-        // --- タイマー機能 ---
+ 
+        // =====================
+        // 画面の更新
+        // =====================
         function updateDisplay() {
             const m = Math.floor(timeLeft / 60);
             const s = timeLeft % 60;
             timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            setCountDisplay.textContent = completedSets;
+            setsGoalDisplay.textContent = setsBeforeLongBreak;
         }
-
-       function startTimer() {
+ 
+        function updateStatus() {
+            if (isWorking) {
+                statusDisplay.textContent = "集中タイム";
+                statusDisplay.className = "text-xl font-bold mb-4 text-orange-500";
+            } else if (isLongBreak) {
+                statusDisplay.textContent = "長い休憩タイム！";
+                statusDisplay.className = "text-xl font-bold mb-4 text-blue-500";
+            } else {
+                statusDisplay.textContent = "休憩タイム";
+                statusDisplay.className = "text-xl font-bold mb-4 text-green-500";
+            }
+        }
+ 
+        // =====================
+        // タイマー開始・一時停止
+        // =====================
+        function startTimer() {
             if (timerId) {
+                // 一時停止
                 clearInterval(timerId);
                 timerId = null;
                 startBtn.textContent = '再開';
                 startBtn.classList.replace('bg-red-500', 'bg-indigo-600');
+                localStorage.setItem('timerRunning', 'false');
+                localStorage.setItem('timeLeft', timeLeft);
             } else {
+                // 開始・再開
                 startBtn.textContent = '一時停止';
                 startBtn.classList.replace('bg-indigo-600', 'bg-red-500');
-
-                startTime = Date.now();
+ 
+                startTime     = Date.now();
                 startTimeLeft = timeLeft;
-
+ 
+                localStorage.setItem('timerRunning',       'true');
+                localStorage.setItem('timerStartTime',     startTime);
+                localStorage.setItem('timerStartTimeLeft', startTimeLeft);
+ 
                 timerId = setInterval(() => {
                     const elapsed = Math.floor((Date.now() - startTime) / 1000);
                     timeLeft = startTimeLeft - elapsed;
-
+ 
                     if (timeLeft <= 0) {
                         timeLeft = 0;
                         updateDisplay();
                         clearInterval(timerId);
                         timerId = null;
-
-                        saveLog(isWorking ? 'work' : 'break');
-
+                        localStorage.setItem('timerRunning', 'false');
+ 
                         if (isWorking) {
+                            // 集中終了
+                            saveLog('work', workMinutes);
                             completedSets++;
-                            setCountDisplay.textContent = completedSets;
+ 
+                            if (completedSets % setsBeforeLongBreak === 0) {
+                                // 長い休憩へ
+                                isWorking   = false;
+                                isLongBreak = true;
+                                timeLeft    = longBreakMinutes * 60;
+                                saveState();
+                                updateDisplay();
+                                updateStatus();
+                                startBtn.textContent = 'スタート';
+                                startBtn.classList.replace('bg-red-500', 'bg-indigo-600');
+                                setTimeout(() => alert(`${setsBeforeLongBreak}セット達成！長い休憩（${longBreakMinutes}分）しましょう！`), 100);
+                            } else {
+                                // 通常休憩へ
+                                isWorking   = false;
+                                isLongBreak = false;
+                                timeLeft    = breakMinutes * 60;
+                                saveState();
+                                updateDisplay();
+                                updateStatus();
+                                startBtn.textContent = 'スタート';
+                                startBtn.classList.replace('bg-red-500', 'bg-indigo-600');
+                                setTimeout(() => alert("休憩しましょう！"), 100);
+                            }
+                        } else {
+                            // 休憩終了
+                            saveLog(isLongBreak ? 'longBreak' : 'break', isLongBreak ? longBreakMinutes : breakMinutes);
+                            isWorking   = true;
+                            isLongBreak = false;
+                            timeLeft    = workMinutes * 60;
+                            saveState();
+                            updateDisplay();
+                            updateStatus();
+                            startBtn.textContent = 'スタート';
+                            startBtn.classList.replace('bg-red-500', 'bg-indigo-600');
+                            setTimeout(() => alert("集中を始めましょう！"), 100);
                         }
-
-                        const message = isWorking ? "休憩しましょう！" : "集中を始めましょう！";
-                        isWorking = !isWorking;
-                        timeLeft = (isWorking ? workMinutes : breakMinutes) * 60;
-
-                        statusDisplay.textContent = isWorking ? "集中タイム" : "休憩タイム";
-                        statusDisplay.className = isWorking
-                            ? "text-xl font-bold mb-4 text-orange-500"
-                            : "text-xl font-bold mb-4 text-green-500";
-
-                        startBtn.textContent = 'スタート';
-                        startBtn.classList.replace('bg-red-500', 'bg-indigo-600');
-                        updateDisplay();
-
-                        setTimeout(() => { alert(message); }, 100);
                         return;
                     }
-
+ 
+                    saveState();
                     updateDisplay();
                 }, 500);
             }
         }
+ 
+        // =====================
+        // リセット
+        // =====================
         function resetTimer() {
             clearInterval(timerId);
-            timerId = null;
-            isWorking = true;
-            timeLeft = workMinutes * 60;
-            statusDisplay.textContent = "集中タイム";
-            statusDisplay.className = "text-xl font-bold mb-4 text-orange-500";
+            timerId     = null;
+            isWorking   = true;
+            isLongBreak = false;
+            completedSets = 0;
+            timeLeft    = workMinutes * 60;
+ 
+            localStorage.setItem('timerRunning', 'false');
+            localStorage.removeItem('timerStartTime');
+            localStorage.removeItem('timerStartTimeLeft');
+            saveState();
+ 
             startBtn.textContent = 'スタート';
             startBtn.className = "w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";
             updateDisplay();
+            updateStatus();
         }
-
-        // --- イベント登録 ---
+ 
+        // =====================
+        // イベント登録
+        // =====================
         startBtn.addEventListener('click', startTimer);
         resetBtn.addEventListener('click', resetTimer);
-
+ 
         saveBtn.addEventListener('click', () => {
-            let w = parseInt(inputWork.value);
-            let b = parseInt(inputBreak.value);
-            if (isNaN(w) || w < 1) w = 1;
-            if (isNaN(b) || b < 1) b = 1;
-
-            workMinutes = w;
-            breakMinutes = b;
+            let w  = parseInt(inputWork.value);
+            let b  = parseInt(inputBreak.value);
+            let lb = parseInt(inputLongBreak.value);
+            let s  = parseInt(inputSets.value);
+            if (isNaN(w)  || w  < 1) w  = 1;
+            if (isNaN(b)  || b  < 1) b  = 1;
+            if (isNaN(lb) || lb < 1) lb = 1;
+            if (isNaN(s)  || s  < 1) s  = 1;
+ 
+            workMinutes         = w;
+            breakMinutes        = b;
+            longBreakMinutes    = lb;
+            setsBeforeLongBreak = s;
+ 
+            localStorage.setItem('workMinutes',         workMinutes);
+            localStorage.setItem('breakMinutes',        breakMinutes);
+            localStorage.setItem('longBreakMinutes',    longBreakMinutes);
+            localStorage.setItem('setsBeforeLongBreak', setsBeforeLongBreak);
+ 
             resetTimer();
             alert("設定を保存しました");
             showPage('timer');
         });
-
+ 
+        // =====================
+        // ページ切り替え
+        // =====================
         function showPage(pageId) {
             document.getElementById('page-timer').classList.add('hidden');
             document.getElementById('page-settings').classList.add('hidden');
             document.getElementById(`page-${pageId}`).classList.remove('hidden');
-
-            const navTimer = document.getElementById('nav-timer');
+ 
+            const navTimer    = document.getElementById('nav-timer');
             const navSettings = document.getElementById('nav-settings');
-
+ 
             if (pageId === 'timer') {
                 navTimer.classList.add('text-indigo-600');
                 navTimer.classList.remove('text-slate-400');
                 navSettings.classList.add('text-slate-400');
                 navSettings.classList.remove('text-indigo-600');
             } else {
+                // 設定ページを開くとき現在値を入力欄にセット
+                inputWork.value      = workMinutes;
+                inputBreak.value     = breakMinutes;
+                inputLongBreak.value = longBreakMinutes;
+                inputSets.value      = setsBeforeLongBreak;
+ 
                 navSettings.classList.add('text-indigo-600');
                 navSettings.classList.remove('text-slate-400');
                 navTimer.classList.add('text-slate-400');
                 navTimer.classList.remove('text-indigo-600');
             }
         }
-        
+ 
+        // =====================
         // 初期化
+        // =====================
+        updateStatus();
         updateDisplay();
         displayLogs();
+ 
+        // タイマーが動いていた場合は自動再開
+        if (wasRunning && timeLeft > 0) {
+            startTimer();
+        }
     </script>
-
+ 
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
