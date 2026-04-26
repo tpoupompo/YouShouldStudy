@@ -13,20 +13,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { silent: true }</script>
     <style>
-        .timer-display { font-variant-numeric: tabular-nums; }
-        .hidden { display: none; }
-        button { -webkit-tap-highlight-color: transparent; }
-        input[type=range] { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 9999px; outline: none; cursor: pointer; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #4f46e5; cursor: pointer; }
-        input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #4f46e5; cursor: pointer; border: none; }
-        .sel-btn.active  { background:#4f46e5; color:white; border-color:#4f46e5; }
-        .choice-btn      { transition: all .15s; }
-        .choice-btn.correct-choice { background:#dcfce7 !important; border-color:#22c55e !important; color:#15803d !important; }
-        .choice-btn.wrong-choice   { background:#fee2e2 !important; border-color:#ef4444 !important; color:#b91c1c !important; }
-        .shake { animation: shake .4s ease; }
-        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
-        .correct-flash { animation: correctFlash .5s ease; }
-        @keyframes correctFlash { 0%{background:#dcfce7} 100%{background:white} }
+        .timer-display{font-variant-numeric:tabular-nums;}
+        .hidden{display:none;}
+        button{-webkit-tap-highlight-color:transparent;}
+        input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:9999px;outline:none;cursor:pointer;}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:#4f46e5;cursor:pointer;}
+        input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#4f46e5;cursor:pointer;border:none;}
+        .sel-btn.active{background:#4f46e5;color:white;border-color:#4f46e5;}
+        .eq-choice-btn{transition:all .15s;width:100%;border:2px solid #e2e8f0;border-radius:1rem;padding:.85rem 1rem;font-weight:700;font-size:.9rem;color:#475569;background:white;text-align:left;}
+        .eq-choice-btn.correct{background:#dcfce7!important;border-color:#22c55e!important;color:#15803d!important;}
+        .eq-choice-btn.wrong{background:#fee2e2!important;border-color:#ef4444!important;color:#b91c1c!important;}
+        .eq-choice-btn:disabled{cursor:default;}
+        .choice-btn{transition:all .15s;}
+        .choice-btn.correct-choice{background:#dcfce7!important;border-color:#22c55e!important;color:#15803d!important;}
+        .choice-btn.wrong-choice{background:#fee2e2!important;border-color:#ef4444!important;color:#b91c1c!important;}
+        .shake{animation:shake .4s ease;}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+        .correct-flash{animation:correctFlash .5s ease;}
+        @keyframes correctFlash{0%{background:#dcfce7}100%{background:white}}
+        .level-bar{transition:width .8s ease;}
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
@@ -36,7 +41,7 @@
 <section id="page-home">
     <div class="flex justify-between items-start mb-8">
         <h1 class="text-2xl font-bold text-slate-700">ホーム</h1>
-        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.2.0</span>
+        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.3.0</span>
     </div>
     <div class="grid grid-cols-2 gap-4">
         <button onclick="showPage('timer')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
@@ -51,11 +56,17 @@
             </div>
             <span class="text-sm font-black text-slate-700">設定</span>
         </button>
-        <button onclick="showPage('quiz')" class="col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
+        <button onclick="showPage('quiz')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
             <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center">
                 <span class="text-2xl font-black text-emerald-600">He</span>
             </div>
-            <span class="text-sm font-black text-slate-700">元素記号クイズ</span>
+            <span class="text-sm font-black text-slate-700">元素クイズ</span>
+        </button>
+        <button onclick="showPage('english')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-16 h-16 bg-rose-100 rounded-2xl flex items-center justify-center">
+                <span class="text-2xl font-black text-rose-500">英</span>
+            </div>
+            <span class="text-sm font-black text-slate-700">英語力診断</span>
         </button>
     </div>
     <div class="mt-6 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
@@ -66,9 +77,7 @@
 
 <!-- タイマー -->
 <section id="page-timer" class="text-center hidden">
-    <div class="flex justify-between items-start mb-8">
-        <h1 class="text-2xl font-bold text-slate-700">タイマー</h1>
-    </div>
+    <div class="flex justify-between items-start mb-8"><h1 class="text-2xl font-bold text-slate-700">タイマー</h1></div>
     <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
         <h2 id="status" class="text-xl font-bold mb-4 text-orange-500">集中タイム</h2>
         <div id="timer-display" class="timer-display text-6xl font-black mb-8 text-slate-800">25:00</div>
@@ -77,15 +86,10 @@
             <button id="reset-btn" class="w-full text-slate-400 py-2 text-sm hover:text-slate-600">リセット</button>
         </div>
     </div>
-    <div class="mt-6 text-slate-500 text-sm">
-        現在のセット: <span id="set-count" class="font-bold text-indigo-600">0</span> / <span id="sets-goal" class="font-bold text-slate-400">4</span>
-    </div>
+    <div class="mt-6 text-slate-500 text-sm">現在のセット: <span id="set-count" class="font-bold text-indigo-600">0</span> / <span id="sets-goal" class="font-bold text-slate-400">4</span></div>
     <div class="mt-8 text-left bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
         <div class="flex items-center justify-between mb-5 pb-5 border-b border-slate-100">
-            <div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">累計勉強時間</p>
-                <p id="total-time-display" class="text-2xl font-black text-indigo-600">0時間00分</p>
-            </div>
+            <div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">累計勉強時間</p><p id="total-time-display" class="text-2xl font-black text-indigo-600">0時間00分</p></div>
             <button id="reset-total-btn" class="text-xs text-slate-300 hover:text-red-400 font-bold transition-colors py-2 px-3 rounded-lg border border-slate-100 hover:border-red-200">リセット</button>
         </div>
         <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest">今日の記録</h3>
@@ -114,22 +118,16 @@
     </div>
 </section>
 
-<!-- 元素記号クイズ -->
+<!-- 元素クイズ -->
 <section id="page-quiz" class="hidden">
     <div class="flex items-center gap-3 mb-8">
-        <button onclick="showPage('home')" class="text-slate-400 hover:text-slate-600 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </button>
+        <button onclick="showPage('home')" class="text-slate-400 hover:text-slate-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
         <h1 class="text-2xl font-bold text-slate-700">元素記号クイズ</h1>
     </div>
-
-    <!-- 設定パネル -->
     <div id="quiz-setup" class="space-y-5">
-
-        <!-- 出題範囲 -->
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
             <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">出題範囲（複数選択可）</h3>
-            <div class="grid grid-cols-2 gap-2" id="range-buttons">
+            <div class="grid grid-cols-2 gap-2">
                 <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="1-20">1〜20番</button>
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="21-40">21〜40番</button>
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="41-60">41〜60番</button>
@@ -138,18 +136,14 @@
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="101-118">101〜118番</button>
             </div>
         </div>
-
-        <!-- 問題タイプ -->
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
             <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">問題タイプ</h3>
-            <div class="grid grid-cols-1 gap-2">
-                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all text-left px-5" data-qtype="nameToSymbol">🔤　元素名 → 記号</button>
-                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all text-left px-5" data-qtype="symbolToName">⚗️　記号 → 元素名</button>
-                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all text-left px-5" data-qtype="periodGroup">🗂️　周期・族 → 元素名</button>
+            <div class="space-y-2">
+                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 transition-all w-full text-left" data-qtype="nameToSymbol">🔤　元素名 → 記号</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 transition-all w-full text-left" data-qtype="symbolToName">⚗️　記号 → 元素名</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 transition-all w-full text-left" data-qtype="periodGroup">🗂️　周期・族 → 元素名</button>
             </div>
         </div>
-
-        <!-- 解答形式 -->
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
             <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">解答形式</h3>
             <div class="grid grid-cols-2 gap-2">
@@ -157,39 +151,24 @@
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-atype="choice">🔘　8択</button>
             </div>
         </div>
-
         <button id="quiz-start-btn" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">クイズスタート</button>
     </div>
-
-    <!-- クイズ本体 -->
     <div id="quiz-main" class="hidden space-y-5">
         <div class="flex justify-between items-center">
             <span id="quiz-progress" class="text-sm font-bold text-slate-400">1 / 10</span>
             <span id="quiz-score" class="text-sm font-black text-emerald-500">0正解</span>
         </div>
-        <div class="w-full bg-slate-100 rounded-full h-2">
-            <div id="quiz-progress-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width:0%"></div>
-        </div>
-
-        <!-- 問題カード -->
+        <div class="w-full bg-slate-100 rounded-full h-2"><div id="quiz-progress-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width:0%"></div></div>
         <div id="quiz-card" class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 text-center transition-all">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4" id="quiz-question-label">元素名</p>
             <p class="text-4xl font-black text-slate-800 mb-2" id="quiz-question">水素</p>
             <p class="text-sm text-slate-400" id="quiz-sub"></p>
         </div>
-
-        <!-- テキスト入力 -->
         <div id="quiz-input-area">
-            <input type="text" id="quiz-input"
-                class="w-full text-center text-2xl font-black p-4 bg-white border-2 border-slate-200 rounded-2xl focus:border-indigo-400 transition-colors"
-                placeholder="答えを入力" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <input type="text" id="quiz-input" class="w-full text-center text-2xl font-black p-4 bg-white border-2 border-slate-200 rounded-2xl focus:border-indigo-400 transition-colors" placeholder="答えを入力" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             <button id="quiz-answer-btn" class="mt-3 w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">答える</button>
         </div>
-
-        <!-- 8択ボタン -->
-        <div id="quiz-choice-area" class="hidden grid grid-cols-2 gap-3" id="choice-grid"></div>
-
-        <!-- フィードバック -->
+        <div id="quiz-choice-area" class="hidden grid grid-cols-2 gap-3"></div>
         <div id="quiz-feedback" class="hidden p-5 rounded-2xl text-center">
             <p id="feedback-icon" class="text-3xl mb-2">✅</p>
             <p id="feedback-text" class="text-lg font-black text-slate-700"></p>
@@ -197,8 +176,6 @@
             <button id="quiz-next-btn" class="mt-4 w-full bg-slate-800 text-white py-3 rounded-2xl font-bold active:scale-95 transition-all">次へ</button>
         </div>
     </div>
-
-    <!-- 結果 -->
     <div id="quiz-result" class="hidden text-center space-y-5">
         <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
             <p class="text-6xl mb-4" id="result-emoji">🎉</p>
@@ -213,6 +190,127 @@
         <div class="grid grid-cols-2 gap-3">
             <button id="quiz-retry-btn" class="bg-emerald-500 text-white py-4 rounded-2xl font-bold active:scale-95 transition-all">もう一度</button>
             <button onclick="showPage('quiz')" class="bg-white text-slate-600 border border-slate-200 py-4 rounded-2xl font-bold active:scale-95 transition-all">設定に戻る</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 英語力診断 ===== -->
+<section id="page-english" class="hidden">
+    <div class="flex items-center gap-3 mb-8">
+        <button onclick="showPage('home')" class="text-slate-400 hover:text-slate-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+        <h1 class="text-2xl font-bold text-slate-700">英語力診断</h1>
+    </div>
+
+    <!-- スタート画面 -->
+    <div id="eq-setup" class="space-y-5">
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <p class="text-sm text-slate-500 leading-relaxed">問題に答えるほど診断の精度が上がります。いつでも「診断する」ボタンで結果を確認できます。</p>
+            <div class="mt-4 space-y-2 text-xs text-slate-400">
+                <p>• 英検5級〜1級・TOEIC 300〜950+ を推定</p>
+                <p>• 4択クイズ（英語→日本語 or 日本語→英語）</p>
+                <p>• 正答率と問題難易度から自動でレベルを調整</p>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">出題方向</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-edir="enToJa">🇬🇧 英語 → 日本語</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-edir="jaToEn">🇯🇵 日本語 → 英語</button>
+            </div>
+        </div>
+        <button id="eq-start-btn" class="w-full bg-rose-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">診断スタート</button>
+    </div>
+
+    <!-- クイズ本体 -->
+    <div id="eq-main" class="hidden space-y-5">
+        <!-- ヘッダー -->
+        <div class="flex justify-between items-center">
+            <span id="eq-qnum" class="text-sm font-bold text-slate-400">第1問</span>
+            <div class="flex gap-2 items-center">
+                <span id="eq-correct-count" class="text-sm font-black text-rose-500">0正解</span>
+                <span class="text-slate-300 text-sm">/</span>
+                <span id="eq-total-count" class="text-sm font-bold text-slate-400">0問</span>
+            </div>
+        </div>
+
+        <!-- レベルインジケーター -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-2">
+                <span>5級</span><span>4級</span><span>3級</span><span>準2</span><span>2級</span><span>準1</span><span>1級</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-3 relative">
+                <div id="eq-level-bar" class="level-bar bg-gradient-to-r from-rose-400 to-rose-600 h-3 rounded-full" style="width:14%"></div>
+            </div>
+            <p class="text-center text-xs font-black text-rose-500 mt-2" id="eq-current-level-label">推定レベル: 英検5級</p>
+        </div>
+
+        <!-- 問題カード -->
+        <div id="eq-card" class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 text-center">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3" id="eq-q-label">英語</p>
+            <p class="text-3xl font-black text-slate-800 mb-1" id="eq-q-word">apple</p>
+            <p class="text-sm text-slate-400 italic" id="eq-q-hint"></p>
+        </div>
+
+        <!-- 4択 -->
+        <div id="eq-choices" class="space-y-3"></div>
+
+        <!-- 次へ（フィードバック後） -->
+        <div id="eq-feedback-bar" class="hidden">
+            <div id="eq-feedback-msg" class="p-4 rounded-2xl text-center mb-3">
+                <p id="eq-fb-icon" class="text-2xl mb-1"></p>
+                <p id="eq-fb-text" class="font-black text-slate-700"></p>
+                <p id="eq-fb-ans" class="text-sm text-slate-500 mt-1"></p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <button id="eq-finish-btn" class="bg-white border-2 border-rose-300 text-rose-500 py-3 rounded-2xl font-bold active:scale-95 transition-all">診断する</button>
+                <button id="eq-next-btn" class="bg-rose-500 text-white py-3 rounded-2xl font-bold active:scale-95 transition-all">次の問題</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="eq-result" class="hidden space-y-5">
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 text-center">
+            <p class="text-5xl mb-3" id="eq-result-badge">🥇</p>
+            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">あなたの英語レベル</p>
+            <p class="text-3xl font-black text-rose-500 mb-1" id="eq-result-eiken"></p>
+            <p class="text-lg font-bold text-slate-500 mb-4" id="eq-result-toeic"></p>
+
+            <div class="w-full bg-slate-100 rounded-full h-4 mb-2">
+                <div id="eq-result-bar" class="level-bar bg-gradient-to-r from-rose-400 to-rose-600 h-4 rounded-full" style="width:0%"></div>
+            </div>
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mb-5">
+                <span>5級</span><span>4級</span><span>3級</span><span>準2</span><span>2級</span><span>準1</span><span>1級</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="bg-slate-50 rounded-2xl p-3">
+                    <p class="text-2xl font-black text-slate-700" id="eq-res-total"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">解答数</p>
+                </div>
+                <div class="bg-green-50 rounded-2xl p-3">
+                    <p class="text-2xl font-black text-green-600" id="eq-res-correct"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">正解数</p>
+                </div>
+                <div class="bg-rose-50 rounded-2xl p-3">
+                    <p class="text-2xl font-black text-rose-500" id="eq-res-pct"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">正解率</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">レベル別 正解率</h3>
+            <div id="eq-level-breakdown" class="space-y-3"></div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl text-xs text-amber-700 font-medium">
+            ※ 解答数が多いほど診断精度が上がります。目安：10問で参考値、20問で標準、30問以上で高精度。
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <button id="eq-retry-btn" class="bg-rose-500 text-white py-4 rounded-2xl font-bold active:scale-95 transition-all">もう一度</button>
+            <button onclick="showPage('home')" class="bg-white text-slate-600 border border-slate-200 py-4 rounded-2xl font-bold active:scale-95 transition-all">ホームへ</button>
         </div>
     </div>
 </section>
@@ -237,383 +335,526 @@
 
 <script>
 // ============================================================
-// 元素データ (全118元素 + 周期・族)
+// 英単語データベース  level 1〜7 (各60語以上, 計約470語)
+// level: 1=英検5級, 2=英検4級, 3=英検3級, 4=英検準2級
+//        5=英検2級,  6=英検準1級, 7=英検1級
 // ============================================================
-const ELEMENTS = [
-    {n:1,  name:'水素',             symbol:'H',  period:1, group:1},
-    {n:2,  name:'ヘリウム',         symbol:'He', period:1, group:18},
-    {n:3,  name:'リチウム',         symbol:'Li', period:2, group:1},
-    {n:4,  name:'ベリリウム',       symbol:'Be', period:2, group:2},
-    {n:5,  name:'ホウ素',           symbol:'B',  period:2, group:13},
-    {n:6,  name:'炭素',             symbol:'C',  period:2, group:14},
-    {n:7,  name:'窒素',             symbol:'N',  period:2, group:15},
-    {n:8,  name:'酸素',             symbol:'O',  period:2, group:16},
-    {n:9,  name:'フッ素',           symbol:'F',  period:2, group:17},
-    {n:10, name:'ネオン',           symbol:'Ne', period:2, group:18},
-    {n:11, name:'ナトリウム',       symbol:'Na', period:3, group:1},
-    {n:12, name:'マグネシウム',     symbol:'Mg', period:3, group:2},
-    {n:13, name:'アルミニウム',     symbol:'Al', period:3, group:13},
-    {n:14, name:'ケイ素',           symbol:'Si', period:3, group:14},
-    {n:15, name:'リン',             symbol:'P',  period:3, group:15},
-    {n:16, name:'硫黄',             symbol:'S',  period:3, group:16},
-    {n:17, name:'塩素',             symbol:'Cl', period:3, group:17},
-    {n:18, name:'アルゴン',         symbol:'Ar', period:3, group:18},
-    {n:19, name:'カリウム',         symbol:'K',  period:4, group:1},
-    {n:20, name:'カルシウム',       symbol:'Ca', period:4, group:2},
-    {n:21, name:'スカンジウム',     symbol:'Sc', period:4, group:3},
-    {n:22, name:'チタン',           symbol:'Ti', period:4, group:4},
-    {n:23, name:'バナジウム',       symbol:'V',  period:4, group:5},
-    {n:24, name:'クロム',           symbol:'Cr', period:4, group:6},
-    {n:25, name:'マンガン',         symbol:'Mn', period:4, group:7},
-    {n:26, name:'鉄',               symbol:'Fe', period:4, group:8},
-    {n:27, name:'コバルト',         symbol:'Co', period:4, group:9},
-    {n:28, name:'ニッケル',         symbol:'Ni', period:4, group:10},
-    {n:29, name:'銅',               symbol:'Cu', period:4, group:11},
-    {n:30, name:'亜鉛',             symbol:'Zn', period:4, group:12},
-    {n:31, name:'ガリウム',         symbol:'Ga', period:4, group:13},
-    {n:32, name:'ゲルマニウム',     symbol:'Ge', period:4, group:14},
-    {n:33, name:'ヒ素',             symbol:'As', period:4, group:15},
-    {n:34, name:'セレン',           symbol:'Se', period:4, group:16},
-    {n:35, name:'臭素',             symbol:'Br', period:4, group:17},
-    {n:36, name:'クリプトン',       symbol:'Kr', period:4, group:18},
-    {n:37, name:'ルビジウム',       symbol:'Rb', period:5, group:1},
-    {n:38, name:'ストロンチウム',   symbol:'Sr', period:5, group:2},
-    {n:39, name:'イットリウム',     symbol:'Y',  period:5, group:3},
-    {n:40, name:'ジルコニウム',     symbol:'Zr', period:5, group:4},
-    {n:41, name:'ニオブ',           symbol:'Nb', period:5, group:5},
-    {n:42, name:'モリブデン',       symbol:'Mo', period:5, group:6},
-    {n:43, name:'テクネチウム',     symbol:'Tc', period:5, group:7},
-    {n:44, name:'ルテニウム',       symbol:'Ru', period:5, group:8},
-    {n:45, name:'ロジウム',         symbol:'Rh', period:5, group:9},
-    {n:46, name:'パラジウム',       symbol:'Pd', period:5, group:10},
-    {n:47, name:'銀',               symbol:'Ag', period:5, group:11},
-    {n:48, name:'カドミウム',       symbol:'Cd', period:5, group:12},
-    {n:49, name:'インジウム',       symbol:'In', period:5, group:13},
-    {n:50, name:'スズ',             symbol:'Sn', period:5, group:14},
-    {n:51, name:'アンチモン',       symbol:'Sb', period:5, group:15},
-    {n:52, name:'テルル',           symbol:'Te', period:5, group:16},
-    {n:53, name:'ヨウ素',           symbol:'I',  period:5, group:17},
-    {n:54, name:'キセノン',         symbol:'Xe', period:5, group:18},
-    {n:55, name:'セシウム',         symbol:'Cs', period:6, group:1},
-    {n:56, name:'バリウム',         symbol:'Ba', period:6, group:2},
-    {n:57, name:'ランタン',         symbol:'La', period:6, group:'ランタノイド'},
-    {n:58, name:'セリウム',         symbol:'Ce', period:6, group:'ランタノイド'},
-    {n:59, name:'プラセオジム',     symbol:'Pr', period:6, group:'ランタノイド'},
-    {n:60, name:'ネオジム',         symbol:'Nd', period:6, group:'ランタノイド'},
-    {n:61, name:'プロメチウム',     symbol:'Pm', period:6, group:'ランタノイド'},
-    {n:62, name:'サマリウム',       symbol:'Sm', period:6, group:'ランタノイド'},
-    {n:63, name:'ユウロピウム',     symbol:'Eu', period:6, group:'ランタノイド'},
-    {n:64, name:'ガドリニウム',     symbol:'Gd', period:6, group:'ランタノイド'},
-    {n:65, name:'テルビウム',       symbol:'Tb', period:6, group:'ランタノイド'},
-    {n:66, name:'ジスプロシウム',   symbol:'Dy', period:6, group:'ランタノイド'},
-    {n:67, name:'ホルミウム',       symbol:'Ho', period:6, group:'ランタノイド'},
-    {n:68, name:'エルビウム',       symbol:'Er', period:6, group:'ランタノイド'},
-    {n:69, name:'ツリウム',         symbol:'Tm', period:6, group:'ランタノイド'},
-    {n:70, name:'イッテルビウム',   symbol:'Yb', period:6, group:'ランタノイド'},
-    {n:71, name:'ルテチウム',       symbol:'Lu', period:6, group:'ランタノイド'},
-    {n:72, name:'ハフニウム',       symbol:'Hf', period:6, group:4},
-    {n:73, name:'タンタル',         symbol:'Ta', period:6, group:5},
-    {n:74, name:'タングステン',     symbol:'W',  period:6, group:6},
-    {n:75, name:'レニウム',         symbol:'Re', period:6, group:7},
-    {n:76, name:'オスミウム',       symbol:'Os', period:6, group:8},
-    {n:77, name:'イリジウム',       symbol:'Ir', period:6, group:9},
-    {n:78, name:'白金',             symbol:'Pt', period:6, group:10},
-    {n:79, name:'金',               symbol:'Au', period:6, group:11},
-    {n:80, name:'水銀',             symbol:'Hg', period:6, group:12},
-    {n:81, name:'タリウム',         symbol:'Tl', period:6, group:13},
-    {n:82, name:'鉛',               symbol:'Pb', period:6, group:14},
-    {n:83, name:'ビスマス',         symbol:'Bi', period:6, group:15},
-    {n:84, name:'ポロニウム',       symbol:'Po', period:6, group:16},
-    {n:85, name:'アスタチン',       symbol:'At', period:6, group:17},
-    {n:86, name:'ラドン',           symbol:'Rn', period:6, group:18},
-    {n:87, name:'フランシウム',     symbol:'Fr', period:7, group:1},
-    {n:88, name:'ラジウム',         symbol:'Ra', period:7, group:2},
-    {n:89, name:'アクチニウム',     symbol:'Ac', period:7, group:'アクチノイド'},
-    {n:90, name:'トリウム',         symbol:'Th', period:7, group:'アクチノイド'},
-    {n:91, name:'プロトアクチニウム',symbol:'Pa',period:7, group:'アクチノイド'},
-    {n:92, name:'ウラン',           symbol:'U',  period:7, group:'アクチノイド'},
-    {n:93, name:'ネプツニウム',     symbol:'Np', period:7, group:'アクチノイド'},
-    {n:94, name:'プルトニウム',     symbol:'Pu', period:7, group:'アクチノイド'},
-    {n:95, name:'アメリシウム',     symbol:'Am', period:7, group:'アクチノイド'},
-    {n:96, name:'キュリウム',       symbol:'Cm', period:7, group:'アクチノイド'},
-    {n:97, name:'バークリウム',     symbol:'Bk', period:7, group:'アクチノイド'},
-    {n:98, name:'カリホルニウム',   symbol:'Cf', period:7, group:'アクチノイド'},
-    {n:99, name:'アインスタイニウム',symbol:'Es',period:7, group:'アクチノイド'},
-    {n:100,name:'フェルミウム',     symbol:'Fm', period:7, group:'アクチノイド'},
-    {n:101,name:'メンデレビウム',   symbol:'Md', period:7, group:'アクチノイド'},
-    {n:102,name:'ノーベリウム',     symbol:'No', period:7, group:'アクチノイド'},
-    {n:103,name:'ローレンシウム',   symbol:'Lr', period:7, group:'アクチノイド'},
-    {n:104,name:'ラザホージウム',   symbol:'Rf', period:7, group:4},
-    {n:105,name:'ドブニウム',       symbol:'Db', period:7, group:5},
-    {n:106,name:'シーボーギウム',   symbol:'Sg', period:7, group:6},
-    {n:107,name:'ボーリウム',       symbol:'Bh', period:7, group:7},
-    {n:108,name:'ハッシウム',       symbol:'Hs', period:7, group:8},
-    {n:109,name:'マイトネリウム',   symbol:'Mt', period:7, group:9},
-    {n:110,name:'ダームスタチウム', symbol:'Ds', period:7, group:10},
-    {n:111,name:'レントゲニウム',   symbol:'Rg', period:7, group:11},
-    {n:112,name:'コペルニシウム',   symbol:'Cn', period:7, group:12},
-    {n:113,name:'ニホニウム',       symbol:'Nh', period:7, group:13},
-    {n:114,name:'フレロビウム',     symbol:'Fl', period:7, group:14},
-    {n:115,name:'モスコビウム',     symbol:'Mc', period:7, group:15},
-    {n:116,name:'リバモリウム',     symbol:'Lv', period:7, group:16},
-    {n:117,name:'テネシン',         symbol:'Ts', period:7, group:17},
-    {n:118,name:'オガネソン',       symbol:'Og', period:7, group:18},
+const EQ_WORDS = [
+// --- Level 1 (英検5級) ---
+{e:'apple',j:'りんご',l:1},{e:'book',j:'本',l:1},{e:'cat',j:'猫',l:1},{e:'dog',j:'犬',l:1},
+{e:'eat',j:'食べる',l:1},{e:'fish',j:'魚',l:1},{e:'go',j:'行く',l:1},{e:'hand',j:'手',l:1},
+{e:'ice',j:'氷',l:1},{e:'jump',j:'跳ぶ',l:1},{e:'key',j:'鍵',l:1},{e:'leg',j:'足・脚',l:1},
+{e:'milk',j:'牛乳',l:1},{e:'name',j:'名前',l:1},{e:'open',j:'開ける',l:1},{e:'pen',j:'ペン',l:1},
+{e:'run',j:'走る',l:1},{e:'sit',j:'座る',l:1},{e:'tree',j:'木',l:1},{e:'use',j:'使う',l:1},
+{e:'water',j:'水',l:1},{e:'year',j:'年',l:1},{e:'zero',j:'ゼロ',l:1},{e:'bird',j:'鳥',l:1},
+{e:'bus',j:'バス',l:1},{e:'color',j:'色',l:1},{e:'desk',j:'机',l:1},{e:'egg',j:'卵',l:1},
+{e:'face',j:'顔',l:1},{e:'girl',j:'女の子',l:1},{e:'hat',j:'帽子',l:1},{e:'ink',j:'インク',l:1},
+{e:'jam',j:'ジャム',l:1},{e:'kind',j:'親切な',l:1},{e:'long',j:'長い',l:1},{e:'map',j:'地図',l:1},
+{e:'nose',j:'鼻',l:1},{e:'old',j:'年老いた',l:1},{e:'play',j:'遊ぶ',l:1},{e:'queen',j:'女王',l:1},
+{e:'red',j:'赤い',l:1},{e:'sky',j:'空',l:1},{e:'tall',j:'背が高い',l:1},{e:'up',j:'上に',l:1},
+{e:'very',j:'とても',l:1},{e:'walk',j:'歩く',l:1},{e:'box',j:'箱',l:1},{e:'chair',j:'椅子',l:1},
+{e:'door',j:'ドア',l:1},{e:'ear',l:1,j:'耳'},{e:'flower',j:'花',l:1},{e:'green',j:'緑',l:1},
+{e:'hot',j:'熱い',l:1},{e:'in',j:'〜の中に',l:1},{e:'juice',j:'ジュース',l:1},{e:'lake',j:'湖',l:1},
+{e:'moon',j:'月',l:1},{e:'new',j:'新しい',l:1},{e:'orange',j:'オレンジ',l:1},{e:'park',j:'公園',l:1},
+// --- Level 2 (英検4級) ---
+{e:'abroad',j:'海外に',l:2},{e:'begin',j:'始める',l:2},{e:'careful',j:'注意深い',l:2},{e:'decide',j:'決める',l:2},
+{e:'enjoy',j:'楽しむ',l:2},{e:'famous',j:'有名な',l:2},{e:'grade',j:'成績・学年',l:2},{e:'habit',j:'習慣',l:2},
+{e:'idea',j:'考え・アイデア',l:2},{e:'join',j:'参加する',l:2},{e:'language',j:'言語',l:2},{e:'member',j:'メンバー',l:2},
+{e:'nature',j:'自然',l:2},{e:'other',j:'他の',l:2},{e:'popular',j:'人気のある',l:2},{e:'quiet',j:'静かな',l:2},
+{e:'reason',j:'理由',l:2},{e:'season',j:'季節',l:2},{e:'travel',j:'旅行する',l:2},{e:'usually',j:'たいてい',l:2},
+{e:'visit',j:'訪問する',l:2},{e:'winner',j:'優勝者',l:2},{e:'young',j:'若い',l:2},{e:'above',j:'〜の上に',l:2},
+{e:'build',j:'建てる',l:2},{e:'city',j:'都市',l:2},{e:'dream',j:'夢',l:2},{e:'early',j:'早い',l:2},
+{e:'front',j:'前',l:2},{e:'group',j:'グループ',l:2},{e:'happen',j:'起こる',l:2},{e:'imagine',j:'想像する',l:2},
+{e:'junior',j:'年下の',l:2},{e:'keep',j:'保つ',l:2},{e:'learn',j:'学ぶ',l:2},{e:'message',j:'メッセージ',l:2},
+{e:'noise',j:'騒音',l:2},{e:'offer',j:'提案する',l:2},{e:'practice',j:'練習する',l:2},{e:'question',j:'質問',l:2},
+{e:'river',j:'川',l:2},{e:'sports',j:'スポーツ',l:2},{e:'together',j:'一緒に',l:2},{e:'understand',j:'理解する',l:2},
+{e:'vacation',j:'休暇',l:2},{e:'weather',j:'天気',l:2},{e:'already',j:'すでに',l:2},{e:'both',j:'両方',l:2},
+{e:'change',j:'変える',l:2},{e:'difficult',j:'難しい',l:2},{e:'enough',j:'十分な',l:2},{e:'festival',j:'祭り',l:2},
+{e:'guess',j:'推測する',l:2},{e:'history',j:'歴史',l:2},{e:'interest',j:'興味',l:2},{e:'just',j:'ちょうど',l:2},
+{e:'kitchen',j:'台所',l:2},{e:'local',j:'地元の',l:2},{e:'morning',j:'朝',l:2},{e:'next',j:'次の',l:2},
+// --- Level 3 (英検3級) ---
+{e:'achieve',j:'達成する',l:3},{e:'believe',j:'信じる',l:3},{e:'collect',j:'集める',l:3},{e:'describe',j:'描写する',l:3},
+{e:'effect',j:'効果',l:3},{e:'focus',j:'集中する',l:3},{e:'global',j:'世界的な',l:3},{e:'human',j:'人間の',l:3},
+{e:'improve',j:'改善する',l:3},{e:'involve',j:'含む',l:3},{e:'knowledge',j:'知識',l:3},{e:'likely',j:'ありそうな',l:3},
+{e:'method',j:'方法',l:3},{e:'notice',j:'気づく',l:3},{e:'opinion',j:'意見',l:3},{e:'provide',j:'提供する',l:3},
+{e:'require',j:'必要とする',l:3},{e:'society',j:'社会',l:3},{e:'tradition',j:'伝統',l:3},{e:'unable',j:'できない',l:3},
+{e:'various',j:'様々な',l:3},{e:'website',j:'ウェブサイト',l:3},{e:'accept',j:'受け入れる',l:3},{e:'behavior',j:'行動',l:3},
+{e:'common',j:'一般的な',l:3},{e:'develop',j:'発達する',l:3},{e:'education',j:'教育',l:3},{e:'foreign',j:'外国の',l:3},
+{e:'generally',j:'一般的に',l:3},{e:'health',j:'健康',l:3},{e:'instead',j:'代わりに',l:3},{e:'junior',j:'下級生',l:3},
+{e:'labor',j:'労働',l:3},{e:'mainly',j:'主に',l:3},{e:'national',j:'国家の',l:3},{e:'opportunity',j:'機会',l:3},
+{e:'prevent',j:'防ぐ',l:3},{e:'reduce',j:'減らす',l:3},{e:'support',j:'支持する',l:3},{e:'throughout',j:'〜を通じて',l:3},
+{e:'unique',j:'独自の',l:3},{e:'volunteer',j:'ボランティア',l:3},{e:'whether',j:'〜かどうか',l:3},{e:'affect',j:'影響する',l:3},
+{e:'broad',j:'幅広い',l:3},{e:'consider',j:'考慮する',l:3},{e:'discuss',j:'議論する',l:3},{e:'environment',j:'環境',l:3},
+{e:'feature',j:'特徴',l:3},{e:'government',j:'政府',l:3},{e:'helpful',j:'役に立つ',l:3},{e:'include',j:'含む',l:3},
+{e:'judge',j:'判断する',l:3},{e:'lack',j:'不足',l:3},{e:'manage',j:'管理する',l:3},{e:'nearly',j:'ほぼ',l:3},
+{e:'original',j:'独創的な',l:3},{e:'produce',j:'生産する',l:3},{e:'recent',j:'最近の',l:3},{e:'suggest',j:'提案する',l:3},
+// --- Level 4 (英検準2級) ---
+{e:'adapt',j:'適応する',l:4},{e:'benefit',j:'利益・恩恵',l:4},{e:'circumstance',j:'状況',l:4},{e:'diverse',j:'多様な',l:4},
+{e:'efficient',j:'効率的な',l:4},{e:'foundation',j:'基礎・財団',l:4},{e:'generate',j:'生み出す',l:4},{e:'hypothesis',j:'仮説',l:4},
+{e:'implement',j:'実施する',l:4},{e:'justify',j:'正当化する',l:4},{e:'legislation',j:'法律・立法',l:4},{e:'moreover',j:'さらに',l:4},
+{e:'negotiate',j:'交渉する',l:4},{e:'obtain',j:'入手する',l:4},{e:'perspective',j:'観点',l:4},{e:'qualify',j:'資格を得る',l:4},
+{e:'recognize',j:'認識する',l:4},{e:'significant',j:'重要な',l:4},{e:'tendency',j:'傾向',l:4},{e:'ultimately',j:'最終的に',l:4},
+{e:'vulnerable',j:'脆弱な',l:4},{e:'whereas',j:'一方で',l:4},{e:'abandon',j:'放棄する',l:4},{e:'bias',j:'偏見',l:4},
+{e:'colleague',j:'同僚',l:4},{e:'demonstrate',j:'示す・実証する',l:4},{e:'ethical',j:'倫理的な',l:4},{e:'fierce',j:'激しい',l:4},
+{e:'grant',j:'付与する・補助金',l:4},{e:'hesitate',j:'ためらう',l:4},{e:'inevitable',j:'避けられない',l:4},{e:'journalist',j:'ジャーナリスト',l:4},
+{e:'launch',j:'開始する・打ち上げる',l:4},{e:'manipulate',j:'操る',l:4},{e:'novel',j:'小説・新しい',l:4},{e:'oppose',j:'反対する',l:4},
+{e:'precise',j:'正確な',l:4},{e:'relevant',j:'関連した',l:4},{e:'sufficient',j:'十分な',l:4},{e:'transform',j:'変換する',l:4},
+{e:'urban',j:'都市の',l:4},{e:'valid',j:'有効な',l:4},{e:'acknowledge',j:'認める',l:4},{e:'bound',j:'〜する予定の・縛られた',l:4},
+{e:'consult',j:'相談する',l:4},{e:'distribute',j:'配布する',l:4},{e:'elaborate',j:'詳しく述べる・精巧な',l:4},{e:'facilitate',j:'促進する',l:4},
+{e:'genuine',j:'本物の',l:4},{e:'highlight',j:'強調する',l:4},{e:'imply',j:'暗示する',l:4},{e:'latter',j:'後者の',l:4},
+{e:'moderate',j:'適度な',l:4},{e:'notion',j:'概念',l:4},{e:'overwhelm',j:'圧倒する',l:4},{e:'presume',j:'推定する',l:4},
+{e:'resolve',j:'解決する',l:4},{e:'strategy',j:'戦略',l:4},{e:'transparent',j:'透明な',l:4},{e:'underlying',j:'根底にある',l:4},
+// --- Level 5 (英検2級) ---
+{e:'ambiguous',j:'曖昧な',l:5},{e:'assert',j:'主張する',l:5},{e:'coherent',j:'一貫した',l:5},{e:'deploy',j:'展開する',l:5},
+{e:'empirical',j:'経験的な',l:5},{e:'fluctuate',j:'変動する',l:5},{e:'grasp',j:'把握する',l:5},{e:'hierarchy',j:'階層',l:5},
+{e:'incentive',j:'動機・奨励金',l:5},{e:'jurisdiction',j:'管轄権',l:5},{e:'landmark',j:'画期的な出来事・目印',l:5},{e:'mechanism',j:'仕組み・機構',l:5},
+{e:'negate',j:'否定する',l:5},{e:'objective',j:'客観的な・目標',l:5},{e:'paradigm',j:'パラダイム・典型',l:5},{e:'quantify',j:'定量化する',l:5},
+{e:'reinforce',j:'強化する',l:5},{e:'scrutinize',j:'精査する',l:5},{e:'tentative',j:'暫定的な',l:5},{e:'unprecedented',j:'前例のない',l:5},
+{e:'volatile',j:'不安定な',l:5},{e:'widespread',j:'広範囲な',l:5},{e:'allocate',j:'割り当てる',l:5},{e:'bureaucracy',j:'官僚主義',l:5},
+{e:'compensate',j:'補償する',l:5},{e:'discourse',j:'談話・議論',l:5},{e:'endorse',j:'支持する',l:5},{e:'formulate',j:'定式化する',l:5},
+{e:'genuine',j:'真の・本物の',l:5},{e:'hinder',j:'妨げる',l:5},{e:'indigenous',j:'先住民の・固有の',l:5},{e:'lament',j:'嘆く',l:5},
+{e:'mitigate',j:'緩和する',l:5},{e:'negligible',j:'無視できるほど小さい',l:5},{e:'orthodox',j:'正統な',l:5},{e:'perpetuate',j:'永続させる',l:5},
+{e:'rationale',j:'根拠・論理的根拠',l:5},{e:'sanctuary',j:'聖域・避難所',l:5},{e:'thrive',j:'繁栄する',l:5},{e:'undermine',j:'徐々に弱める',l:5},
+{e:'vague',j:'漠然とした',l:5},{e:'accelerate',j:'加速する',l:5},{e:'benchmark',j:'基準・指標',l:5},{e:'consolidate',j:'統合する',l:5},
+{e:'diminish',j:'減少する',l:5},{e:'enact',j:'制定する',l:5},{e:'forthcoming',j:'近づいている・率直な',l:5},{e:'groundbreaking',j:'画期的な',l:5},
+{e:'inherent',j:'固有の・本来の',l:5},{e:'legitimate',j:'合法的な・正当な',l:5},{e:'manifest',j:'明らかにする・明白な',l:5},{e:'nuance',j:'微妙なニュアンス',l:5},
+{e:'obsolete',j:'時代遅れの',l:5},{e:'pragmatic',j:'実用的な',l:5},{e:'resonate',j:'共鳴する',l:5},{e:'skeptical',j:'懐疑的な',l:5},
+{e:'turmoil',j:'混乱',l:5},{e:'unambiguous',j:'明確な',l:5},{e:'vigorous',j:'精力的な',l:5},{e:'withhold',j:'差し控える',l:5},
+// --- Level 6 (英検準1級) ---
+{e:'aberrant',j:'異常な',l:6},{e:'benevolent',j:'慈悲深い',l:6},{e:'capricious',j:'気まぐれな',l:6},{e:'debilitate',j:'衰弱させる',l:6},
+{e:'elucidate',j:'解明する',l:6},{e:'fabricate',j:'捏造する',l:6},{e:'galvanize',j:'刺激して行動させる',l:6},{e:'hamper',j:'妨害する',l:6},
+{e:'impede',j:'妨げる',l:6},{e:'judicious',j:'賢明な',l:6},{e:'kinetic',j:'運動の・活発な',l:6},{e:'lucid',j:'明晰な',l:6},
+{e:'meticulous',j:'細心の注意を払う',l:6},{e:'nonchalant',j:'無関心な',l:6},{e:'ostracize',j:'追放する',l:6},{e:'placate',j:'なだめる',l:6},
+{e:'quandary',j:'困惑・苦境',l:6},{e:'relentless',j:'執拗な・容赦ない',l:6},{e:'stagnant',j:'停滞した',l:6},{e:'trite',j:'陳腐な',l:6},
+{e:'ubiquitous',j:'どこにでもある',l:6},{e:'venerate',j:'崇敬する',l:6},{e:'whimsical',j:'気まぐれな・奇妙な',l:6},{e:'admonish',j:'戒める',l:6},
+{e:'bolster',j:'強化する',l:6},{e:'circumvent',j:'回避する',l:6},{e:'discern',j:'識別する',l:6},{e:'espouse',j:'支持する・採用する',l:6},
+{e:'foreboding',j:'不吉な予感',l:6},{e:'gregarious',j:'社交的な',l:6},{e:'hapless',j:'不運な',l:6},{e:'incessant',j:'絶え間ない',l:6},
+{e:'jeopardize',j:'危険にさらす',l:6},{e:'laborious',j:'骨の折れる',l:6},{e:'mollify',j:'なだめる',l:6},{e:'nebulous',j:'漠然とした',l:6},
+{e:'ominous',j:'不吉な',l:6},{e:'perilous',j:'危険な',l:6},{e:'querulous',j:'不平を言う',l:6},{e:'raucous',j:'騒々しい',l:6},
+{e:'stolid',j:'感情を表さない',l:6},{e:'taciturn',j:'無口な',l:6},{e:'unwitting',j:'知らずにやる',l:6},{e:'verbose',j:'くどい・冗長な',l:6},
+{e:'xenophobia',j:'外国人嫌い',l:6},{e:'zealot',j:'熱狂的な信奉者',l:6},{e:'abhor',j:'嫌悪する',l:6},{e:'beguile',j:'たぶらかす',l:6},
+{e:'coerce',j:'強制する',l:6},{e:'didactic',j:'教訓的な',l:6},{e:'emulate',j:'見習う・模倣する',l:6},{e:'fervent',j:'熱烈な',l:6},
+{e:'gullible',j:'だまされやすい',l:6},{e:'harangue',j:'長い演説・叱責',l:6},{e:'impeccable',j:'非の打ちどころのない',l:6},{e:'laconic',j:'簡潔な',l:6},
+// --- Level 7 (英検1級) ---
+{e:'abeyance',j:'一時停止状態',l:7},{e:'bellicose',j:'好戦的な',l:7},{e:'capitulate',j:'降伏する',l:7},{e:'deleterious',j:'有害な',l:7},
+{e:'egregious',j:'目に余る・はなはだしい',l:7},{e:'fastidious',j:'好みがうるさい',l:7},{e:'garrulous',j:'おしゃべりな',l:7},{e:'hegemony',j:'覇権',l:7},
+{e:'ignominious',j:'恥ずかしい',l:7},{e:'juxtapose',j:'並置する',l:7},{e:'knavish',j:'悪意のある',l:7},{e:'loquacious',j:'おしゃべりな',l:7},
+{e:'malfeasance',j:'不正行為',l:7},{e:'nadir',j:'最低点・どん底',l:7},{e:'obfuscate',j:'曖昧にする',l:7},{e:'perfidious',j:'不誠実な',l:7},
+{e:'quixotic',j:'非現実的な・夢想的な',l:7},{e:'recalcitrant',j:'反抗的な',l:7},{e:'sycophant',j:'おべっか使い',l:7},{e:'truculent',j:'好戦的な・反抗的な',l:7},
+{e:'unconscionable',j:'法外な・良心に反する',l:7},{e:'veracious',j:'正直な・真実の',l:7},{e:'wanton',j:'みだらな・恣意的な',l:7},{e:'acrimony',j:'激しい怒り',l:7},
+{e:'brazen',j:'厚かましい',l:7},{e:'castigate',j:'厳しく批判する',l:7},{e:'duplicitous',j:'二枚舌の',l:7},{e:'enervate',j:'活力を奪う',l:7},
+{e:'furtive',j:'こそこそした',l:7},{e:'grandiloquent',j:'大げさな',l:7},{e:'hubris',j:'傲慢',l:7},{e:'inimical',j:'敵対的な・有害な',l:7},
+{e:'jingoist',j:'排外的愛国主義者',l:7},{e:'lugubrious',j:'悲嘆に暮れた',l:7},{e:'mendacious',j:'うそつきの',l:7},{e:'nefarious',j:'極悪な',l:7},
+{e:'obsequious',j:'こびへつらう',l:7},{e:'parsimonious',j:'けちな',l:7},{e:'querulous',j:'不平をよく言う',l:7},{e:'remonstrate',j:'抗議する',l:7},
+{e:'sophistry',j:'詭弁',l:7},{e:'tendentious',j:'偏った',l:7},{e:'unctuous',j:'うわべだけ親切な',l:7},{e:'vitriolic',j:'辛辣な',l:7},
+{e:'wily',j:'狡猾な',l:7},{e:'xenial',j:'客人に親切な',l:7},{e:'yoke',j:'くびき・束縛',l:7},{e:'zealous',j:'熱心な',l:7},
+{e:'acumen',j:'洞察力',l:7},{e:'blandish',j:'おだてる',l:7},{e:'chicanery',j:'詐欺・ごまかし',l:7},{e:'denouement',j:'結末',l:7},
+{e:'equivocate',j:'言葉を濁す',l:7},{e:'finagle',j:'ずる賢く手に入れる',l:7},{e:'gourmand',j:'大食家',l:7},{e:'halcyon',j:'平和な・穏やかな',l:7},
+{e:'imbroglio',j:'混乱した状況',l:7},{e:'lambaste',j:'厳しく批判する',l:7},
 ];
 
-function groupLabel(g) {
-    if (typeof g === 'number') return `第${g}族`;
-    return g; // ランタノイド / アクチノイド
-}
-
 // ============================================================
-// クイズ状態
+// 英語力診断ロジック
 // ============================================================
-const RANGES = {'1-20':[1,20],'21-40':[21,40],'41-60':[41,60],'61-80':[61,80],'81-100':[81,100],'101-118':[101,118]};
-let selectedRanges = new Set(['1-20']);
-let quizQType  = 'nameToSymbol'; // nameToSymbol | symbolToName | periodGroup
-let quizAType  = 'text';         // text | choice
-let quizPool   = [];
-let quizQueue  = [];
-let currentIdx = 0;
-let correctCount = 0;
-let wrongList  = [];
-let answered   = false;
-const QUIZ_COUNT = 10;
-const CHOICE_COUNT = 8;
+const EQ_LEVEL_INFO = [
+    {label:'英検5級',  toeic:'TOEIC 〜300',  color:'#f87171', pct:5},
+    {label:'英検4級',  toeic:'TOEIC 〜350',  color:'#fb923c', pct:20},
+    {label:'英検3級',  toeic:'TOEIC 〜450',  color:'#fbbf24', pct:35},
+    {label:'英検準2級',toeic:'TOEIC 〜550',  color:'#a3e635', pct:50},
+    {label:'英検2級',  toeic:'TOEIC 〜700',  color:'#34d399', pct:65},
+    {label:'英検準1級',toeic:'TOEIC 〜860',  color:'#38bdf8', pct:80},
+    {label:'英検1級',  toeic:'TOEIC 900+',   color:'#818cf8', pct:95},
+];
+const EQ_BADGE = ['📗','📘','📙','🥉','🥈','🥇','🏆'];
 
-// --- 範囲ボタン ---
-document.querySelectorAll('[data-range]').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const r = btn.dataset.range;
-        if (selectedRanges.has(r)) {
-            if (selectedRanges.size === 1) return;
-            selectedRanges.delete(r); btn.classList.remove('active');
-        } else {
-            selectedRanges.add(r); btn.classList.add('active');
-        }
-    });
-});
+let eqDir        = 'enToJa';   // enToJa | jaToEn
+let eqAbility    = 3.0;        // 1〜7の浮動小数
+let eqAnswered   = 0;
+let eqCorrect    = 0;
+let eqHistory    = [];         // {word, correct, level}
+let eqUsed       = new Set();
+let eqCurrent    = null;       // 現在の問題
 
-// --- 問題タイプボタン ---
-document.querySelectorAll('[data-qtype]').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-qtype]').forEach(b => b.classList.remove('active'));
+const EQ_K = 0.4; // 能力更新の係数
+
+document.querySelectorAll('[data-edir]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-edir]').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
-        quizQType = btn.dataset.qtype;
+        eqDir = btn.dataset.edir;
     });
 });
 
-// --- 解答形式ボタン ---
-document.querySelectorAll('[data-atype]').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-atype]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        quizAType = btn.dataset.atype;
-    });
+document.getElementById('eq-start-btn').addEventListener('click', eqStart);
+document.getElementById('eq-next-btn').addEventListener('click', eqNext);
+document.getElementById('eq-finish-btn').addEventListener('click', eqShowResult);
+document.getElementById('eq-retry-btn').addEventListener('click', ()=>{
+    document.getElementById('eq-result').classList.add('hidden');
+    eqStart();
 });
 
-// --- クイズスタート ---
-document.getElementById('quiz-start-btn').addEventListener('click', () => {
-    quizPool = ELEMENTS.filter(el => {
-        for (const r of selectedRanges) {
-            const [mn,mx] = RANGES[r];
-            if (el.n >= mn && el.n <= mx) return true;
-        }
-        return false;
+function eqStart() {
+    eqAbility = 3.0; eqAnswered = 0; eqCorrect = 0;
+    eqHistory = []; eqUsed = new Set(); eqCurrent = null;
+    document.getElementById('eq-setup').classList.add('hidden');
+    document.getElementById('eq-result').classList.add('hidden');
+    document.getElementById('eq-main').classList.remove('hidden');
+    eqUpdateLevelBar();
+    eqNextQuestion();
+}
+
+function eqPickWord() {
+    // 能力値付近の単語を優先してピック（ガウス的サンプリング）
+    const pool = EQ_WORDS.filter(w => !eqUsed.has(w.e));
+    if (pool.length === 0) { eqUsed.clear(); return eqPickWord(); }
+    // 能力値との距離でスコアリング
+    const scored = pool.map(w => {
+        const dist = Math.abs(w.l - eqAbility);
+        const score = Math.exp(-dist * dist * 0.8) + Math.random() * 0.15;
+        return {w, score};
     });
-    if (quizPool.length === 0) return;
+    scored.sort((a,b) => b.score - a.score);
+    return scored[0].w;
+}
 
-    quizQueue    = shuffle([...quizPool]).slice(0, QUIZ_COUNT);
-    currentIdx   = 0; correctCount = 0; wrongList = [];
-
-    document.getElementById('quiz-setup').classList.add('hidden');
-    document.getElementById('quiz-result').classList.add('hidden');
-    document.getElementById('quiz-main').classList.remove('hidden');
-    document.getElementById('quiz-progress-bar').style.width = '0%';
-    showQuestion();
-});
-
-function shuffle(arr) {
-    for (let i = arr.length-1; i > 0; i--) {
-        const j = Math.floor(Math.random()*(i+1));
-        [arr[i],arr[j]] = [arr[j],arr[i]];
+function eqMakeChoices(correct) {
+    // 正解と同レベル付近から3つ選ぶ
+    const pool = EQ_WORDS.filter(w => w.e !== correct.e);
+    const byDist = pool.slice().sort((a,b) =>
+        Math.abs(a.l - correct.l) - Math.abs(b.l - correct.l)
+    );
+    const wrong = [];
+    for (const w of byDist) {
+        if (wrong.length >= 3) break;
+        wrong.push(w);
     }
-    return arr;
+    return shuffle([correct, ...wrong]);
 }
 
-function getChoicePool() {
-    // 選択肢は全118元素から取る（quizPoolが小さくても8択できるように）
-    return ELEMENTS;
-}
+function eqNextQuestion() {
+    document.getElementById('eq-feedback-bar').classList.add('hidden');
+    document.getElementById('eq-choices').innerHTML = '';
 
-function makeChoices(correctEl) {
-    const pool = getChoicePool().filter(e => e.n !== correctEl.n);
-    const wrongs = shuffle(pool).slice(0, CHOICE_COUNT - 1);
-    return shuffle([correctEl, ...wrongs]);
-}
+    eqCurrent = eqPickWord();
+    eqUsed.add(eqCurrent.e);
 
-function getChoiceLabel(el) {
-    // 8択ボタンに表示するテキスト
-    if (quizQType === 'nameToSymbol') return el.symbol;
-    return el.name; // symbolToName と periodGroup
-}
+    document.getElementById('eq-qnum').textContent = `第${eqAnswered+1}問`;
+    document.getElementById('eq-correct-count').textContent = `${eqCorrect}正解`;
+    document.getElementById('eq-total-count').textContent   = `${eqAnswered}問`;
 
-function showQuestion() {
-    answered = false;
-    const el = quizQueue[currentIdx];
-    const total = quizQueue.length;
+    const choices = eqMakeChoices(eqCurrent);
 
-    document.getElementById('quiz-progress').textContent = `${currentIdx+1} / ${total}`;
-    document.getElementById('quiz-score').textContent    = `${correctCount}正解`;
-    document.getElementById('quiz-progress-bar').style.width = `${(currentIdx/total)*100}%`;
-    document.getElementById('quiz-card').classList.remove('correct-flash');
-    document.getElementById('quiz-feedback').classList.add('hidden');
-
-    // 問題カード表示
-    if (quizQType === 'nameToSymbol') {
-        document.getElementById('quiz-question-label').textContent = '元素名';
-        document.getElementById('quiz-question').textContent       = el.name;
-        document.getElementById('quiz-sub').textContent            = `原子番号: ${el.n}`;
-    } else if (quizQType === 'symbolToName') {
-        document.getElementById('quiz-question-label').textContent = '元素記号';
-        document.getElementById('quiz-question').textContent       = el.symbol;
-        document.getElementById('quiz-sub').textContent            = `原子番号: ${el.n}`;
-    } else { // periodGroup
-        document.getElementById('quiz-question-label').textContent = '周期・族';
-        document.getElementById('quiz-question').textContent       = `第${el.period}周期`;
-        document.getElementById('quiz-sub').textContent            = groupLabel(el.group);
-    }
-
-    // 解答エリア
-    if (quizAType === 'text') {
-        document.getElementById('quiz-input-area').classList.remove('hidden');
-        document.getElementById('quiz-choice-area').classList.add('hidden');
-        const inp = document.getElementById('quiz-input');
-        inp.value = '';
-        if (quizQType === 'nameToSymbol') {
-            inp.placeholder = '記号を入力 (例: He)';
-        } else {
-            inp.placeholder = '元素名を入力 (例: ヘリウム)';
-        }
-        inp.focus();
-    } else {
-        document.getElementById('quiz-input-area').classList.add('hidden');
-        const choiceArea = document.getElementById('quiz-choice-area');
-        choiceArea.classList.remove('hidden');
-        choiceArea.innerHTML = '';
-        const choices = makeChoices(el);
-        choices.forEach(choice => {
+    if (eqDir === 'enToJa') {
+        document.getElementById('eq-q-label').textContent = '英語';
+        document.getElementById('eq-q-word').textContent  = eqCurrent.e;
+        document.getElementById('eq-q-hint').textContent  = '';
+        choices.forEach(w => {
             const btn = document.createElement('button');
-            btn.textContent = getChoiceLabel(choice);
-            btn.className = 'choice-btn border-2 border-slate-200 bg-white rounded-2xl py-3 px-2 text-sm font-bold text-slate-700 active:scale-95';
-            btn.addEventListener('click', () => handleChoiceClick(choice, el, btn));
-            choiceArea.appendChild(btn);
+            btn.className = 'eq-choice-btn';
+            btn.textContent = w.j;
+            btn.addEventListener('click', () => eqAnswer(w, eqCurrent));
+            document.getElementById('eq-choices').appendChild(btn);
+        });
+    } else {
+        document.getElementById('eq-q-label').textContent = '日本語';
+        document.getElementById('eq-q-word').textContent  = eqCurrent.j;
+        document.getElementById('eq-q-hint').textContent  = '';
+        choices.forEach(w => {
+            const btn = document.createElement('button');
+            btn.className = 'eq-choice-btn';
+            btn.textContent = w.e;
+            btn.addEventListener('click', () => eqAnswer(w, eqCurrent));
+            document.getElementById('eq-choices').appendChild(btn);
         });
     }
 }
 
-function handleChoiceClick(chosen, correct, clickedBtn) {
-    if (answered) return;
-    answered = true;
-    const isCorrect = chosen.n === correct.n;
+function eqAnswer(chosen, correct) {
+    const isCorrect = chosen.e === correct.e;
+    eqAnswered++;
+    if (isCorrect) eqCorrect++;
+    eqHistory.push({word: correct, correct: isCorrect, level: correct.l});
 
-    // 全ボタンの正解・不正解を色表示
-    document.querySelectorAll('.choice-btn').forEach(b => {
-        const label = b.textContent;
-        const correctLabel = getChoiceLabel(correct);
-        if (label === correctLabel) b.classList.add('correct-choice');
-        else if (b === clickedBtn && !isCorrect) b.classList.add('wrong-choice');
-        b.disabled = true;
+    // 能力値更新 (IRT簡易版)
+    const expected = 1 / (1 + Math.exp(-(eqAbility - correct.l)));
+    const update   = EQ_K * ((isCorrect ? 1 : 0) - expected);
+    eqAbility = Math.max(1, Math.min(7, eqAbility + update));
+
+    // 選択肢の色を変える
+    document.querySelectorAll('.eq-choice-btn').forEach(btn => {
+        const label = eqDir === 'enToJa' ? btn.textContent : btn.textContent;
+        const isThisCorrect = eqDir === 'enToJa'
+            ? btn.textContent === correct.j
+            : btn.textContent === correct.e;
+        if (isThisCorrect) btn.classList.add('correct');
+        else if (btn === event.target && !isCorrect) btn.classList.add('wrong');
+        btn.disabled = true;
     });
 
-    showFeedback(isCorrect, correct);
+    // フィードバック
+    const fb = document.getElementById('eq-feedback-bar');
+    fb.classList.remove('hidden');
+    const fbMsg = document.getElementById('eq-feedback-msg');
+    fbMsg.className = `p-4 rounded-2xl text-center mb-3 ${isCorrect ? 'bg-green-50' : 'bg-red-50'}`;
+    document.getElementById('eq-fb-icon').textContent = isCorrect ? '✅' : '❌';
+    document.getElementById('eq-fb-text').textContent = isCorrect ? '正解！' : '不正解…';
+    document.getElementById('eq-fb-ans').textContent  = `${correct.e} ＝ ${correct.j}`;
+
+    document.getElementById('eq-correct-count').textContent = `${eqCorrect}正解`;
+    document.getElementById('eq-total-count').textContent   = `${eqAnswered}問`;
+
+    eqUpdateLevelBar();
 }
 
-function checkAnswer() {
-    if (answered) return;
-    answered = true;
-    const el    = quizQueue[currentIdx];
-    const input = document.getElementById('quiz-input').value.trim();
-    let correct;
-    if (quizQType === 'nameToSymbol') correct = el.symbol;
-    else correct = el.name;
+function eqNext() {
+    eqNextQuestion();
+}
 
-    const isCorrect = quizQType === 'nameToSymbol'
-        ? input.toLowerCase() === correct.toLowerCase()
-        : input === correct;
+function eqUpdateLevelBar() {
+    const pct = ((eqAbility - 1) / 6) * 90 + 5; // 5%〜95%
+    document.getElementById('eq-level-bar').style.width = pct + '%';
+    const idx = Math.round(eqAbility) - 1;
+    const info = EQ_LEVEL_INFO[Math.max(0, Math.min(6, idx))];
+    document.getElementById('eq-current-level-label').textContent = `推定レベル: ${info.label}`;
+}
 
-    if (!isCorrect) {
-        document.getElementById('quiz-input').classList.add('shake');
-        setTimeout(() => document.getElementById('quiz-input').classList.remove('shake'), 400);
+function eqShowResult() {
+    document.getElementById('eq-main').classList.add('hidden');
+    document.getElementById('eq-result').classList.remove('hidden');
+
+    const idx  = Math.max(0, Math.min(6, Math.round(eqAbility) - 1));
+    const info = EQ_LEVEL_INFO[idx];
+
+    document.getElementById('eq-result-eiken').textContent = info.label;
+    document.getElementById('eq-result-toeic').textContent = info.toeic;
+    document.getElementById('eq-result-badge').textContent = EQ_BADGE[idx];
+
+    const pct = ((eqAbility - 1) / 6) * 90 + 5;
+    document.getElementById('eq-result-bar').style.width = pct + '%';
+
+    document.getElementById('eq-res-total').textContent   = eqAnswered;
+    document.getElementById('eq-res-correct').textContent = eqCorrect;
+    const accuracy = eqAnswered > 0 ? Math.round(eqCorrect/eqAnswered*100) : 0;
+    document.getElementById('eq-res-pct').textContent     = accuracy + '%';
+
+    // レベル別正解率
+    const breakdown = {};
+    eqHistory.forEach(h => {
+        if (!breakdown[h.level]) breakdown[h.level] = {total:0,correct:0};
+        breakdown[h.level].total++;
+        if (h.correct) breakdown[h.level].correct++;
+    });
+    const bEl = document.getElementById('eq-level-breakdown');
+    bEl.innerHTML = '';
+    for (let lv = 1; lv <= 7; lv++) {
+        if (!breakdown[lv]) continue;
+        const info2 = EQ_LEVEL_INFO[lv-1];
+        const acc   = Math.round(breakdown[lv].correct / breakdown[lv].total * 100);
+        bEl.innerHTML += `
+        <div>
+            <div class="flex justify-between text-xs font-bold mb-1">
+                <span class="text-slate-600">${info2.label}</span>
+                <span class="text-slate-400">${breakdown[lv].correct}/${breakdown[lv].total}問 (${acc}%)</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2">
+                <div class="h-2 rounded-full transition-all" style="width:${acc}%;background:${info2.color}"></div>
+            </div>
+        </div>`;
     }
-    showFeedback(isCorrect, el);
 }
 
-function showFeedback(isCorrect, el) {
-    if (isCorrect) {
-        correctCount++;
-        document.getElementById('quiz-card').classList.add('correct-flash');
-    } else {
-        wrongList.push(el);
-    }
-    document.getElementById('quiz-score').textContent = `${correctCount}正解`;
+// ============================================================
+// 元素データ
+// ============================================================
+const ELEMENTS = [
+    {n:1,name:'水素',symbol:'H',period:1,group:1},{n:2,name:'ヘリウム',symbol:'He',period:1,group:18},
+    {n:3,name:'リチウム',symbol:'Li',period:2,group:1},{n:4,name:'ベリリウム',symbol:'Be',period:2,group:2},
+    {n:5,name:'ホウ素',symbol:'B',period:2,group:13},{n:6,name:'炭素',symbol:'C',period:2,group:14},
+    {n:7,name:'窒素',symbol:'N',period:2,group:15},{n:8,name:'酸素',symbol:'O',period:2,group:16},
+    {n:9,name:'フッ素',symbol:'F',period:2,group:17},{n:10,name:'ネオン',symbol:'Ne',period:2,group:18},
+    {n:11,name:'ナトリウム',symbol:'Na',period:3,group:1},{n:12,name:'マグネシウム',symbol:'Mg',period:3,group:2},
+    {n:13,name:'アルミニウム',symbol:'Al',period:3,group:13},{n:14,name:'ケイ素',symbol:'Si',period:3,group:14},
+    {n:15,name:'リン',symbol:'P',period:3,group:15},{n:16,name:'硫黄',symbol:'S',period:3,group:16},
+    {n:17,name:'塩素',symbol:'Cl',period:3,group:17},{n:18,name:'アルゴン',symbol:'Ar',period:3,group:18},
+    {n:19,name:'カリウム',symbol:'K',period:4,group:1},{n:20,name:'カルシウム',symbol:'Ca',period:4,group:2},
+    {n:21,name:'スカンジウム',symbol:'Sc',period:4,group:3},{n:22,name:'チタン',symbol:'Ti',period:4,group:4},
+    {n:23,name:'バナジウム',symbol:'V',period:4,group:5},{n:24,name:'クロム',symbol:'Cr',period:4,group:6},
+    {n:25,name:'マンガン',symbol:'Mn',period:4,group:7},{n:26,name:'鉄',symbol:'Fe',period:4,group:8},
+    {n:27,name:'コバルト',symbol:'Co',period:4,group:9},{n:28,name:'ニッケル',symbol:'Ni',period:4,group:10},
+    {n:29,name:'銅',symbol:'Cu',period:4,group:11},{n:30,name:'亜鉛',symbol:'Zn',period:4,group:12},
+    {n:31,name:'ガリウム',symbol:'Ga',period:4,group:13},{n:32,name:'ゲルマニウム',symbol:'Ge',period:4,group:14},
+    {n:33,name:'ヒ素',symbol:'As',period:4,group:15},{n:34,name:'セレン',symbol:'Se',period:4,group:16},
+    {n:35,name:'臭素',symbol:'Br',period:4,group:17},{n:36,name:'クリプトン',symbol:'Kr',period:4,group:18},
+    {n:37,name:'ルビジウム',symbol:'Rb',period:5,group:1},{n:38,name:'ストロンチウム',symbol:'Sr',period:5,group:2},
+    {n:39,name:'イットリウム',symbol:'Y',period:5,group:3},{n:40,name:'ジルコニウム',symbol:'Zr',period:5,group:4},
+    {n:41,name:'ニオブ',symbol:'Nb',period:5,group:5},{n:42,name:'モリブデン',symbol:'Mo',period:5,group:6},
+    {n:43,name:'テクネチウム',symbol:'Tc',period:5,group:7},{n:44,name:'ルテニウム',symbol:'Ru',period:5,group:8},
+    {n:45,name:'ロジウム',symbol:'Rh',period:5,group:9},{n:46,name:'パラジウム',symbol:'Pd',period:5,group:10},
+    {n:47,name:'銀',symbol:'Ag',period:5,group:11},{n:48,name:'カドミウム',symbol:'Cd',period:5,group:12},
+    {n:49,name:'インジウム',symbol:'In',period:5,group:13},{n:50,name:'スズ',symbol:'Sn',period:5,group:14},
+    {n:51,name:'アンチモン',symbol:'Sb',period:5,group:15},{n:52,name:'テルル',symbol:'Te',period:5,group:16},
+    {n:53,name:'ヨウ素',symbol:'I',period:5,group:17},{n:54,name:'キセノン',symbol:'Xe',period:5,group:18},
+    {n:55,name:'セシウム',symbol:'Cs',period:6,group:1},{n:56,name:'バリウム',symbol:'Ba',period:6,group:2},
+    {n:57,name:'ランタン',symbol:'La',period:6,group:'ランタノイド'},{n:58,name:'セリウム',symbol:'Ce',period:6,group:'ランタノイド'},
+    {n:59,name:'プラセオジム',symbol:'Pr',period:6,group:'ランタノイド'},{n:60,name:'ネオジム',symbol:'Nd',period:6,group:'ランタノイド'},
+    {n:61,name:'プロメチウム',symbol:'Pm',period:6,group:'ランタノイド'},{n:62,name:'サマリウム',symbol:'Sm',period:6,group:'ランタノイド'},
+    {n:63,name:'ユウロピウム',symbol:'Eu',period:6,group:'ランタノイド'},{n:64,name:'ガドリニウム',symbol:'Gd',period:6,group:'ランタノイド'},
+    {n:65,name:'テルビウム',symbol:'Tb',period:6,group:'ランタノイド'},{n:66,name:'ジスプロシウム',symbol:'Dy',period:6,group:'ランタノイド'},
+    {n:67,name:'ホルミウム',symbol:'Ho',period:6,group:'ランタノイド'},{n:68,name:'エルビウム',symbol:'Er',period:6,group:'ランタノイド'},
+    {n:69,name:'ツリウム',symbol:'Tm',period:6,group:'ランタノイド'},{n:70,name:'イッテルビウム',symbol:'Yb',period:6,group:'ランタノイド'},
+    {n:71,name:'ルテチウム',symbol:'Lu',period:6,group:'ランタノイド'},{n:72,name:'ハフニウム',symbol:'Hf',period:6,group:4},
+    {n:73,name:'タンタル',symbol:'Ta',period:6,group:5},{n:74,name:'タングステン',symbol:'W',period:6,group:6},
+    {n:75,name:'レニウム',symbol:'Re',period:6,group:7},{n:76,name:'オスミウム',symbol:'Os',period:6,group:8},
+    {n:77,name:'イリジウム',symbol:'Ir',period:6,group:9},{n:78,name:'白金',symbol:'Pt',period:6,group:10},
+    {n:79,name:'金',symbol:'Au',period:6,group:11},{n:80,name:'水銀',symbol:'Hg',period:6,group:12},
+    {n:81,name:'タリウム',symbol:'Tl',period:6,group:13},{n:82,name:'鉛',symbol:'Pb',period:6,group:14},
+    {n:83,name:'ビスマス',symbol:'Bi',period:6,group:15},{n:84,name:'ポロニウム',symbol:'Po',period:6,group:16},
+    {n:85,name:'アスタチン',symbol:'At',period:6,group:17},{n:86,name:'ラドン',symbol:'Rn',period:6,group:18},
+    {n:87,name:'フランシウム',symbol:'Fr',period:7,group:1},{n:88,name:'ラジウム',symbol:'Ra',period:7,group:2},
+    {n:89,name:'アクチニウム',symbol:'Ac',period:7,group:'アクチノイド'},{n:90,name:'トリウム',symbol:'Th',period:7,group:'アクチノイド'},
+    {n:91,name:'プロトアクチニウム',symbol:'Pa',period:7,group:'アクチノイド'},{n:92,name:'ウラン',symbol:'U',period:7,group:'アクチノイド'},
+    {n:93,name:'ネプツニウム',symbol:'Np',period:7,group:'アクチノイド'},{n:94,name:'プルトニウム',symbol:'Pu',period:7,group:'アクチノイド'},
+    {n:95,name:'アメリシウム',symbol:'Am',period:7,group:'アクチノイド'},{n:96,name:'キュリウム',symbol:'Cm',period:7,group:'アクチノイド'},
+    {n:97,name:'バークリウム',symbol:'Bk',period:7,group:'アクチノイド'},{n:98,name:'カリホルニウム',symbol:'Cf',period:7,group:'アクチノイド'},
+    {n:99,name:'アインスタイニウム',symbol:'Es',period:7,group:'アクチノイド'},{n:100,name:'フェルミウム',symbol:'Fm',period:7,group:'アクチノイド'},
+    {n:101,name:'メンデレビウム',symbol:'Md',period:7,group:'アクチノイド'},{n:102,name:'ノーベリウム',symbol:'No',period:7,group:'アクチノイド'},
+    {n:103,name:'ローレンシウム',symbol:'Lr',period:7,group:'アクチノイド'},{n:104,name:'ラザホージウム',symbol:'Rf',period:7,group:4},
+    {n:105,name:'ドブニウム',symbol:'Db',period:7,group:5},{n:106,name:'シーボーギウム',symbol:'Sg',period:7,group:6},
+    {n:107,name:'ボーリウム',symbol:'Bh',period:7,group:7},{n:108,name:'ハッシウム',symbol:'Hs',period:7,group:8},
+    {n:109,name:'マイトネリウム',symbol:'Mt',period:7,group:9},{n:110,name:'ダームスタチウム',symbol:'Ds',period:7,group:10},
+    {n:111,name:'レントゲニウム',symbol:'Rg',period:7,group:11},{n:112,name:'コペルニシウム',symbol:'Cn',period:7,group:12},
+    {n:113,name:'ニホニウム',symbol:'Nh',period:7,group:13},{n:114,name:'フレロビウム',symbol:'Fl',period:7,group:14},
+    {n:115,name:'モスコビウム',symbol:'Mc',period:7,group:15},{n:116,name:'リバモリウム',symbol:'Lv',period:7,group:16},
+    {n:117,name:'テネシン',symbol:'Ts',period:7,group:17},{n:118,name:'オガネソン',symbol:'Og',period:7,group:18},
+];
+function groupLabel(g){return typeof g==='number'?`第${g}族`:g;}
 
-    const fb = document.getElementById('quiz-feedback');
-    fb.classList.remove('hidden','bg-green-50','bg-red-50');
-    fb.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
-    document.getElementById('feedback-icon').textContent = isCorrect ? '✅' : '❌';
-    document.getElementById('feedback-text').textContent = isCorrect ? '正解！' : '不正解…';
-    document.getElementById('feedback-answer').textContent =
-        `${el.name}　${el.symbol}　第${el.period}周期　${groupLabel(el.group)}`;
-}
+// ============================================================
+// 元素クイズロジック
+// ============================================================
+const RANGES={'1-20':[1,20],'21-40':[21,40],'41-60':[41,60],'61-80':[61,80],'81-100':[81,100],'101-118':[101,118]};
+let selectedRanges=new Set(['1-20']),quizQType='nameToSymbol',quizAType='text';
+let quizPool=[],quizQueue=[],currentIdx=0,correctCount=0,wrongList=[],qAnswered=false;
+const QUIZ_COUNT=10;
 
-document.getElementById('quiz-answer-btn').addEventListener('click', checkAnswer);
-document.getElementById('quiz-input').addEventListener('keydown', e => { if (e.key==='Enter') checkAnswer(); });
-
-document.getElementById('quiz-next-btn').addEventListener('click', () => {
-    currentIdx++;
-    if (currentIdx >= quizQueue.length) showResult();
-    else showQuestion();
+document.querySelectorAll('[data-range]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const r=btn.dataset.range;
+        if(selectedRanges.has(r)){if(selectedRanges.size===1)return;selectedRanges.delete(r);btn.classList.remove('active');}
+        else{selectedRanges.add(r);btn.classList.add('active');}
+    });
+});
+document.querySelectorAll('[data-qtype]').forEach(btn=>{
+    btn.addEventListener('click',()=>{document.querySelectorAll('[data-qtype]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');quizQType=btn.dataset.qtype;});
+});
+document.querySelectorAll('[data-atype]').forEach(btn=>{
+    btn.addEventListener('click',()=>{document.querySelectorAll('[data-atype]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');quizAType=btn.dataset.atype;});
 });
 
-function showResult() {
-    const total = quizQueue.length;
-    document.getElementById('quiz-main').classList.add('hidden');
-    document.getElementById('quiz-result').classList.remove('hidden');
-    document.getElementById('quiz-progress-bar').style.width = '100%';
-
-    const pct = Math.round((correctCount/total)*100);
-    document.getElementById('result-score').textContent  = `${correctCount} / ${total}`;
-    document.getElementById('result-detail').textContent = `正解率 ${pct}%`;
-    document.getElementById('result-emoji').textContent  = pct===100?'🏆':pct>=80?'🎉':pct>=60?'👍':'😅';
-
-    const wc = document.getElementById('wrong-list-container');
-    if (wrongList.length > 0) {
-        wc.classList.remove('hidden');
-        document.getElementById('wrong-list').innerHTML = wrongList.map(el => `
-            <li class="flex justify-between items-center py-2 border-b border-slate-50 last:border-0">
-                <div>
-                    <span class="text-sm font-bold text-slate-700">${el.name}</span>
-                    <span class="text-xs text-slate-400 ml-2">第${el.period}周期 ${groupLabel(el.group)}</span>
-                </div>
-                <span class="text-sm font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg">${el.symbol}</span>
-            </li>
-        `).join('');
-    } else {
-        wc.classList.add('hidden');
-    }
-}
-
-document.getElementById('quiz-retry-btn').addEventListener('click', () => {
-    quizQueue    = shuffle([...quizPool]).slice(0, QUIZ_COUNT);
-    currentIdx   = 0; correctCount = 0; wrongList = [];
+document.getElementById('quiz-start-btn').addEventListener('click',()=>{
+    quizPool=ELEMENTS.filter(el=>{for(const r of selectedRanges){const[mn,mx]=RANGES[r];if(el.n>=mn&&el.n<=mx)return true;}return false;});
+    if(quizPool.length===0)return;
+    quizQueue=shuffle([...quizPool]).slice(0,QUIZ_COUNT);
+    currentIdx=0;correctCount=0;wrongList=[];
+    document.getElementById('quiz-setup').classList.add('hidden');
     document.getElementById('quiz-result').classList.add('hidden');
     document.getElementById('quiz-main').classList.remove('hidden');
-    document.getElementById('quiz-progress-bar').style.width = '0%';
+    document.getElementById('quiz-progress-bar').style.width='0%';
     showQuestion();
 });
 
-function resetQuizToSetup() {
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function getChoiceLabel(el){return quizQType==='nameToSymbol'?el.symbol:el.name;}
+function makeChoices(correct){
+    const pool=ELEMENTS.filter(e=>e.n!==correct.n);
+    const wrongs=shuffle(pool).slice(0,7);
+    return shuffle([correct,...wrongs]);
+}
+
+function showQuestion(){
+    qAnswered=false;
+    const el=quizQueue[currentIdx];
+    const total=quizQueue.length;
+    document.getElementById('quiz-progress').textContent=`${currentIdx+1} / ${total}`;
+    document.getElementById('quiz-score').textContent=`${correctCount}正解`;
+    document.getElementById('quiz-progress-bar').style.width=`${(currentIdx/total)*100}%`;
+    document.getElementById('quiz-card').classList.remove('correct-flash');
+    document.getElementById('quiz-feedback').classList.add('hidden');
+    if(quizQType==='nameToSymbol'){document.getElementById('quiz-question-label').textContent='元素名';document.getElementById('quiz-question').textContent=el.name;document.getElementById('quiz-sub').textContent=`原子番号: ${el.n}`;}
+    else if(quizQType==='symbolToName'){document.getElementById('quiz-question-label').textContent='元素記号';document.getElementById('quiz-question').textContent=el.symbol;document.getElementById('quiz-sub').textContent=`原子番号: ${el.n}`;}
+    else{document.getElementById('quiz-question-label').textContent='周期・族';document.getElementById('quiz-question').textContent=`第${el.period}周期`;document.getElementById('quiz-sub').textContent=groupLabel(el.group);}
+    if(quizAType==='text'){
+        document.getElementById('quiz-input-area').classList.remove('hidden');
+        document.getElementById('quiz-choice-area').classList.add('hidden');
+        const inp=document.getElementById('quiz-input');inp.value='';
+        inp.placeholder=quizQType==='nameToSymbol'?'記号を入力':'元素名を入力';inp.focus();
+    } else {
+        document.getElementById('quiz-input-area').classList.add('hidden');
+        const ca=document.getElementById('quiz-choice-area');ca.classList.remove('hidden');ca.innerHTML='';
+        makeChoices(el).forEach(choice=>{
+            const btn=document.createElement('button');btn.textContent=getChoiceLabel(choice);
+            btn.className='choice-btn border-2 border-slate-200 bg-white rounded-2xl py-3 px-2 text-sm font-bold text-slate-700 active:scale-95';
+            btn.addEventListener('click',()=>{
+                if(qAnswered)return;qAnswered=true;
+                const isOk=choice.n===el.n;
+                document.querySelectorAll('.choice-btn').forEach(b=>{
+                    if(b.textContent===getChoiceLabel(el))b.classList.add('correct-choice');
+                    else if(b===btn&&!isOk)b.classList.add('wrong-choice');
+                    b.disabled=true;
+                });
+                showQFeedback(isOk,el);
+            });
+            ca.appendChild(btn);
+        });
+    }
+}
+
+function checkQAnswer(){
+    if(qAnswered)return;qAnswered=true;
+    const el=quizQueue[currentIdx];
+    const input=document.getElementById('quiz-input').value.trim();
+    const correct=quizQType==='nameToSymbol'?el.symbol:el.name;
+    const isOk=quizQType==='nameToSymbol'?input.toLowerCase()===correct.toLowerCase():input===correct;
+    if(!isOk){document.getElementById('quiz-input').classList.add('shake');setTimeout(()=>document.getElementById('quiz-input').classList.remove('shake'),400);}
+    showQFeedback(isOk,el);
+}
+
+function showQFeedback(isOk,el){
+    if(isOk)correctCount++;else wrongList.push(el);
+    document.getElementById('quiz-score').textContent=`${correctCount}正解`;
+    if(isOk)document.getElementById('quiz-card').classList.add('correct-flash');
+    const fb=document.getElementById('quiz-feedback');
+    fb.classList.remove('hidden','bg-green-50','bg-red-50');fb.classList.add(isOk?'bg-green-50':'bg-red-50');
+    document.getElementById('feedback-icon').textContent=isOk?'✅':'❌';
+    document.getElementById('feedback-text').textContent=isOk?'正解！':'不正解…';
+    document.getElementById('feedback-answer').textContent=`${el.name}　${el.symbol}　第${el.period}周期　${groupLabel(el.group)}`;
+}
+
+document.getElementById('quiz-answer-btn').addEventListener('click',checkQAnswer);
+document.getElementById('quiz-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkQAnswer();});
+document.getElementById('quiz-next-btn').addEventListener('click',()=>{currentIdx++;if(currentIdx>=quizQueue.length)showQResult();else showQuestion();});
+
+function showQResult(){
+    const total=quizQueue.length;
+    document.getElementById('quiz-main').classList.add('hidden');document.getElementById('quiz-result').classList.remove('hidden');
+    document.getElementById('quiz-progress-bar').style.width='100%';
+    const pct=Math.round((correctCount/total)*100);
+    document.getElementById('result-score').textContent=`${correctCount} / ${total}`;
+    document.getElementById('result-detail').textContent=`正解率 ${pct}%`;
+    document.getElementById('result-emoji').textContent=pct===100?'🏆':pct>=80?'🎉':pct>=60?'👍':'😅';
+    const wc=document.getElementById('wrong-list-container');
+    if(wrongList.length>0){wc.classList.remove('hidden');document.getElementById('wrong-list').innerHTML=wrongList.map(el=>`<li class="flex justify-between items-center py-2 border-b border-slate-50 last:border-0"><div><span class="text-sm font-bold text-slate-700">${el.name}</span><span class="text-xs text-slate-400 ml-2">第${el.period}周期 ${groupLabel(el.group)}</span></div><span class="text-sm font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg">${el.symbol}</span></li>`).join('');}
+    else wc.classList.add('hidden');
+}
+
+document.getElementById('quiz-retry-btn').addEventListener('click',()=>{
+    quizQueue=shuffle([...quizPool]).slice(0,QUIZ_COUNT);currentIdx=0;correctCount=0;wrongList=[];
+    document.getElementById('quiz-result').classList.add('hidden');document.getElementById('quiz-main').classList.remove('hidden');
+    document.getElementById('quiz-progress-bar').style.width='0%';showQuestion();
+});
+
+function resetQuizToSetup(){
     document.getElementById('quiz-setup').classList.remove('hidden');
     document.getElementById('quiz-main').classList.add('hidden');
     document.getElementById('quiz-result').classList.add('hidden');
@@ -622,167 +863,77 @@ function resetQuizToSetup() {
 // ============================================================
 // タイマー
 // ============================================================
-let workMinutes         = parseInt(localStorage.getItem('workMinutes'))         || 25;
-let breakMinutes        = parseInt(localStorage.getItem('breakMinutes'))        || 5;
-let longBreakMinutes    = parseInt(localStorage.getItem('longBreakMinutes'))    || 15;
-let setsBeforeLongBreak = parseInt(localStorage.getItem('setsBeforeLongBreak')) || 4;
-let completedSets       = parseInt(localStorage.getItem('completedSets'))       || 0;
-let totalStudyMinutes   = parseInt(localStorage.getItem('totalStudyMinutes'))   || 0;
-let volume              = parseInt(localStorage.getItem('volume'))              || 80;
-let isWorking  = localStorage.getItem('isWorking')  !== 'false';
-let isLongBreak= localStorage.getItem('isLongBreak') === 'true';
-
-const wasRunning         = localStorage.getItem('timerRunning') === 'true';
-const savedStartTime     = parseInt(localStorage.getItem('timerStartTime'))     || null;
-const savedStartTimeLeft = parseInt(localStorage.getItem('timerStartTimeLeft')) || null;
-
+let workMinutes=parseInt(localStorage.getItem('workMinutes'))||25;
+let breakMinutes=parseInt(localStorage.getItem('breakMinutes'))||5;
+let longBreakMinutes=parseInt(localStorage.getItem('longBreakMinutes'))||15;
+let setsBeforeLongBreak=parseInt(localStorage.getItem('setsBeforeLongBreak'))||4;
+let completedSets=parseInt(localStorage.getItem('completedSets'))||0;
+let totalStudyMinutes=parseInt(localStorage.getItem('totalStudyMinutes'))||0;
+let volume=parseInt(localStorage.getItem('volume'))||80;
+let isWorking=localStorage.getItem('isWorking')!=='false';
+let isLongBreak=localStorage.getItem('isLongBreak')==='true';
+const wasRunning=localStorage.getItem('timerRunning')==='true';
+const savedStartTime=parseInt(localStorage.getItem('timerStartTime'))||null;
+const savedStartTimeLeft=parseInt(localStorage.getItem('timerStartTimeLeft'))||null;
 let timeLeft;
-if (wasRunning && savedStartTime && savedStartTimeLeft != null) {
-    const elapsed = Math.floor((Date.now() - savedStartTime) / 1000);
-    timeLeft = Math.max(0, savedStartTimeLeft - elapsed);
-} else {
-    timeLeft = parseInt(localStorage.getItem('timeLeft'));
-    if (isNaN(timeLeft) || timeLeft == null) timeLeft = workMinutes * 60;
+if(wasRunning&&savedStartTime&&savedStartTimeLeft!=null){const el=Math.floor((Date.now()-savedStartTime)/1000);timeLeft=Math.max(0,savedStartTimeLeft-el);}
+else{timeLeft=parseInt(localStorage.getItem('timeLeft'));if(isNaN(timeLeft)||timeLeft==null)timeLeft=workMinutes*60;}
+let timerId=null,startTime=null,startTimeLeft=0;
+const timerDisplay=document.getElementById('timer-display');
+const statusDisplay=document.getElementById('status');
+const startBtn=document.getElementById('start-btn');
+const resetBtn=document.getElementById('reset-btn');
+const setCountDisplay=document.getElementById('set-count');
+const setsGoalDisplay=document.getElementById('sets-goal');
+const inputWork=document.getElementById('input-work');
+const inputBreak=document.getElementById('input-break');
+const inputLongBreak=document.getElementById('input-long-break');
+const inputSets=document.getElementById('input-sets');
+const inputVolume=document.getElementById('input-volume');
+const volumeLabel=document.getElementById('volume-label');
+const saveBtn=document.getElementById('save-settings');
+inputVolume.value=volume;volumeLabel.textContent=volume+'%';
+
+function saveState(){localStorage.setItem('timeLeft',timeLeft);localStorage.setItem('isWorking',isWorking);localStorage.setItem('isLongBreak',isLongBreak);localStorage.setItem('completedSets',completedSets);}
+function playSound(type){
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();const vol=volume/100;
+    const p={work:[{f:880,t:0,d:.15},{f:1100,t:.2,d:.25}],break:[{f:660,t:0,d:.2},{f:528,t:.25,d:.3}],longBreak:[{f:660,t:0,d:.15},{f:528,t:.2,d:.15},{f:440,t:.4,d:.3}]};
+    (p[type]||p.work).forEach(({f,t,d})=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(vol,ctx.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+t+d);o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+d+.05);});
 }
-
-let timerId=null, startTime=null, startTimeLeft=0;
-
-const timerDisplay    = document.getElementById('timer-display');
-const statusDisplay   = document.getElementById('status');
-const startBtn        = document.getElementById('start-btn');
-const resetBtn        = document.getElementById('reset-btn');
-const setCountDisplay = document.getElementById('set-count');
-const setsGoalDisplay = document.getElementById('sets-goal');
-const inputWork       = document.getElementById('input-work');
-const inputBreak      = document.getElementById('input-break');
-const inputLongBreak  = document.getElementById('input-long-break');
-const inputSets       = document.getElementById('input-sets');
-const inputVolume     = document.getElementById('input-volume');
-const volumeLabel     = document.getElementById('volume-label');
-const saveBtn         = document.getElementById('save-settings');
-
-inputVolume.value = volume;
-volumeLabel.textContent = volume + '%';
-
-function saveState() {
-    localStorage.setItem('timeLeft',timeLeft); localStorage.setItem('isWorking',isWorking);
-    localStorage.setItem('isLongBreak',isLongBreak); localStorage.setItem('completedSets',completedSets);
-}
-
-function playSound(type) {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const vol = volume/100;
-    const p = {
-        work:      [{f:880,t:0,d:.15},{f:1100,t:.2,d:.25}],
-        break:     [{f:660,t:0,d:.2},{f:528,t:.25,d:.3}],
-        longBreak: [{f:660,t:0,d:.15},{f:528,t:.2,d:.15},{f:440,t:.4,d:.3}],
-    };
-    (p[type]||p.work).forEach(({f,t,d})=>{
-        const o=ctx.createOscillator(), g=ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
-        o.frequency.value=f; o.type='sine';
-        g.gain.setValueAtTime(vol,ctx.currentTime+t);
-        g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+t+d);
-        o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+d+.05);
-    });
-}
-
-function displayTotalTime() {
-    const h=Math.floor(totalStudyMinutes/60), m=totalStudyMinutes%60;
-    const text=`${h}時間${String(m).padStart(2,'0')}分`;
-    document.getElementById('total-time-display').textContent=text;
-    document.getElementById('home-total-display').textContent=text;
-}
-
-function displayLogs() {
-    const list=document.getElementById('study-logs'); if(!list) return;
+function displayTotalTime(){const h=Math.floor(totalStudyMinutes/60),m=totalStudyMinutes%60;const text=`${h}時間${String(m).padStart(2,'0')}分`;document.getElementById('total-time-display').textContent=text;document.getElementById('home-total-display').textContent=text;}
+function displayLogs(){
+    const list=document.getElementById('study-logs');if(!list)return;
     const logs=JSON.parse(localStorage.getItem('studyLogs')||'[]');
-    if(logs.length===0){
-        list.innerHTML=`<li class="py-10 text-center border-2 border-dashed border-slate-100 rounded-2xl"><p class="text-xs font-bold text-slate-300 italic">No records yet</p></li>`;
-        return;
-    }
-    list.innerHTML=logs.map(log=>`
-        <li class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
-            <div class="flex flex-col">
-                <span class="text-[10px] font-bold text-slate-400 leading-none mb-1">${log.time}</span>
-                <span class="text-sm font-black text-slate-700">${log.type}終了</span>
-            </div>
-            <span class="text-xs font-black text-slate-500 bg-white px-3 py-1 rounded-lg border border-slate-100">${log.duration}分</span>
-        </li>`).join('');
+    if(logs.length===0){list.innerHTML=`<li class="py-10 text-center border-2 border-dashed border-slate-100 rounded-2xl"><p class="text-xs font-bold text-slate-300 italic">No records yet</p></li>`;return;}
+    list.innerHTML=logs.map(log=>`<li class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm"><div class="flex flex-col"><span class="text-[10px] font-bold text-slate-400 leading-none mb-1">${log.time}</span><span class="text-sm font-black text-slate-700">${log.type}終了</span></div><span class="text-xs font-black text-slate-500 bg-white px-3 py-1 rounded-lg border border-slate-100">${log.duration}分</span></li>`).join('');
 }
-
-function saveLog(type,duration) {
-    const now=new Date();
-    const ts=now.getHours()+":"+String(now.getMinutes()).padStart(2,'0');
+function saveLog(type,duration){
+    const now=new Date();const ts=now.getHours()+":"+String(now.getMinutes()).padStart(2,'0');
     const label={work:'集中',break:'休憩',longBreak:'長い休憩'}[type]||type;
-    const logs=JSON.parse(localStorage.getItem('studyLogs')||'[]');
-    logs.unshift({time:ts,type:label,duration});
+    const logs=JSON.parse(localStorage.getItem('studyLogs')||'[]');logs.unshift({time:ts,type:label,duration});
     localStorage.setItem('studyLogs',JSON.stringify(logs.slice(0,5)));
     if(type==='work'){totalStudyMinutes+=duration;localStorage.setItem('totalStudyMinutes',totalStudyMinutes);displayTotalTime();}
     displayLogs();
 }
-
-function updateDisplay() {
-    const m=Math.floor(timeLeft/60),s=timeLeft%60;
-    timerDisplay.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    setCountDisplay.textContent=completedSets; setsGoalDisplay.textContent=setsBeforeLongBreak;
-}
-
-function updateStatus() {
-    if(isWorking){statusDisplay.textContent="集中タイム";statusDisplay.className="text-xl font-bold mb-4 text-orange-500";}
-    else if(isLongBreak){statusDisplay.textContent="長い休憩タイム！";statusDisplay.className="text-xl font-bold mb-4 text-blue-500";}
-    else{statusDisplay.textContent="休憩タイム";statusDisplay.className="text-xl font-bold mb-4 text-green-500";}
-}
-
-function startTimer() {
-    if(timerId){
-        clearInterval(timerId); timerId=null;
-        startBtn.textContent='再開'; startBtn.classList.replace('bg-red-500','bg-indigo-600');
-        localStorage.setItem('timerRunning','false'); localStorage.setItem('timeLeft',timeLeft);
-    } else {
-        startBtn.textContent='一時停止'; startBtn.classList.replace('bg-indigo-600','bg-red-500');
-        startTime=Date.now(); startTimeLeft=timeLeft;
-        localStorage.setItem('timerRunning','true');
-        localStorage.setItem('timerStartTime',startTime);
-        localStorage.setItem('timerStartTimeLeft',startTimeLeft);
+function updateDisplay(){const m=Math.floor(timeLeft/60),s=timeLeft%60;timerDisplay.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;setCountDisplay.textContent=completedSets;setsGoalDisplay.textContent=setsBeforeLongBreak;}
+function updateStatus(){if(isWorking){statusDisplay.textContent="集中タイム";statusDisplay.className="text-xl font-bold mb-4 text-orange-500";}else if(isLongBreak){statusDisplay.textContent="長い休憩タイム！";statusDisplay.className="text-xl font-bold mb-4 text-blue-500";}else{statusDisplay.textContent="休憩タイム";statusDisplay.className="text-xl font-bold mb-4 text-green-500";}}
+function startTimer(){
+    if(timerId){clearInterval(timerId);timerId=null;startBtn.textContent='再開';startBtn.classList.replace('bg-red-500','bg-indigo-600');localStorage.setItem('timerRunning','false');localStorage.setItem('timeLeft',timeLeft);}
+    else{startBtn.textContent='一時停止';startBtn.classList.replace('bg-indigo-600','bg-red-500');startTime=Date.now();startTimeLeft=timeLeft;localStorage.setItem('timerRunning','true');localStorage.setItem('timerStartTime',startTime);localStorage.setItem('timerStartTimeLeft',startTimeLeft);
         timerId=setInterval(()=>{
-            const elapsed=Math.floor((Date.now()-startTime)/1000);
-            timeLeft=startTimeLeft-elapsed;
-            if(timeLeft<=0){
-                timeLeft=0; updateDisplay(); clearInterval(timerId); timerId=null;
-                localStorage.setItem('timerRunning','false');
-                if(isWorking){
-                    saveLog('work',workMinutes); completedSets++;
-                    if(completedSets%setsBeforeLongBreak===0){
-                        playSound('longBreak'); isWorking=false; isLongBreak=true; timeLeft=longBreakMinutes*60;
-                    } else {
-                        playSound('break'); isWorking=false; isLongBreak=false; timeLeft=breakMinutes*60;
-                    }
-                } else {
-                    playSound('work');
-                    saveLog(isLongBreak?'longBreak':'break',isLongBreak?longBreakMinutes:breakMinutes);
-                    isWorking=true; isLongBreak=false; timeLeft=workMinutes*60;
-                }
-                saveState(); updateDisplay(); updateStatus(); startTimer(); return;
-            }
-            saveState(); updateDisplay();
+            const elapsed=Math.floor((Date.now()-startTime)/1000);timeLeft=startTimeLeft-elapsed;
+            if(timeLeft<=0){timeLeft=0;updateDisplay();clearInterval(timerId);timerId=null;localStorage.setItem('timerRunning','false');
+                if(isWorking){saveLog('work',workMinutes);completedSets++;if(completedSets%setsBeforeLongBreak===0){playSound('longBreak');isWorking=false;isLongBreak=true;timeLeft=longBreakMinutes*60;}else{playSound('break');isWorking=false;isLongBreak=false;timeLeft=breakMinutes*60;}}
+                else{playSound('work');saveLog(isLongBreak?'longBreak':'break',isLongBreak?longBreakMinutes:breakMinutes);isWorking=true;isLongBreak=false;timeLeft=workMinutes*60;}
+                saveState();updateDisplay();updateStatus();startTimer();return;}
+            saveState();updateDisplay();
         },500);
     }
 }
+function resetTimer(){clearInterval(timerId);timerId=null;isWorking=true;isLongBreak=false;completedSets=0;timeLeft=workMinutes*60;localStorage.setItem('timerRunning','false');localStorage.removeItem('timerStartTime');localStorage.removeItem('timerStartTimeLeft');saveState();startBtn.textContent='スタート';startBtn.className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";updateDisplay();updateStatus();}
 
-function resetTimer() {
-    clearInterval(timerId); timerId=null; isWorking=true; isLongBreak=false;
-    completedSets=0; timeLeft=workMinutes*60;
-    localStorage.setItem('timerRunning','false');
-    localStorage.removeItem('timerStartTime'); localStorage.removeItem('timerStartTimeLeft');
-    saveState();
-    startBtn.textContent='スタート';
-    startBtn.className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";
-    updateDisplay(); updateStatus();
-}
-
-function showPage(pageId) {
-    ['home','timer','settings','quiz'].forEach(id=>{
+function showPage(pageId){
+    ['home','timer','settings','quiz','english'].forEach(id=>{
         document.getElementById(`page-${id}`).classList.add('hidden');
         const nav=document.getElementById(`nav-${id}`);
         if(nav){nav.classList.remove('text-indigo-600');nav.classList.add('text-slate-400');}
@@ -790,56 +941,30 @@ function showPage(pageId) {
     document.getElementById(`page-${pageId}`).classList.remove('hidden');
     const an=document.getElementById(`nav-${pageId}`);
     if(an){an.classList.add('text-indigo-600');an.classList.remove('text-slate-400');}
-    if(pageId==='settings'){
-        inputWork.value=workMinutes; inputBreak.value=breakMinutes;
-        inputLongBreak.value=longBreakMinutes; inputSets.value=setsBeforeLongBreak;
-        inputVolume.value=volume; volumeLabel.textContent=volume+'%';
-    }
-    if(pageId==='quiz') resetQuizToSetup();
+    if(pageId==='settings'){inputWork.value=workMinutes;inputBreak.value=breakMinutes;inputLongBreak.value=longBreakMinutes;inputSets.value=setsBeforeLongBreak;inputVolume.value=volume;volumeLabel.textContent=volume+'%';}
+    if(pageId==='quiz')resetQuizToSetup();
+    if(pageId==='english'){document.getElementById('eq-setup').classList.remove('hidden');document.getElementById('eq-main').classList.add('hidden');document.getElementById('eq-result').classList.add('hidden');}
 }
 
 startBtn.addEventListener('click',startTimer);
 resetBtn.addEventListener('click',resetTimer);
 inputVolume.addEventListener('input',()=>{volume=parseInt(inputVolume.value);volumeLabel.textContent=volume+'%';});
-
-document.getElementById('reset-total-btn').addEventListener('click',()=>{
-    if(!confirm('累計勉強時間をリセットしますか？'))return;
-    totalStudyMinutes=0; localStorage.setItem('totalStudyMinutes',0); displayTotalTime();
-});
-
-document.getElementById('clear-logs-btn').addEventListener('click',()=>{
-    if(!confirm('記録をすべて削除しますか？\n（累計勉強時間は削除されません）'))return;
-    localStorage.removeItem('studyLogs'); displayLogs();
-});
-
-document.getElementById('update-btn').addEventListener('click',()=>{
-    caches.keys().then(k=>Promise.all(k.map(c=>caches.delete(c)))).then(()=>window.location.reload());
-});
-
+document.getElementById('reset-total-btn').addEventListener('click',()=>{if(!confirm('累計勉強時間をリセットしますか？'))return;totalStudyMinutes=0;localStorage.setItem('totalStudyMinutes',0);displayTotalTime();});
+document.getElementById('clear-logs-btn').addEventListener('click',()=>{if(!confirm('記録をすべて削除しますか？\n（累計勉強時間は削除されません）'))return;localStorage.removeItem('studyLogs');displayLogs();});
+document.getElementById('update-btn').addEventListener('click',()=>{caches.keys().then(k=>Promise.all(k.map(c=>caches.delete(c)))).then(()=>window.location.reload());});
 saveBtn.addEventListener('click',()=>{
-    let w=parseInt(inputWork.value),b=parseInt(inputBreak.value);
-    let lb=parseInt(inputLongBreak.value),s=parseInt(inputSets.value),v=parseInt(inputVolume.value);
-    if(isNaN(w)||w<1)w=1; if(isNaN(b)||b<1)b=1;
-    if(isNaN(lb)||lb<1)lb=1; if(isNaN(s)||s<1)s=1; if(isNaN(v))v=80;
+    let w=parseInt(inputWork.value),b=parseInt(inputBreak.value),lb=parseInt(inputLongBreak.value),s=parseInt(inputSets.value),v=parseInt(inputVolume.value);
+    if(isNaN(w)||w<1)w=1;if(isNaN(b)||b<1)b=1;if(isNaN(lb)||lb<1)lb=1;if(isNaN(s)||s<1)s=1;if(isNaN(v))v=80;
     workMinutes=w;breakMinutes=b;longBreakMinutes=lb;setsBeforeLongBreak=s;volume=v;
-    localStorage.setItem('workMinutes',w);localStorage.setItem('breakMinutes',b);
-    localStorage.setItem('longBreakMinutes',lb);localStorage.setItem('setsBeforeLongBreak',s);
-    localStorage.setItem('volume',v);
-    resetTimer(); alert("設定を保存しました"); showPage('timer');
+    localStorage.setItem('workMinutes',w);localStorage.setItem('breakMinutes',b);localStorage.setItem('longBreakMinutes',lb);localStorage.setItem('setsBeforeLongBreak',s);localStorage.setItem('volume',v);
+    resetTimer();alert("設定を保存しました");showPage('timer');
 });
 
-updateStatus(); updateDisplay(); displayLogs(); displayTotalTime();
+updateStatus();updateDisplay();displayLogs();displayTotalTime();
 if(wasRunning&&timeLeft>0){showPage('timer');startTimer();}
 </script>
-
 <script>
-if('serviceWorker' in navigator){
-    window.addEventListener('load',()=>{
-        navigator.serviceWorker.register('./sw.js')
-            .then(()=>console.log('SW success'))
-            .catch(()=>console.log('SW fail'));
-    });
-}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').then(()=>console.log('SW success')).catch(()=>console.log('SW fail'));});}
 </script>
 </body>
 </html>
