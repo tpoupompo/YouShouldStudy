@@ -43,7 +43,7 @@
 <section id="page-home">
     <div class="flex justify-between items-start mb-8">
         <h1 class="text-2xl font-bold text-slate-700">ホーム</h1>
-        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.4.0</span>
+        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.5.0</span>
     </div>
     <div class="grid grid-cols-2 gap-4">
         <button onclick="showPage('timer')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
@@ -75,6 +75,12 @@
                 <span class="text-2xl font-black text-violet-600">語</span>
             </div>
             <span class="text-sm font-black text-slate-700">日本語力診断</span>
+        </button>
+        <button onclick="showPage('math')" class="col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center">
+                <span class="text-2xl font-black text-amber-500">⚡</span>
+            </div>
+            <span class="text-sm font-black text-slate-700">暗算タイムアタック</span>
         </button>
     </div>
     <div class="mt-6 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
@@ -325,6 +331,16 @@
             </div>
             <p class="text-[10px] text-slate-400 mt-3 text-center">わからない場合は「英検準2級」のままでOK</p>
         </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">選択肢の数</h3>
+            <div class="grid grid-cols-5 gap-2">
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-echoices="4">4択</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-echoices="5">5択</button>
+                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-echoices="6">6択</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-echoices="7">7択</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-echoices="8">8択</button>
+            </div>
+        </div>
         <button id="eq-start-btn" class="w-full bg-rose-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">診断スタート</button>
     </div>
 
@@ -458,6 +474,16 @@
             </div>
             <p class="text-[10px] text-slate-400 mt-3 text-center">わからない場合は「高校生」のままでOK</p>
         </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">選択肢の数</h3>
+            <div class="grid grid-cols-5 gap-2">
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-jchoices="4">4択</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-jchoices="5">5択</button>
+                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-jchoices="6">6択</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-jchoices="7">7択</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-jchoices="8">8択</button>
+            </div>
+        </div>
         <button id="jq-start-btn" class="w-full bg-violet-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">診断スタート</button>
     </div>
 
@@ -545,6 +571,149 @@
         <div class="grid grid-cols-2 gap-3">
             <button id="jq-retry-btn" class="bg-violet-500 text-white py-4 rounded-2xl font-bold active:scale-95 transition-all">もう一度</button>
             <button onclick="showPage('home')" class="bg-white text-slate-600 border border-slate-200 py-4 rounded-2xl font-bold active:scale-95 transition-all">ホームへ</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 暗算タイムアタック ===== -->
+<section id="page-math" class="hidden">
+    <div class="flex items-center gap-3 mb-8">
+        <button onclick="showPage('home')" class="text-slate-400 hover:text-slate-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+        <h1 class="text-2xl font-bold text-slate-700">暗算タイムアタック</h1>
+    </div>
+
+    <!-- セットアップ -->
+    <div id="math-setup" class="space-y-5">
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <p class="text-sm text-slate-500 leading-relaxed">制限時間内に暗算で答えよう！連続正解でコンボボーナス時間が加算されます。</p>
+            <div class="mt-4 space-y-2 text-xs text-slate-400">
+                <p>⚡ 正解で +0.5秒・コンボで追加ボーナス</p>
+                <p>❌ 不正解はスルーして次の問題へ</p>
+                <p>🔥 3連続正解でコンボ開始！</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">難易度</h3>
+            <div class="space-y-2">
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 w-full text-left transition-all" data-diff="easy">🌱　かんたん（1桁の足し算・引き算）</button>
+                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 w-full text-left transition-all" data-diff="normal">📘　ふつう（2桁の四則演算）</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 w-full text-left transition-all" data-diff="hard">🔥　むずかしい（3桁・複合演算）</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 w-full text-left transition-all" data-diff="extreme">💀　鬼（分数・二乗・混合）</button>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">制限時間</h3>
+            <div class="grid grid-cols-3 gap-2">
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-time="30">30秒</button>
+                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-time="60">60秒</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 text-sm font-bold text-slate-500 transition-all" data-time="120">120秒</button>
+            </div>
+        </div>
+
+        <!-- ハイスコア -->
+        <div class="bg-amber-50 border border-amber-200 rounded-3xl p-5">
+            <h3 class="text-xs font-black text-amber-500 uppercase tracking-widest mb-3">ハイスコア</h3>
+            <div id="math-highscores" class="space-y-1"></div>
+        </div>
+
+        <button id="math-start-btn" class="w-full bg-amber-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">スタート！</button>
+    </div>
+
+    <!-- ゲーム画面 -->
+    <div id="math-main" class="hidden">
+        <!-- タイマー・スコア -->
+        <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-2">
+                <div id="math-timer-ring" class="relative w-12 h-12">
+                    <svg class="w-12 h-12 -rotate-90" viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="28" fill="none" stroke="#f1f5f9" stroke-width="6"/>
+                        <circle id="math-timer-circle" cx="32" cy="32" r="28" fill="none" stroke="#f59e0b" stroke-width="6"
+                            stroke-dasharray="175.9" stroke-dashoffset="0" style="transition:stroke-dashoffset .1s linear"/>
+                    </svg>
+                    <span id="math-time-display" class="absolute inset-0 flex items-center justify-center text-sm font-black text-amber-500">60</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400">スコア</p>
+                    <p id="math-score" class="text-xl font-black text-slate-800">0</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div id="math-combo-display" class="hidden">
+                    <p class="text-[10px] font-bold text-orange-400">COMBO</p>
+                    <p id="math-combo-num" class="text-2xl font-black text-orange-500">0</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 mt-1">正解</p>
+                    <p id="math-correct-count" class="text-base font-black text-green-500">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- コンボバー -->
+        <div class="w-full bg-slate-100 rounded-full h-1.5 mb-3">
+            <div id="math-combo-bar" class="h-1.5 rounded-full bg-orange-400 transition-all duration-300" style="width:0%"></div>
+        </div>
+
+        <!-- 問題カード -->
+        <div id="math-card" class="bg-white p-5 rounded-2xl shadow-lg border border-slate-100 text-center mb-3">
+            <p id="math-question" class="text-4xl font-black text-slate-800 mb-1">12 + 34</p>
+            <p id="math-feedback-text" class="text-xs font-bold h-4"></p>
+        </div>
+
+        <!-- 入力表示 -->
+        <div id="math-answer-display" class="bg-white border-2 border-amber-300 rounded-2xl py-2 px-4 text-center text-2xl font-black text-slate-800 mb-3 min-h-[48px]">
+            <span id="math-input-val">?</span>
+        </div>
+
+        <!-- テンキー -->
+        <div class="grid grid-cols-3 gap-2 mb-2">
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="7">7</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="8">8</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="9">9</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="4">4</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="5">5</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="6">6</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="1">1</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="2">2</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="3">3</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="0">0</button>
+            <button class="math-key bg-amber-100 border-2 border-amber-200 rounded-xl py-3 text-lg font-black text-amber-700 active:scale-95 transition-all" data-val="-">±</button>
+            <button id="math-delete-btn" class="bg-slate-100 border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-500 active:scale-95 transition-all">⌫</button>
+        </div>
+        <button id="math-submit-btn" class="w-full bg-amber-500 text-white py-3 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">答える</button>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="math-result" class="hidden text-center space-y-5">
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
+            <p id="math-result-badge" class="text-6xl mb-3">🏆</p>
+            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">最終スコア</p>
+            <p id="math-result-score" class="text-6xl font-black text-amber-500 mb-1"></p>
+            <p id="math-result-rank" class="text-lg font-bold text-slate-500 mb-5"></p>
+
+            <div class="grid grid-cols-3 gap-3 text-center mb-5">
+                <div class="bg-green-50 rounded-2xl p-3">
+                    <p id="math-res-correct" class="text-2xl font-black text-green-600"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">正解数</p>
+                </div>
+                <div class="bg-red-50 rounded-2xl p-3">
+                    <p id="math-res-wrong" class="text-2xl font-black text-red-400"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">不正解数</p>
+                </div>
+                <div class="bg-orange-50 rounded-2xl p-3">
+                    <p id="math-res-maxcombo" class="text-2xl font-black text-orange-500"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">最大コンボ</p>
+                </div>
+            </div>
+
+            <div id="math-highscore-msg" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-3 text-sm font-black text-amber-600 mb-3">🎉 ハイスコア更新！</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <button id="math-retry-btn" class="bg-amber-500 text-white py-4 rounded-2xl font-bold active:scale-95 transition-all">もう一度</button>
+            <button onclick="showPage('math')" class="bg-white text-slate-600 border border-slate-200 py-4 rounded-2xl font-bold active:scale-95 transition-all">設定に戻る</button>
         </div>
     </div>
 </section>
@@ -775,6 +944,7 @@ const EQ_BADGE = ['📗','📘','📙','🥉','🥈','🥇','🏆','💎','👑'
 
 let eqDir        = 'enToJa';   // enToJa | jaToEn
 let eqStartLevel = 4;          // 開始レベル 1〜6
+let eqChoiceCount = 6;         // 選択肢の数 4〜8
 let eqAbility    = 4.0;        // 1〜7の浮動小数
 let eqAnswered   = 0;
 let eqCorrect    = 0;
@@ -805,6 +975,13 @@ document.querySelectorAll('[data-elv]').forEach(btn=>{
         document.querySelectorAll('[data-elv]').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
         eqStartLevel = parseInt(btn.dataset.elv);
+    });
+});
+
+document.querySelectorAll('[data-echoices]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-echoices]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); eqChoiceCount=parseInt(btn.dataset.echoices);
     });
 });
 
@@ -841,26 +1018,17 @@ function eqPickWord() {
 }
 
 function eqMakeChoices(correct) {
-    // 同レベルの単語をシャッフルして3つ選ぶ
     const sameLevel = shuffle(
         EQ_WORDS.filter(w => w.e !== correct.e && w.l === correct.l)
     );
-    const wrong = [...sameLevel.slice(0, 3)];
-
-    // 同レベルが3つ未満なら隣レベルからランダムに補充
-    if (wrong.length < 3) {
+    const need = eqChoiceCount - 1;
+    const wrong = [...sameLevel.slice(0, need)];
+    if(wrong.length < need){
         const neighbors = shuffle(
-            EQ_WORDS.filter(w =>
-                w.e !== correct.e &&
-                !wrong.some(x => x.e === w.e) &&
-                Math.abs(w.l - correct.l) === 1
-            )
+            EQ_WORDS.filter(w=>w.e!==correct.e&&!wrong.some(x=>x.e===w.e)&&Math.abs(w.l-correct.l)===1)
         );
-        while (wrong.length < 3 && neighbors.length > 0) {
-            wrong.push(neighbors.shift());
-        }
+        while(wrong.length < need && neighbors.length > 0) wrong.push(neighbors.shift());
     }
-
     return shuffle([correct, ...wrong]);
 }
 
@@ -910,7 +1078,10 @@ function eqAnswer(chosen, correct) {
 
     // 能力値更新 (IRT簡易版・序盤は変動大)
     const expected = 1 / (1 + Math.exp(-(eqAbility - correct.l)));
-    const update   = eqGetK() * ((isCorrect ? 1 : 0) - expected);
+    // 正解より不正解の方が変動が大きい（正解:0.8倍、不正解:1.3倍）
+    const kBase    = eqGetK();
+    const kFactor  = isCorrect ? 0.8 : 1.3;
+    const update   = kBase * kFactor * ((isCorrect ? 1 : 0) - expected);
     eqAbility = Math.max(1, Math.min(7, eqAbility + update));
 
     // 選択肢の色を変える
@@ -1695,6 +1866,7 @@ const JQ_BADGE = ['📗','📘','📙','🥉','🥈','🥇','🏆','💎','👑'
 
 let jqDir        = 'wordToMeaning';
 let jqStartLevel = 4;
+let jqChoiceCount = 6;
 let jqAbility    = 4.0;
 let jqAnswered   = 0;
 let jqCorrect    = 0;
@@ -1717,6 +1889,13 @@ document.querySelectorAll('[data-jlv]').forEach(btn=>{
     btn.addEventListener('click',()=>{
         document.querySelectorAll('[data-jlv]').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active'); jqStartLevel=parseInt(btn.dataset.jlv);
+    });
+});
+
+document.querySelectorAll('[data-jchoices]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-jchoices]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); jqChoiceCount=parseInt(btn.dataset.jchoices);
     });
 });
 
@@ -1751,10 +1930,11 @@ function jqPickWord(){
 
 function jqMakeChoices(correct){
     const sameLevel=shuffle(JQ_WORDS.filter(w=>w.w!==correct.w&&w.l===correct.l));
-    const wrong=[...sameLevel.slice(0,3)];
-    if(wrong.length<3){
+    const need=jqChoiceCount-1;
+    const wrong=[...sameLevel.slice(0,need)];
+    if(wrong.length<need){
         const neighbors=shuffle(JQ_WORDS.filter(w=>w.w!==correct.w&&!wrong.some(x=>x.w===w.w)&&Math.abs(w.l-correct.l)===1));
-        while(wrong.length<3&&neighbors.length>0)wrong.push(neighbors.shift());
+        while(wrong.length<need&&neighbors.length>0)wrong.push(neighbors.shift());
     }
     return shuffle([correct,...wrong]);
 }
@@ -1802,7 +1982,9 @@ function jqAnswer(chosen,correct){
     jqHistory.push({word:correct,correct:isCorrect,level:correct.l});
 
     const expected=1/(1+Math.exp(-(jqAbility-correct.l)));
-    const update=jqGetK()*((isCorrect?1:0)-expected);
+    const kBase2   = jqGetK();
+    const kFactor2 = isCorrect ? 0.8 : 1.3;
+    const update=kBase2*kFactor2*((isCorrect?1:0)-expected);
     jqAbility=Math.max(1,Math.min(10,jqAbility+update));
 
     document.querySelectorAll('#jq-choices .eq-choice-btn').forEach(btn=>{
@@ -1863,6 +2045,264 @@ function jqShowResult(){
         const a=Math.round(breakdown[lv].correct/breakdown[lv].total*100);
         bEl.innerHTML+=`<div><div class="flex justify-between text-xs font-bold mb-1"><span class="text-slate-600">${info2.label}</span><span class="text-slate-400">${breakdown[lv].correct}/${breakdown[lv].total}問 (${a}%)</span></div><div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 rounded-full transition-all" style="width:${a}%;background:${info2.color}"></div></div></div>`;
     }
+}
+
+// ============================================================
+// 暗算タイムアタック
+// ============================================================
+let mathDiff      = 'normal';
+let mathTimeLimit = 60;
+let mathTimeLeft  = 60;
+let mathTimerId   = null;
+let mathScore     = 0;
+let mathCorrect   = 0;
+let mathWrong     = 0;
+let mathCombo     = 0;
+let mathMaxCombo  = 0;
+let mathInputStr  = '';
+let mathAnswer    = 0;
+let mathQuestion  = '';
+let mathRunning   = false;
+
+const MATH_RANKS = [
+    {min:0,   label:'🐣 はじめて',   color:'text-slate-400'},
+    {min:5,   label:'🌱 見習い',     color:'text-green-500'},
+    {min:10,  label:'📘 初級',       color:'text-blue-500'},
+    {min:20,  label:'⭐ 中級',       color:'text-yellow-500'},
+    {min:35,  label:'🔥 上級',       color:'text-orange-500'},
+    {min:50,  label:'💎 エキスパート',color:'text-indigo-500'},
+    {min:70,  label:'👑 マスター',   color:'text-purple-500'},
+    {min:100, label:'🌟 伝説',       color:'text-rose-500'},
+];
+
+document.querySelectorAll('[data-diff]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-diff]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); mathDiff=btn.dataset.diff;
+    });
+});
+document.querySelectorAll('[data-time]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-time]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); mathTimeLimit=parseInt(btn.dataset.time);
+    });
+});
+
+document.querySelectorAll('.math-key').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        if(!mathRunning) return;
+        const val=btn.dataset.val;
+        if(val==='-'){
+            if(mathInputStr.startsWith('-')) mathInputStr=mathInputStr.slice(1);
+            else mathInputStr='-'+mathInputStr;
+        } else {
+            if(mathInputStr.length>=6) return;
+            mathInputStr+=val;
+        }
+        updateMathInput();
+    });
+});
+
+document.getElementById('math-delete-btn').addEventListener('click',()=>{
+    if(!mathRunning) return;
+    mathInputStr=mathInputStr.slice(0,-1);
+    updateMathInput();
+});
+
+document.getElementById('math-submit-btn').addEventListener('click', submitMathAnswer);
+document.getElementById('math-start-btn').addEventListener('click', startMath);
+document.getElementById('math-retry-btn').addEventListener('click', ()=>{
+    document.getElementById('math-result').classList.add('hidden');
+    startMath();
+});
+
+function updateMathInput(){
+    const el=document.getElementById('math-input-val');
+    el.textContent=mathInputStr===''||mathInputStr==='-'?'?':mathInputStr;
+}
+
+function generateQuestion(){
+    let a,b,op,ans,display;
+    const r=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+
+    if(mathDiff==='easy'){
+        op=['+','-'][r(0,1)];
+        a=r(1,9); b=r(1,9);
+        if(op==='-'&&a<b)[a,b]=[b,a];
+        ans=op==='+'?a+b:a-b;
+        display=`${a} ${op} ${b}`;
+    } else if(mathDiff==='normal'){
+        const ops=['+','-','×','÷'];
+        op=ops[r(0,3)];
+        if(op==='+'){a=r(10,99);b=r(10,99);ans=a+b;}
+        else if(op==='-'){a=r(20,99);b=r(10,a);ans=a-b;}
+        else if(op==='×'){a=r(2,12);b=r(2,12);ans=a*b;}
+        else{b=r(2,9);ans=r(2,12);a=ans*b;op='÷';}
+        display=`${a} ${op} ${b}`;
+    } else if(mathDiff==='hard'){
+        const type=r(0,3);
+        if(type===0){a=r(10,99);b=r(10,99);const c=r(1,9);op='+';ans=a+b+c;display=`${a} + ${b} + ${c}`;}
+        else if(type===1){a=r(10,50);b=r(2,9);ans=a*b;display=`${a} × ${b}`;}
+        else if(type===2){a=r(100,999);b=r(10,99);ans=a+b;display=`${a} + ${b}`;}
+        else{a=r(2,9);ans=a*a;display=`${a}²`;}
+    } else { // extreme
+        const type=r(0,3);
+        if(type===0){// 分数
+            const d=r(2,9);const n1=r(1,d-1);const n2=r(1,d-1);
+            ans=n1+n2;// 分子の和（同分母）
+            display=`${n1}/${d} + ${n2}/${d} = ?/${d}`;
+        } else if(type===1){
+            a=r(10,30);ans=a*a;display=`${a}²`;
+        } else if(type===2){
+            a=r(2,9);b=r(2,9);const c=r(2,9);ans=a*b+c;display=`${a}×${b}+${c}`;
+        } else {
+            a=r(100,999);b=r(10,99);ans=a-b;display=`${a} − ${b}`;
+        }
+    }
+
+    mathAnswer=ans;
+    mathQuestion=display;
+    document.getElementById('math-question').textContent=display;
+    mathInputStr='';
+    updateMathInput();
+}
+
+function submitMathAnswer(){
+    if(!mathRunning) return;
+    const input=parseInt(mathInputStr);
+    if(isNaN(input)) return;
+
+    const isCorrect=input===mathAnswer;
+    const fb=document.getElementById('math-feedback-text');
+
+    if(isCorrect){
+        mathCorrect++;
+        mathCombo++;
+        if(mathCombo>mathMaxCombo) mathMaxCombo=mathCombo;
+
+        // スコア計算
+        const diffBonus={easy:1,normal:2,hard:4,extreme:7}[mathDiff];
+        const comboBonus=mathCombo>=3?Math.floor(mathCombo/3):0;
+        const gained=diffBonus+comboBonus;
+        mathScore+=gained;
+
+        // 時間ボーナス
+        const timeBonus=0.5+(mathCombo>=5?0.5:0)+(mathCombo>=10?1.0:0);
+        mathTimeLeft=Math.min(mathTimeLeft+timeBonus, mathTimeLimit*1.5);
+
+        fb.textContent=comboBonus>0?`✅ +${gained}点 コンボ+${comboBonus}！`:`✅ +${gained}点`;
+        fb.className='text-sm font-bold text-green-500 h-5';
+
+        // コンボ表示
+        if(mathCombo>=3){
+            document.getElementById('math-combo-display').classList.remove('hidden');
+            document.getElementById('math-combo-num').textContent=mathCombo;
+        }
+    } else {
+        mathWrong++;
+        mathCombo=0;
+        document.getElementById('math-combo-display').classList.add('hidden');
+        fb.textContent=`❌ 正解: ${mathAnswer}`;
+        fb.className='text-sm font-bold text-red-400 h-5';
+    }
+
+    // コンボバー (3連続で1ゲージ)
+    const barPct=Math.min((mathCombo%3)/3*100,100);
+    document.getElementById('math-combo-bar').style.width=barPct+'%';
+
+    document.getElementById('math-score').textContent=mathScore;
+    document.getElementById('math-correct-count').textContent=mathCorrect;
+
+    setTimeout(()=>{
+        fb.textContent='';
+        generateQuestion();
+    }, 400);
+}
+
+function startMath(){
+    mathScore=0; mathCorrect=0; mathWrong=0;
+    mathCombo=0; mathMaxCombo=0; mathInputStr='';
+    mathTimeLeft=mathTimeLimit; mathRunning=true;
+
+    document.getElementById('math-setup').classList.add('hidden');
+    document.getElementById('math-result').classList.add('hidden');
+    document.getElementById('math-main').classList.remove('hidden');
+    document.getElementById('math-combo-display').classList.add('hidden');
+    document.getElementById('math-combo-bar').style.width='0%';
+    document.getElementById('math-score').textContent='0';
+    document.getElementById('math-correct-count').textContent='0';
+    document.getElementById('math-feedback-text').textContent='';
+
+    generateQuestion();
+
+    if(mathTimerId) clearInterval(mathTimerId);
+    const circumference=175.9;
+    mathTimerId=setInterval(()=>{
+        mathTimeLeft-=0.1;
+        const display=Math.ceil(mathTimeLeft);
+        document.getElementById('math-time-display').textContent=display;
+
+        // タイマーリング
+        const pct=Math.max(0,mathTimeLeft/mathTimeLimit);
+        const offset=circumference*(1-Math.min(pct,1));
+        document.getElementById('math-timer-circle').style.strokeDashoffset=offset;
+
+        // 残り少ないと赤く
+        if(mathTimeLeft<=10){
+            document.getElementById('math-timer-circle').style.stroke='#ef4444';
+            document.getElementById('math-time-display').className='absolute inset-0 flex items-center justify-center text-lg font-black text-red-500';
+        }
+
+        if(mathTimeLeft<=0){
+            clearInterval(mathTimerId);
+            mathTimerId=null;
+            mathRunning=false;
+            showMathResult();
+        }
+    },100);
+}
+
+function showMathResult(){
+    document.getElementById('math-main').classList.add('hidden');
+    document.getElementById('math-result').classList.remove('hidden');
+
+    document.getElementById('math-result-score').textContent=mathScore;
+    document.getElementById('math-res-correct').textContent=mathCorrect;
+    document.getElementById('math-res-wrong').textContent=mathWrong;
+    document.getElementById('math-res-maxcombo').textContent=mathMaxCombo;
+
+    // ランク
+    let rank=MATH_RANKS[0];
+    for(const r of MATH_RANKS){ if(mathScore>=r.min) rank=r; }
+    document.getElementById('math-result-rank').textContent=rank.label;
+    document.getElementById('math-result-badge').textContent=
+        mathScore>=100?'🌟':mathScore>=70?'👑':mathScore>=50?'💎':mathScore>=35?'🔥':mathScore>=20?'⭐':'🎯';
+
+    // ハイスコア保存
+    const key=`mathHigh_${mathDiff}_${mathTimeLimit}`;
+    const prev=parseInt(localStorage.getItem(key))||0;
+    if(mathScore>prev){
+        localStorage.setItem(key,mathScore);
+        document.getElementById('math-highscore-msg').classList.remove('hidden');
+    } else {
+        document.getElementById('math-highscore-msg').classList.add('hidden');
+    }
+    renderMathHighscores();
+}
+
+function renderMathHighscores(){
+    const el=document.getElementById('math-highscores');
+    const diffs=['easy','normal','hard','extreme'];
+    const diffLabels={easy:'かんたん',normal:'ふつう',hard:'むずかしい',extreme:'鬼'};
+    const times=[30,60,120];
+    let html='';
+    diffs.forEach(d=>{
+        times.forEach(t=>{
+            const v=parseInt(localStorage.getItem(`mathHigh_${d}_${t}`))||0;
+            if(v>0) html+=`<div class="flex justify-between text-xs font-bold"><span class="text-slate-500">${diffLabels[d]} ${t}秒</span><span class="text-amber-600">${v}点</span></div>`;
+        });
+    });
+    el.innerHTML=html||'<p class="text-xs text-slate-400">まだ記録がありません</p>';
 }
 
 // ============================================================
@@ -1938,7 +2378,7 @@ function startTimer(){
 function resetTimer(){clearInterval(timerId);timerId=null;isWorking=true;isLongBreak=false;completedSets=0;timeLeft=workMinutes*60;localStorage.setItem('timerRunning','false');localStorage.removeItem('timerStartTime');localStorage.removeItem('timerStartTimeLeft');saveState();startBtn.textContent='スタート';startBtn.className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";updateDisplay();updateStatus();}
 
 function showPage(pageId){
-    ['home','timer','settings','quiz','english','japanese'].forEach(id=>{
+    ['home','timer','settings','quiz','english','japanese','math'].forEach(id=>{
         document.getElementById(`page-${id}`).classList.add('hidden');
         const nav=document.getElementById(`nav-${id}`);
         if(nav){nav.classList.remove('text-indigo-600');nav.classList.add('text-slate-400');}
@@ -1950,6 +2390,13 @@ function showPage(pageId){
     if(pageId==='quiz')resetQuizToSetup();
     if(pageId==='english'){document.getElementById('eq-setup').classList.remove('hidden');document.getElementById('eq-main').classList.add('hidden');document.getElementById('eq-result').classList.add('hidden');}
     if(pageId==='japanese'){document.getElementById('jq-setup').classList.remove('hidden');document.getElementById('jq-main').classList.add('hidden');document.getElementById('jq-result').classList.add('hidden');}
+    if(pageId==='math'){
+        if(mathTimerId){clearInterval(mathTimerId);mathTimerId=null;mathRunning=false;}
+        document.getElementById('math-setup').classList.remove('hidden');
+        document.getElementById('math-main').classList.add('hidden');
+        document.getElementById('math-result').classList.add('hidden');
+        renderMathHighscores();
+    }
 }
 
 startBtn.addEventListener('click',startTimer);
