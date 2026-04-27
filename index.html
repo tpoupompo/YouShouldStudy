@@ -19,7 +19,9 @@
         input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:9999px;outline:none;cursor:pointer;}
         input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:#4f46e5;cursor:pointer;}
         input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#4f46e5;cursor:pointer;border:none;}
-        .sel-btn.active{background:#4f46e5;color:white;border-color:#4f46e5;}
+        .sel-btn.active,
+        .qrange-btn.active,
+        .qgroup-btn.active{background:#4f46e5;color:white;border-color:#4f46e5;}
         .eq-choice-btn{transition:all .15s;width:100%;border:2px solid #e2e8f0;border-radius:1rem;padding:.85rem 1rem;font-weight:700;font-size:.9rem;color:#475569;background:white;text-align:left;}
         .eq-choice-btn.correct{background:#dcfce7!important;border-color:#22c55e!important;color:#15803d!important;}
         .eq-choice-btn.wrong{background:#fee2e2!important;border-color:#ef4444!important;color:#b91c1c!important;}
@@ -41,7 +43,7 @@
 <section id="page-home">
     <div class="flex justify-between items-start mb-8">
         <h1 class="text-2xl font-bold text-slate-700">ホーム</h1>
-        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.3.0</span>
+        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.4.0</span>
     </div>
     <div class="grid grid-cols-2 gap-4">
         <button onclick="showPage('timer')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
@@ -67,6 +69,12 @@
                 <span class="text-2xl font-black text-rose-500">英</span>
             </div>
             <span class="text-sm font-black text-slate-700">英語力診断</span>
+        </button>
+        <button onclick="showPage('japanese')" class="col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-16 h-16 bg-violet-100 rounded-2xl flex items-center justify-center">
+                <span class="text-2xl font-black text-violet-600">語</span>
+            </div>
+            <span class="text-sm font-black text-slate-700">日本語力診断</span>
         </button>
     </div>
     <div class="mt-6 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
@@ -102,11 +110,11 @@
 <section id="page-settings" class="hidden">
     <h1 class="text-2xl font-bold mb-8 text-slate-700">設定</h1>
     <div class="bg-white p-6 rounded-3xl shadow-lg space-y-6">
-        <div><label class="block text-sm font-medium text-slate-600 mb-2">集中時間 (分)</label><input type="number" id="input-work" value="25" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"></div>
-        <div><label class="block text-sm font-medium text-slate-600 mb-2">休憩時間 (分)</label><input type="number" id="input-break" value="5" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"></div>
+        <div><label class="block text-sm font-medium text-slate-600 mb-2">集中時間 (分)</label><input type="number" id="input-work" value="25" min="0" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"></div>
+        <div><label class="block text-sm font-medium text-slate-600 mb-2">休憩時間 (分)</label><input type="number" id="input-break" value="5" min="0" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"></div>
         <hr class="border-slate-100">
         <div><label class="block text-sm font-medium text-slate-600 mb-2">長い休憩までのセット数</label><input type="number" id="input-sets" value="4" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"></div>
-        <div><label class="block text-sm font-medium text-slate-600 mb-2">長い休憩時間 (分)</label><input type="number" id="input-long-break" value="15" min="1" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"></div>
+        <div><label class="block text-sm font-medium text-slate-600 mb-2">長い休憩時間 (分)</label><input type="number" id="input-long-break" value="15" min="0" class="w-full p-3 bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"></div>
         <hr class="border-slate-100">
         <div>
             <div class="flex justify-between items-center mb-3"><label class="text-sm font-medium text-slate-600">通知音量</label><span id="volume-label" class="text-sm font-black text-indigo-600">80%</span></div>
@@ -125,32 +133,119 @@
         <h1 class="text-2xl font-bold text-slate-700">元素記号クイズ</h1>
     </div>
     <div id="quiz-setup" class="space-y-5">
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">出題範囲（複数選択可）</h3>
-            <div class="grid grid-cols-2 gap-2">
-                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="1-20">1〜20番</button>
-                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="21-40">21〜40番</button>
-                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="41-60">41〜60番</button>
-                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="61-80">61〜80番</button>
-                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="81-100">81〜100番</button>
-                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="101-118">101〜118番</button>
+
+        <!-- 選択モードタブ -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="grid grid-cols-3 border-b border-slate-100">
+                <button class="quiz-tab-btn py-3 text-xs font-black text-indigo-600 border-b-2 border-indigo-600 transition-all" data-tab="range">番号範囲</button>
+                <button class="quiz-tab-btn py-3 text-xs font-black text-slate-400 border-b-2 border-transparent transition-all" data-tab="group">族・周期</button>
+                <button class="quiz-tab-btn py-3 text-xs font-black text-slate-400 border-b-2 border-transparent transition-all" data-tab="individual">個別選択</button>
+            </div>
+
+            <!-- 番号範囲タブ -->
+            <div id="qtab-range" class="p-5 space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="qrange-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="1-20">1〜20番</button>
+                    <button class="qrange-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="21-40">21〜40番</button>
+                    <button class="qrange-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="41-60">41〜60番</button>
+                    <button class="qrange-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="61-80">61〜80番</button>
+                    <button class="qrange-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="81-100">81〜100番</button>
+                    <button class="qrange-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-range="101-118">101〜118番</button>
+                </div>
+                <p class="text-[10px] text-slate-400 text-center">複数選択可</p>
+            </div>
+
+            <!-- 族・周期タブ -->
+            <div id="qtab-group" class="p-5 space-y-4 hidden">
+                <div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">周期</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="period" data-gval="1">第1周期</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="period" data-gval="2">第2周期</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="period" data-gval="3">第3周期</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="period" data-gval="4">第4周期</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="period" data-gval="5">第5周期</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="period" data-gval="6">第6周期</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="period" data-gval="7">第7周期</button>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">族グループ</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="alkali">アルカリ金属</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="alkaline">アルカリ土類</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="transition">遷移金属</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="post">典型金属</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="metalloid">半金属</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="nonmetal">非金属</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="halogen">ハロゲン</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="noble">希ガス</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="lanthanide">ランタノイド</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-xl py-2 px-3 text-xs font-bold text-slate-500 transition-all" data-gtype="cat" data-gval="actinide">アクチノイド</button>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">族番号</p>
+                    <div class="flex flex-wrap gap-1">
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="1">1族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="2">2族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="3">3族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="4">4族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="5">5族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="6">6族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="7">7族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="8">8族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="9">9族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="10">10族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="11">11族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="12">12族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="13">13族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="14">14族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="15">15族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="16">16族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="17">17族</button>
+                        <button class="qgroup-btn border-2 border-slate-200 rounded-lg py-1 px-2 text-[11px] font-bold text-slate-500 transition-all" data-gtype="gnum" data-gval="18">18族</button>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-400 text-center">複数選択可</p>
+            </div>
+
+            <!-- 個別選択タブ -->
+            <div id="qtab-individual" class="p-4 hidden">
+                <div class="flex gap-2 mb-3">
+                    <button id="ind-select-all" class="flex-1 text-xs font-bold text-indigo-600 border border-indigo-200 rounded-xl py-2 active:scale-95">全選択</button>
+                    <button id="ind-clear-all" class="flex-1 text-xs font-bold text-slate-400 border border-slate-200 rounded-xl py-2 active:scale-95">全解除</button>
+                </div>
+                <div id="individual-grid" class="grid grid-cols-5 gap-1 max-h-72 overflow-y-auto pr-1"></div>
+                <p class="text-[10px] text-slate-400 text-center mt-3">タップで個別に選択/解除</p>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">問題タイプ</h3>
+
+        <!-- 選択中の元素数 -->
+        <div class="bg-indigo-50 border border-indigo-100 rounded-2xl px-4 py-3 flex justify-between items-center">
+            <span class="text-xs font-bold text-indigo-500">選択中の元素</span>
+            <span id="quiz-selected-count" class="text-lg font-black text-indigo-600">20個</span>
+        </div>
+
+        <!-- 問題タイプ -->
+        <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">問題タイプ</h3>
             <div class="space-y-2">
                 <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 transition-all w-full text-left" data-qtype="nameToSymbol">🔤　元素名 → 記号</button>
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 transition-all w-full text-left" data-qtype="symbolToName">⚗️　記号 → 元素名</button>
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 transition-all w-full text-left" data-qtype="periodGroup">🗂️　周期・族 → 元素名</button>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">解答形式</h3>
+
+        <!-- 解答形式 -->
+        <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">解答形式</h3>
             <div class="grid grid-cols-2 gap-2">
                 <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-atype="text">✏️　テキスト入力</button>
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-atype="choice">🔘　8択</button>
             </div>
         </div>
+
         <button id="quiz-start-btn" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">クイズスタート</button>
     </div>
     <div id="quiz-main" class="hidden space-y-5">
@@ -217,6 +312,18 @@
                 <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-edir="enToJa">🇬🇧 英語 → 日本語</button>
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-edir="jaToEn">🇯🇵 日本語 → 英語</button>
             </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">開始レベル</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-elv="1">英検5級から</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-elv="2">英検4級から</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-elv="3">英検3級から</button>
+                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-elv="4">英検準2級から</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-elv="5">英検2級から</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-elv="6">英検準1級から</button>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-3 text-center">わからない場合は「英検準2級」のままでOK</p>
         </div>
         <button id="eq-start-btn" class="w-full bg-rose-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">診断スタート</button>
     </div>
@@ -310,6 +417,133 @@
 
         <div class="grid grid-cols-2 gap-3">
             <button id="eq-retry-btn" class="bg-rose-500 text-white py-4 rounded-2xl font-bold active:scale-95 transition-all">もう一度</button>
+            <button onclick="showPage('home')" class="bg-white text-slate-600 border border-slate-200 py-4 rounded-2xl font-bold active:scale-95 transition-all">ホームへ</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 日本語力診断 ===== -->
+<section id="page-japanese" class="hidden">
+    <div class="flex items-center gap-3 mb-8">
+        <button onclick="showPage('home')" class="text-slate-400 hover:text-slate-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+        <h1 class="text-2xl font-bold text-slate-700">日本語力診断</h1>
+    </div>
+
+    <!-- セットアップ -->
+    <div id="jq-setup" class="space-y-5">
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <p class="text-sm text-slate-500 leading-relaxed">問題に答えるほど診断精度が上がります。いつでも「診断する」ボタンで結果確認できます。</p>
+            <div class="mt-4 space-y-2 text-xs text-slate-400">
+                <p>• 小学生〜超難読語（漢検1級超）を推定</p>
+                <p>• 4択クイズ（言葉→意味 or 意味→言葉）</p>
+                <p>• 正答率と難易度から自動レベル調整</p>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">出題方向</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-jdir="wordToMeaning">📖 言葉 → 意味</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-jdir="meaningToWord">💡 意味 → 言葉</button>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">開始レベル</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-jlv="1">小学低学年から</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-jlv="2">小学高学年から</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-jlv="3">中学生から</button>
+                <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-jlv="4">高校生から</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-jlv="6">漢検2級から</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-4 text-sm font-bold text-slate-500 transition-all" data-jlv="8">漢検準1級から</button>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-3 text-center">わからない場合は「高校生」のままでOK</p>
+        </div>
+        <button id="jq-start-btn" class="w-full bg-violet-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">診断スタート</button>
+    </div>
+
+    <!-- クイズ本体 -->
+    <div id="jq-main" class="hidden space-y-5">
+        <div class="flex justify-between items-center">
+            <span id="jq-qnum" class="text-sm font-bold text-slate-400">第1問</span>
+            <div class="flex gap-2 items-center">
+                <span id="jq-correct-count" class="text-sm font-black text-violet-500">0正解</span>
+                <span class="text-slate-300 text-sm">/</span>
+                <span id="jq-total-count" class="text-sm font-bold text-slate-400">0問</span>
+            </div>
+        </div>
+
+        <!-- レベルバー (10段階) -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mb-2">
+                <span>小低</span><span>小高</span><span>中学</span><span>高校</span><span>大学</span><span>漢2</span><span>漢準1</span><span>漢1</span><span>★1</span><span>★2</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-3">
+                <div id="jq-level-bar" class="level-bar bg-gradient-to-r from-violet-400 to-violet-600 h-3 rounded-full" style="width:14%"></div>
+            </div>
+            <p class="text-center text-xs font-black text-violet-500 mt-2" id="jq-current-level-label">推定レベル: 小学低学年</p>
+        </div>
+
+        <!-- 問題カード -->
+        <div id="jq-card" class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 text-center">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3" id="jq-q-label">言葉</p>
+            <p class="text-3xl font-black text-slate-800 mb-1" id="jq-q-word">山</p>
+            <p class="text-sm text-slate-400 italic" id="jq-q-hint"></p>
+        </div>
+
+        <!-- 4択 -->
+        <div id="jq-choices" class="space-y-3"></div>
+
+        <!-- フィードバック -->
+        <div id="jq-feedback-bar" class="hidden">
+            <div id="jq-feedback-msg" class="p-4 rounded-2xl text-center mb-3">
+                <p id="jq-fb-icon" class="text-2xl mb-1"></p>
+                <p id="jq-fb-text" class="font-black text-slate-700"></p>
+                <p id="jq-fb-ans" class="text-sm text-slate-500 mt-1"></p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <button id="jq-finish-btn" class="bg-white border-2 border-violet-300 text-violet-500 py-3 rounded-2xl font-bold active:scale-95 transition-all">診断する</button>
+                <button id="jq-next-btn" class="bg-violet-500 text-white py-3 rounded-2xl font-bold active:scale-95 transition-all">次の問題</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 結果 -->
+    <div id="jq-result" class="hidden space-y-5">
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 text-center">
+            <p class="text-5xl mb-3" id="jq-result-badge">📗</p>
+            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">あなたの日本語レベル</p>
+            <p class="text-3xl font-black text-violet-500 mb-1" id="jq-result-level"></p>
+            <p class="text-lg font-bold text-slate-500 mb-4" id="jq-result-sub"></p>
+            <div class="w-full bg-slate-100 rounded-full h-4 mb-2">
+                <div id="jq-result-bar" class="level-bar bg-gradient-to-r from-violet-400 to-violet-600 h-4 rounded-full" style="width:0%"></div>
+            </div>
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mb-5">
+                <span>小低</span><span>小高</span><span>中</span><span>高</span><span>大</span><span>漢2</span><span>漢準1</span><span>漢1</span><span>★1</span><span>★2</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="bg-slate-50 rounded-2xl p-3">
+                    <p class="text-2xl font-black text-slate-700" id="jq-res-total"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">解答数</p>
+                </div>
+                <div class="bg-green-50 rounded-2xl p-3">
+                    <p class="text-2xl font-black text-green-600" id="jq-res-correct"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">正解数</p>
+                </div>
+                <div class="bg-violet-50 rounded-2xl p-3">
+                    <p class="text-2xl font-black text-violet-500" id="jq-res-pct"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">正解率</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">レベル別 正解率</h3>
+            <div id="jq-level-breakdown" class="space-y-3"></div>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl text-xs text-amber-700 font-medium">
+            ※ 解答数が多いほど診断精度が上がります。目安：10問で参考値、20問で標準、30問以上で高精度。
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <button id="jq-retry-btn" class="bg-violet-500 text-white py-4 rounded-2xl font-bold active:scale-95 transition-all">もう一度</button>
             <button onclick="showPage('home')" class="bg-white text-slate-600 border border-slate-200 py-4 rounded-2xl font-bold active:scale-95 transition-all">ホームへ</button>
         </div>
     </div>
@@ -451,37 +685,126 @@ const EQ_WORDS = [
 {e:'acumen',j:'洞察力',l:7},{e:'blandish',j:'おだてる',l:7},{e:'chicanery',j:'詐欺・ごまかし',l:7},{e:'denouement',j:'結末',l:7},
 {e:'equivocate',j:'言葉を濁す',l:7},{e:'finagle',j:'ずる賢く手に入れる',l:7},{e:'gourmand',j:'大食家',l:7},{e:'halcyon',j:'平和な・穏やかな',l:7},
 {e:'imbroglio',j:'混乱した状況',l:7},{e:'lambaste',j:'厳しく批判する',l:7},
+// --- Level 8 (超級 ★1) ---
+{e:'abstruse',j:'難解な',l:8},{e:'apocryphal',j:'真偽不明の・外典の',l:8},{e:'bathetic',j:'感傷的すぎる・陳腐な',l:8},
+{e:'calumniate',j:'中傷する',l:8},{e:'contumacious',j:'命令に従わない',l:8},{e:'defenestration',j:'窓外への放出',l:8},
+{e:'edacious',j:'大食の・貪欲な',l:8},{e:'effulgent',j:'輝かしい',l:8},{e:'encomium',j:'称賛の言葉',l:8},
+{e:'execrable',j:'最悪の・忌まわしい',l:8},{e:'fecund',j:'多産の・豊かな',l:8},{e:'flagitious',j:'極めて悪質な',l:8},
+{e:'fulsome',j:'過度に媚びた',l:8},{e:'gainsay',j:'否定する・反論する',l:8},{e:'hegemonic',j:'覇権的な',l:8},
+{e:'hieratic',j:'聖職者の・格式ある',l:8},{e:'ignominy',j:'恥辱・不名誉',l:8},{e:'impecunious',j:'貧しい・無一文の',l:8},
+{e:'ineluctable',j:'避けられない・必然的な',l:8},{e:'jejune',j:'面白みのない・単純な',l:8},{e:'lassitude',j:'倦怠感・疲労',l:8},
+{e:'logorrhea',j:'多弁症・言葉の洪水',l:8},{e:'malediction',j:'呪い・悪口',l:8},{e:'meretricious',j:'見かけだけ魅力的な',l:8},
+{e:'miscreant',j:'悪人・不信心者',l:8},{e:'nugatory',j:'無価値な・取るに足らない',l:8},{e:'obstreperous',j:'騒々しい・手に負えない',l:8},
+{e:'opprobrium',j:'不名誉・非難',l:8},{e:'palimpsest',j:'書き直した羊皮紙・痕跡',l:8},{e:'pellucid',j:'透明な・明快な',l:8},
+{e:'peregrinate',j:'旅する・放浪する',l:8},{e:'phantasmagoric',j:'幻想的な・奇怪な',l:8},{e:'pleonasm',j:'冗語・重複表現',l:8},
+{e:'propitious',j:'好都合な・吉兆の',l:8},{e:'puerile',j:'子供っぽい・幼稚な',l:8},{e:'recondite',j:'難解な・あまり知られていない',l:8},
+{e:'refractory',j:'扱いにくい・頑固な',l:8},{e:'scurrilous',j:'粗野な・中傷的な',l:8},{e:'stertorous',j:'いびきをかく・喘ぐ',l:8},
+{e:'susurrus',j:'ささやき・かすかな音',l:8},{e:'tendentiously',j:'偏った形で',l:8},{e:'truculent',j:'残忍な・好戦的な',l:8},
+{e:'turpitude',j:'道徳的堕落',l:8},{e:'ululation',j:'長い遠吠え・哀泣',l:8},{e:'venal',j:'買収できる・金で動く',l:8},
+{e:'vitiate',j:'損なう・無効にする',l:8},{e:'voluble',j:'よくしゃべる・流暢な',l:8},{e:'weltanschauung',j:'世界観',l:8},
+{e:'xenophilia',j:'外国文化好き',l:8},{e:'yahoo',j:'粗野な人・野蛮人',l:8},{e:'zealotry',j:'狂信的行為',l:8},
+// --- Level 9 (超級 ★2) ---
+{e:'anacoluthon',j:'文法的不連続・文脈の断絶',l:9},{e:'antinomian',j:'道徳律廃棄論者の',l:9},
+{e:'apophenia',j:'無関係な物事に関連を見出す傾向',l:9},{e:'bathysphere',j:'深海潜水球',l:9},
+{e:'casuistry',j:'決疑論・こじつけの詭弁',l:9},{e:'clerisy',j:'知識人階層',l:9},
+{e:'contumely',j:'軽蔑・侮辱',l:9},{e:'couvade',j:'疑似分娩・父親の出産共感症状',l:9},
+{e:'demiurge',j:'創造神・職人的神',l:9},{e:'dysphemism',j:'悪化表現・遠回しでない言い方',l:9},
+{e:'eleemosynary',j:'慈善の・施しによる',l:9},{e:'epopee',j:'叙事詩・英雄詩',l:9},
+{e:'eschatology',j:'終末論',l:9},{e:'etiolate',j:'日光不足で白化する・弱める',l:9},
+{e:'exiguous',j:'わずかな・乏しい',l:9},{e:'flibbertigibbet',j:'おしゃべりで軽率な人',l:9},
+{e:'fugacious',j:'はかない・すぐ消える',l:9},{e:'gasconade',j:'大げさな自慢話',l:9},
+{e:'gnomon',j:'日時計の指針',l:9},{e:'hamartia',j:'悲劇的欠陥・致命的欠点',l:9},
+{e:'hapax legomenon',j:'一度しか使われない語',l:9},{e:'hierophant',j:'秘儀の解説者・神秘の案内人',l:9},
+{e:'hypnagogic',j:'入眠時の幻覚に関する',l:9},{e:'illeism',j:'自分を三人称で語る癖',l:9},
+{e:'interstice',j:'隙間・間隙',l:9},{e:'inveigle',j:'甘言で誘い込む',l:9},
+{e:'irenicism',j:'平和主義・和解主義',l:9},{e:'kakistocracy',j:'最悪の者による政治',l:9},
+{e:'liminal',j:'境界の・過渡期の',l:9},{e:'loquacity',j:'おしゃべり・多弁',l:9},
+{e:'maieutic',j:'産婆術的な・思考を引き出す',l:9},{e:'meliorism',j:'世界は改善できるという信念',l:9},
+{e:'mnemonics',j:'記憶術・語呂合わせ',l:9},{e:'moiety',j:'半分・一部分',l:9},
+{e:'nacreous',j:'真珠のような',l:9},{e:'noctilucent',j:'夜光雲の',l:9},
+{e:'omphalos',j:'世界の中心・へそ',l:9},{e:'panegyric',j:'称賛演説・頌詩',l:9},
+{e:'paroemia',j:'ことわざ',l:9},{e:'persiflage',j:'軽い冗談・からかい',l:9},
+{e:'petrichor',j:'雨後の土の匂い',l:9},{e:'philippic',j:'痛烈な非難演説',l:9},
+{e:'plangent',j:'鳴り響く・哀愁を帯びた',l:9},{e:'psephology',j:'選挙学',l:9},
+{e:'pyrrhic',j:'勝っても意味のない（勝利）',l:9},{e:'reification',j:'抽象概念の実体化',l:9},
+{e:'rodomontade',j:'空威張り・大げさな自慢',l:9},{e:'solecism',j:'文法上の誤り・非礼',l:9},
+{e:'subfusc',j:'暗い・地味な',l:9},{e:'syzygy',j:'朔望・天体の一直線配置',l:9},
+// --- Level 10 (超級 ★3) ---
+{e:'abderian',j:'馬鹿笑いをする',l:10},{e:'accismus',j:'わざと拒否するふりをする修辞法',l:10},
+{e:'agelast',j:'笑わない人',l:10},{e:'alexithymia',j:'感情失認・感情を言語化できない状態',l:10},
+{e:'anfractuous',j:'迂回した・複雑な',l:10},{e:'anopisthographic',j:'片面だけに書かれた',l:10},
+{e:'apotropaic',j:'邪悪を退ける・魔除けの',l:10},{e:'battology',j:'無意味な繰り返し',l:10},
+{e:'boustrophedon',j:'左右交互に書く古代の書法',l:10},{e:'cachinnate',j:'大声で笑う',l:10},
+{e:'callipygian',j:'美しい臀部を持つ',l:10},{e:'catachresis',j:'語の誤用・無理な比喩',l:10},
+{e:'chrestomathy',j:'学習用の文章集',l:10},{e:'chryselephantine',j:'金と象牙でできた',l:10},
+{e:'cicisbeo',j:'既婚女性の公認の愛人',l:10},{e:'colporteur',j:'宗教書の行商人',l:10},
+{e:'compossible',j:'共存できる',l:10},{e:'deasil',j:'時計回りに',l:10},
+{e:'deipnosophist',j:'食卓での談義を楽しむ人',l:10},{e:'eldritch',j:'不気味な・超自然的な',l:10},
+{e:'epexegesis',j:'説明的付加語',l:10},{e:'esemplastic',j:'多様なものを一つに統合する',l:10},
+{e:'eudaemonia',j:'幸福・繁栄（アリストテレス哲学）',l:10},{e:'floccinaucinihilipilification',j:'無価値と見なす行為',l:10},
+{e:'gossypiboma',j:'手術で体内に置き忘れた綿製品',l:10},{e:'hadeharia',j:'地獄という言葉を多用する癖',l:10},
+{e:'hirundine',j:'ツバメの・ツバメに似た',l:10},{e:'ithyphallic',j:'勃起した男根像の',l:10},
+{e:'jentacular',j:'朝食に関する',l:10},{e:'jouissance',j:'享楽・快楽（ラカン的概念）',l:10},
+{e:'kenopsia',j:'人がいなくなった場所の不気味さ',l:10},{e:'lethologica',j:'単語が思い出せない状態',l:10},
+{e:'lucubration',j:'夜を徹した勉学・苦心の作',l:10},{e:'meraki',j:'情熱と魂を込めて行う行為',l:10},
+{e:'mimsy',j:'弱々しい・物足りない',l:10},{e:'mumpsimus',j:'間違いと知りながら続ける慣習',l:10},
+{e:'naevus',j:'母斑・あざ',l:10},{e:'nelipot',j:'裸足で歩く人',l:10},
+{e:'numinous',j:'霊的な畏怖感を呼び起こす',l:10},{e:'obnubilate',j:'曇らせる・混乱させる',l:10},
+{e:'opsimath',j:'晩年になって学び始めた人',l:10},{e:'ostranenie',j:'異化・見慣れたものを新鮮に見せる手法',l:10},
+{e:'paracosm',j:'詳細な空想世界',l:10},{e:'pareidolia',j:'無関係なものに顔などを見出す現象',l:10},
+{e:'perendinate',j:'翌々日まで延期する',l:10},{e:'perissology',j:'冗長な言い回し',l:10},
+{e:'philippize',j:'外国の利益のために働く',l:10},{e:'pogonotrophy',j:'ひげを生やすこと',l:10},
 ];
 
 // ============================================================
 // 英語力診断ロジック
 // ============================================================
 const EQ_LEVEL_INFO = [
-    {label:'英検5級',  toeic:'TOEIC 〜300',  color:'#f87171', pct:5},
-    {label:'英検4級',  toeic:'TOEIC 〜350',  color:'#fb923c', pct:20},
-    {label:'英検3級',  toeic:'TOEIC 〜450',  color:'#fbbf24', pct:35},
-    {label:'英検準2級',toeic:'TOEIC 〜550',  color:'#a3e635', pct:50},
-    {label:'英検2級',  toeic:'TOEIC 〜700',  color:'#34d399', pct:65},
-    {label:'英検準1級',toeic:'TOEIC 〜860',  color:'#38bdf8', pct:80},
-    {label:'英検1級',  toeic:'TOEIC 900+',   color:'#818cf8', pct:95},
+    {label:'英検5級',    toeic:'TOEIC 〜300',  color:'#f87171', pct:4},
+    {label:'英検4級',    toeic:'TOEIC 〜350',  color:'#fb923c', pct:14},
+    {label:'英検3級',    toeic:'TOEIC 〜450',  color:'#fbbf24', pct:24},
+    {label:'英検準2級',  toeic:'TOEIC 〜550',  color:'#a3e635', pct:34},
+    {label:'英検2級',    toeic:'TOEIC 〜700',  color:'#34d399', pct:44},
+    {label:'英検準1級',  toeic:'TOEIC 〜860',  color:'#38bdf8', pct:54},
+    {label:'英検1級',    toeic:'TOEIC 900+',   color:'#818cf8', pct:64},
+    {label:'超級 ★1',   toeic:'英検1級超・学術レベル', color:'#c084fc', pct:74},
+    {label:'超級 ★2',   toeic:'専門家・研究者レベル', color:'#e879f9', pct:84},
+    {label:'超級 ★3',   toeic:'語彙の達人',         color:'#f43f5e', pct:96},
 ];
-const EQ_BADGE = ['📗','📘','📙','🥉','🥈','🥇','🏆'];
+const EQ_BADGE = ['📗','📘','📙','🥉','🥈','🥇','🏆','💎','👑','🌟'];
 
 let eqDir        = 'enToJa';   // enToJa | jaToEn
-let eqAbility    = 3.0;        // 1〜7の浮動小数
+let eqStartLevel = 4;          // 開始レベル 1〜6
+let eqAbility    = 4.0;        // 1〜7の浮動小数
 let eqAnswered   = 0;
 let eqCorrect    = 0;
 let eqHistory    = [];         // {word, correct, level}
 let eqUsed       = new Set();
 let eqCurrent    = null;       // 現在の問題
 
-const EQ_K = 0.4; // 能力更新の係数
+const EQ_K_EARLY = 0.7;  // 序盤（〜10問）の変動係数
+const EQ_K_MID   = 0.5;  // 中盤（11〜20問）
+const EQ_K_LATE  = 0.35; // 終盤（21問〜）
+
+function eqGetK() {
+    if (eqAnswered < 10) return EQ_K_EARLY;
+    if (eqAnswered < 20) return EQ_K_MID;
+    return EQ_K_LATE;
+}
 
 document.querySelectorAll('[data-edir]').forEach(btn=>{
     btn.addEventListener('click',()=>{
         document.querySelectorAll('[data-edir]').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
         eqDir = btn.dataset.edir;
+    });
+});
+
+document.querySelectorAll('[data-elv]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-elv]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        eqStartLevel = parseInt(btn.dataset.elv);
     });
 });
 
@@ -494,7 +817,7 @@ document.getElementById('eq-retry-btn').addEventListener('click', ()=>{
 });
 
 function eqStart() {
-    eqAbility = 3.0; eqAnswered = 0; eqCorrect = 0;
+    eqAbility = eqStartLevel; eqAnswered = 0; eqCorrect = 0;
     eqHistory = []; eqUsed = new Set(); eqCurrent = null;
     document.getElementById('eq-setup').classList.add('hidden');
     document.getElementById('eq-result').classList.add('hidden');
@@ -518,16 +841,26 @@ function eqPickWord() {
 }
 
 function eqMakeChoices(correct) {
-    // 正解と同レベル付近から3つ選ぶ
-    const pool = EQ_WORDS.filter(w => w.e !== correct.e);
-    const byDist = pool.slice().sort((a,b) =>
-        Math.abs(a.l - correct.l) - Math.abs(b.l - correct.l)
+    // 同レベルの単語をシャッフルして3つ選ぶ
+    const sameLevel = shuffle(
+        EQ_WORDS.filter(w => w.e !== correct.e && w.l === correct.l)
     );
-    const wrong = [];
-    for (const w of byDist) {
-        if (wrong.length >= 3) break;
-        wrong.push(w);
+    const wrong = [...sameLevel.slice(0, 3)];
+
+    // 同レベルが3つ未満なら隣レベルからランダムに補充
+    if (wrong.length < 3) {
+        const neighbors = shuffle(
+            EQ_WORDS.filter(w =>
+                w.e !== correct.e &&
+                !wrong.some(x => x.e === w.e) &&
+                Math.abs(w.l - correct.l) === 1
+            )
+        );
+        while (wrong.length < 3 && neighbors.length > 0) {
+            wrong.push(neighbors.shift());
+        }
     }
+
     return shuffle([correct, ...wrong]);
 }
 
@@ -575,9 +908,9 @@ function eqAnswer(chosen, correct) {
     if (isCorrect) eqCorrect++;
     eqHistory.push({word: correct, correct: isCorrect, level: correct.l});
 
-    // 能力値更新 (IRT簡易版)
+    // 能力値更新 (IRT簡易版・序盤は変動大)
     const expected = 1 / (1 + Math.exp(-(eqAbility - correct.l)));
-    const update   = EQ_K * ((isCorrect ? 1 : 0) - expected);
+    const update   = eqGetK() * ((isCorrect ? 1 : 0) - expected);
     eqAbility = Math.max(1, Math.min(7, eqAbility + update));
 
     // 選択肢の色を変える
@@ -732,18 +1065,160 @@ function groupLabel(g){return typeof g==='number'?`第${g}族`:g;}
 // ============================================================
 // 元素クイズロジック
 // ============================================================
-const RANGES={'1-20':[1,20],'21-40':[21,40],'41-60':[41,60],'61-80':[61,80],'81-100':[81,100],'101-118':[101,118]};
-let selectedRanges=new Set(['1-20']),quizQType='nameToSymbol',quizAType='text';
+
+// 元素カテゴリ分類
+const ELEM_CAT = {
+    alkali:     [3,11,19,37,55,87],
+    alkaline:   [4,12,20,38,56,88],
+    transition: [21,22,23,24,25,26,27,28,29,30,39,40,41,42,43,44,45,46,47,48,
+                 71,72,73,74,75,76,77,78,79,80,103,104,105,106,107,108,109,110,111,112],
+    post:       [13,31,32,49,50,81,82,83,84,113,114,115,116],
+    metalloid:  [5,14,32,33,51,52,85],
+    nonmetal:   [1,6,7,8,15,16,34],
+    halogen:    [9,17,35,53,85,117],
+    noble:      [2,10,18,36,54,86,118],
+    lanthanide: [57,58,59,60,61,62,63,64,65,66,67,68,69,70,71],
+    actinide:   [89,90,91,92,93,94,95,96,97,98,99,100,101,102,103],
+};
+
+const RANGES = {'1-20':[1,20],'21-40':[21,40],'41-60':[41,60],'61-80':[61,80],'81-100':[81,100],'101-118':[101,118]};
+
+// 選択状態
+let quizSelMode   = 'range';       // 'range' | 'group' | 'individual'
+let selectedRanges = new Set(['1-20']);
+let selectedGroups = new Set();    // 'period:1', 'cat:alkali', 'gnum:1' など
+let selectedIndividuals = new Set([...ELEMENTS.filter(e=>e.n<=20).map(e=>e.n)]);
+
+let quizQType='nameToSymbol', quizAType='text';
 let quizPool=[],quizQueue=[],currentIdx=0,correctCount=0,wrongList=[],qAnswered=false;
 const QUIZ_COUNT=10;
 
-document.querySelectorAll('[data-range]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-        const r=btn.dataset.range;
-        if(selectedRanges.has(r)){if(selectedRanges.size===1)return;selectedRanges.delete(r);btn.classList.remove('active');}
-        else{selectedRanges.add(r);btn.classList.add('active');}
+// --- 選択された元素一覧を返す ---
+function getQuizPool() {
+    if (quizSelMode === 'range') {
+        return ELEMENTS.filter(el => {
+            for (const r of selectedRanges) {
+                const [mn,mx] = RANGES[r];
+                if (el.n >= mn && el.n <= mx) return true;
+            }
+            return false;
+        });
+    }
+    if (quizSelMode === 'group') {
+        if (selectedGroups.size === 0) return [];
+        return ELEMENTS.filter(el => {
+            for (const key of selectedGroups) {
+                const [type, val] = key.split(':');
+                if (type === 'period' && el.period === parseInt(val)) return true;
+                if (type === 'cat'    && ELEM_CAT[val]?.includes(el.n)) return true;
+                if (type === 'gnum'   && el.group  === parseInt(val))   return true;
+            }
+            return false;
+        });
+    }
+    if (quizSelMode === 'individual') {
+        return ELEMENTS.filter(el => selectedIndividuals.has(el.n));
+    }
+    return [];
+}
+
+function updateSelectedCount() {
+    const cnt = getQuizPool().length;
+    document.getElementById('quiz-selected-count').textContent = `${cnt}個`;
+}
+
+// --- タブ切り替え ---
+document.querySelectorAll('.quiz-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        quizSelMode = tab;
+        document.querySelectorAll('.quiz-tab-btn').forEach(b => {
+            b.classList.remove('text-indigo-600','border-indigo-600');
+            b.classList.add('text-slate-400','border-transparent');
+        });
+        btn.classList.add('text-indigo-600','border-indigo-600');
+        btn.classList.remove('text-slate-400','border-transparent');
+        document.getElementById('qtab-range').classList.toggle('hidden', tab !== 'range');
+        document.getElementById('qtab-group').classList.toggle('hidden', tab !== 'group');
+        document.getElementById('qtab-individual').classList.toggle('hidden', tab !== 'individual');
+        updateSelectedCount();
     });
 });
+
+// --- 番号範囲ボタン ---
+document.querySelectorAll('.qrange-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const r = btn.dataset.range;
+        if (selectedRanges.has(r)) {
+            if (selectedRanges.size === 1) return;
+            selectedRanges.delete(r); btn.classList.remove('active');
+        } else {
+            selectedRanges.add(r); btn.classList.add('active');
+        }
+        updateSelectedCount();
+    });
+});
+
+// --- 族・周期ボタン ---
+document.querySelectorAll('.qgroup-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const key = `${btn.dataset.gtype}:${btn.dataset.gval}`;
+        if (selectedGroups.has(key)) {
+            selectedGroups.delete(key); btn.classList.remove('active');
+        } else {
+            selectedGroups.add(key); btn.classList.add('active');
+        }
+        updateSelectedCount();
+    });
+});
+
+// --- 個別選択グリッド生成 ---
+(function buildIndividualGrid() {
+    const grid = document.getElementById('individual-grid');
+    ELEMENTS.forEach(el => {
+        const btn = document.createElement('button');
+        btn.dataset.n = el.n;
+        btn.title = `${el.n} ${el.name}`;
+        const isSelected = selectedIndividuals.has(el.n);
+        btn.className = `ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all ${
+            isSelected ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white text-slate-600 border-slate-200'
+        }`;
+        btn.innerHTML = `<span class="block text-[8px] font-bold opacity-60">${el.n}</span>${el.symbol}`;
+        btn.addEventListener('click', () => {
+            if (selectedIndividuals.has(el.n)) {
+                if (selectedIndividuals.size === 1) return;
+                selectedIndividuals.delete(el.n);
+                btn.className = 'ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all bg-white text-slate-600 border-slate-200';
+            } else {
+                selectedIndividuals.add(el.n);
+                btn.className = 'ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all bg-indigo-500 text-white border-indigo-500';
+            }
+            updateSelectedCount();
+        });
+        grid.appendChild(btn);
+    });
+})();
+
+document.getElementById('ind-select-all').addEventListener('click', () => {
+    ELEMENTS.forEach(el => selectedIndividuals.add(el.n));
+    document.querySelectorAll('.ind-el-btn').forEach(b => {
+        b.className = 'ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all bg-indigo-500 text-white border-indigo-500';
+    });
+    updateSelectedCount();
+});
+document.getElementById('ind-clear-all').addEventListener('click', () => {
+    selectedIndividuals.clear();
+    selectedIndividuals.add(ELEMENTS[0].n); // 最低1つ残す
+    document.querySelectorAll('.ind-el-btn').forEach(b => {
+        const n = parseInt(b.dataset.n);
+        b.className = `ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all ${
+            selectedIndividuals.has(n) ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white text-slate-600 border-slate-200'
+        }`;
+    });
+    updateSelectedCount();
+});
+
+// --- 問題タイプ・解答形式 ---
 document.querySelectorAll('[data-qtype]').forEach(btn=>{
     btn.addEventListener('click',()=>{document.querySelectorAll('[data-qtype]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');quizQType=btn.dataset.qtype;});
 });
@@ -752,9 +1227,9 @@ document.querySelectorAll('[data-atype]').forEach(btn=>{
 });
 
 document.getElementById('quiz-start-btn').addEventListener('click',()=>{
-    quizPool=ELEMENTS.filter(el=>{for(const r of selectedRanges){const[mn,mx]=RANGES[r];if(el.n>=mn&&el.n<=mx)return true;}return false;});
-    if(quizPool.length===0)return;
-    quizQueue=shuffle([...quizPool]).slice(0,QUIZ_COUNT);
+    quizPool = getQuizPool();
+    if(quizPool.length === 0) { alert('元素が選択されていません'); return; }
+    quizQueue=shuffle([...quizPool]).slice(0,Math.min(QUIZ_COUNT, quizPool.length));
     currentIdx=0;correctCount=0;wrongList=[];
     document.getElementById('quiz-setup').classList.add('hidden');
     document.getElementById('quiz-result').classList.add('hidden');
@@ -858,6 +1333,536 @@ function resetQuizToSetup(){
     document.getElementById('quiz-setup').classList.remove('hidden');
     document.getElementById('quiz-main').classList.add('hidden');
     document.getElementById('quiz-result').classList.add('hidden');
+    updateSelectedCount();
+}
+
+// ============================================================
+// 日本語力診断
+// ============================================================
+const JQ_WORDS = [
+// --- Level 1 (小学低学年) ---
+{w:'山',r:'やま',j:'地面が高く盛り上がっている場所',l:1},{w:'川',r:'かわ',j:'山から海へ水が流れる細長い水の流れ',l:1},
+{w:'空',r:'そら',j:'頭上に広がる大きな空間',l:1},{w:'花',r:'はな',j:'植物の美しく色づいた部分',l:1},
+{w:'魚',r:'さかな',j:'水の中に住む生き物',l:1},{w:'犬',r:'いぬ',j:'人に飼われる代表的な動物',l:1},
+{w:'猫',r:'ねこ',j:'ニャーと鳴くかわいい動物',l:1},{w:'木',r:'き',j:'幹・枝・葉を持つ大きな植物',l:1},
+{w:'石',r:'いし',j:'地面にある硬い鉱物の固まり',l:1},{w:'雨',r:'あめ',j:'空から水滴が落ちてくる現象',l:1},
+{w:'風',r:'かぜ',j:'空気が動いて感じられる自然現象',l:1},{w:'雪',r:'ゆき',j:'冬に空から白く降るもの',l:1},
+{w:'月',r:'つき',j:'夜空に浮かぶ地球の衛星',l:1},{w:'星',r:'ほし',j:'夜空にきらきら光る天体',l:1},
+{w:'海',r:'うみ',j:'広大な塩水が広がる場所',l:1},{w:'森',r:'もり',j:'木がたくさん生えている場所',l:1},
+{w:'火',r:'ひ',j:'燃えて熱と光を出すもの',l:1},{w:'水',r:'みず',j:'飲んだり洗ったりする液体',l:1},
+{w:'土',r:'つち',j:'地面を作っている柔らかい物質',l:1},{w:'鳥',r:'とり',j:'羽があって空を飛ぶ動物',l:1},
+{w:'手',r:'て',j:'腕の先にある五本の指を持つ部分',l:1},{w:'足',r:'あし',j:'立ったり歩いたりするための体の部分',l:1},
+{w:'目',r:'め',j:'ものを見るための感覚器官',l:1},{w:'耳',r:'みみ',j:'音を聞くための感覚器官',l:1},
+{w:'口',r:'くち',j:'食べたり話したりする体の部分',l:1},{w:'顔',r:'かお',j:'目・鼻・口がある頭の前面',l:1},
+{w:'親',r:'おや',j:'子どもを産み育てる人',l:1},{w:'友',r:'とも',j:'仲良くする相手',l:1},
+{w:'家',r:'いえ',j:'人が住む建物',l:1},{w:'道',r:'みち',j:'人や車が通る場所',l:1},
+// --- Level 2 (小学高学年) ---
+{w:'勇気',r:'ゆうき',j:'恐れずに立ち向かう気持ち',l:2},{w:'努力',r:'どりょく',j:'目標に向かって頑張ること',l:2},
+{w:'友情',r:'ゆうじょう',j:'友達との深い絆や感情',l:2},{w:'感謝',r:'かんしゃ',j:'ありがたいと思う気持ち',l:2},
+{w:'希望',r:'きぼう',j:'よいことを願い望む気持ち',l:2},{w:'想像',r:'そうぞう',j:'頭の中でものごとを思い描くこと',l:2},
+{w:'自然',r:'しぜん',j:'人の手が加わっていない山・川・海などの世界',l:2},{w:'季節',r:'きせつ',j:'春・夏・秋・冬の四つの時期',l:2},
+{w:'植物',r:'しょくぶつ',j:'根・茎・葉を持ち光合成する生き物',l:2},{w:'動物',r:'どうぶつ',j:'自ら動くことができる生き物',l:2},
+{w:'科学',r:'かがく',j:'自然の仕組みを調べる学問',l:2},{w:'歴史',r:'れきし',j:'過去に起きたできごとの記録',l:2},
+{w:'文化',r:'ぶんか',j:'人々が作り上げてきた生活の様式',l:2},{w:'社会',r:'しゃかい',j:'人々が集まって生活する集団',l:2},
+{w:'記念',r:'きねん',j:'大切な出来事を忘れないようにすること',l:2},{w:'経験',r:'けいけん',j:'実際にやってみて得た知識や感覚',l:2},
+{w:'発見',r:'はっけん',j:'新しいことや隠れていたことを見つけること',l:2},{w:'成長',r:'せいちょう',j:'体や心が大きく育つこと',l:2},
+{w:'変化',r:'へんか',j:'ものごとの様子が変わること',l:2},{w:'協力',r:'きょうりょく',j:'力を合わせて何かをすること',l:2},
+{w:'平和',r:'へいわ',j:'争いがなく穏やかな状態',l:2},{w:'命',r:'いのち',j:'生き物が生きている力',l:2},
+{w:'夢',r:'ゆめ',j:'将来こうなりたいという願い',l:2},{w:'挑戦',r:'ちょうせん',j:'難しいことに積極的に取り組むこと',l:2},
+{w:'責任',r:'せきにん',j:'自分の行為の結果を引き受けること',l:2},{w:'関係',r:'かんけい',j:'二つ以上のものごとのつながり',l:2},
+{w:'目的',r:'もくてき',j:'何かをする際のねらいや目標',l:2},{w:'方法',r:'ほうほう',j:'ものごとを行うやり方',l:2},
+{w:'比較',r:'ひかく',j:'二つ以上のものを見比べること',l:2},{w:'原因',r:'げんいん',j:'ある結果を生み出したもとになること',l:2},
+// --- Level 3 (中学生) ---
+{w:'矛盾',r:'むじゅん',j:'二つの事柄が食い違って両立しないこと',l:3},{w:'皮肉',r:'ひにく',j:'遠回しに相手を非難する言い方',l:3},
+{w:'曖昧',r:'あいまい',j:'はっきりしない・どちらともとれる様子',l:3},{w:'根拠',r:'こんきょ',j:'判断や主張のもとになる理由や証拠',l:3},
+{w:'抽象',r:'ちゅうしょう',j:'具体性を取り除いて本質だけを取り出すこと',l:3},{w:'具体',r:'くたい',j:'実際の形や内容がはっきりしていること',l:3},
+{w:'論理',r:'ろんり',j:'筋道を立てて考えること',l:3},{w:'客観',r:'きゃっかん',j:'自分の感情を入れずに物事を見ること',l:3},
+{w:'主観',r:'しゅかん',j:'自分の感情や考えをもとに物事を見ること',l:3},{w:'批判',r:'ひはん',j:'良い点・悪い点を評価して論じること',l:3},
+{w:'反論',r:'はんろん',j:'相手の意見に対して反対意見を述べること',l:3},{w:'概念',r:'がいねん',j:'ものごとの共通の特徴をまとめた考え',l:3},
+{w:'現象',r:'げんしょう',j:'目に見える形で現れた出来事',l:3},{w:'影響',r:'えいきょう',j:'あるものが他のものに作用を及ぼすこと',l:3},
+{w:'解釈',r:'かいしゃく',j:'言葉や出来事の意味を説明すること',l:3},{w:'仮説',r:'かせつ',j:'まだ証明されていない説明の案',l:3},
+{w:'証明',r:'しょうめい',j:'正しいことを根拠を挙げて示すこと',l:3},{w:'矛先',r:'ほこさき',j:'非難や攻撃が向かう方向',l:3},
+{w:'本質',r:'ほんしつ',j:'ものごとの最も根本的な性質',l:3},{w:'手段',r:'しゅだん',j:'目的を達成するために使う方法',l:3},
+{w:'傾向',r:'けいこう',j:'ある方向に進もうとする性質',l:3},{w:'対策',r:'たいさく',j:'問題に対して取る措置',l:3},
+{w:'結論',r:'けつろん',j:'議論や考察の最後にたどり着いた答え',l:3},{w:'過程',r:'かてい',j:'目標に至るまでの手順や経緯',l:3},
+{w:'条件',r:'じょうけん',j:'何かが成立するために必要な事柄',l:3},{w:'矛盾点',r:'むじゅんてん',j:'食い違っている部分',l:3},
+{w:'前提',r:'ぜんてい',j:'議論の出発点として認める事柄',l:3},{w:'背景',r:'はいけい',j:'物事が起きるもとになった状況',l:3},
+{w:'発展',r:'はってん',j:'物事がより大きく・高度になること',l:3},{w:'限界',r:'げんかい',j:'それ以上は無理な境界線',l:3},
+// --- Level 4 (高校生) ---
+{w:'逡巡',r:'しゅんじゅん',j:'ためらってなかなか決断できないこと',l:4},{w:'忖度',r:'そんたく',j:'相手の気持ちや意向を推し量ること',l:4},
+{w:'恣意',r:'しい',j:'自分勝手な考えで行動すること',l:4},{w:'漸進',r:'ぜんしん',j:'少しずつ進んでいくこと',l:4},
+{w:'帰納',r:'きのう',j:'個々の事実から一般的な法則を導き出すこと',l:4},{w:'演繹',r:'えんえき',j:'一般的な法則から個々の事実を導き出すこと',l:4},
+{w:'弁証',r:'べんしょう',j:'道理を立てて正しいことを証明すること',l:4},{w:'止揚',r:'しよう',j:'矛盾する二つを高次元で統合すること',l:4},
+{w:'実存',r:'じつぞん',j:'現に存在していること・主体的な存在のあり方',l:4},{w:'相対',r:'そうたい',j:'他との関係で決まる性質',l:4},
+{w:'絶対',r:'ぜったい',j:'何ものにも依存しない・無条件な様子',l:4},{w:'弁証法',r:'べんしょうほう',j:'矛盾を通じて発展する思考法',l:4},
+{w:'普遍',r:'ふへん',j:'すべてのものに共通して当てはまること',l:4},{w:'特殊',r:'とくしゅ',j:'普通とは異なる特別な性質',l:4},
+{w:'形而上',r:'けいじじょう',j:'感覚では捉えられない精神的・観念的なもの',l:4},{w:'還元',r:'かんげん',j:'複雑なものを単純な要素に分解すること',l:4},
+{w:'超越',r:'ちょうえつ',j:'普通の範囲や限界を超えること',l:4},{w:'内在',r:'ないざい',j:'あるものの中に存在すること',l:4},
+{w:'弁別',r:'べんべつ',j:'物事を区別して判断すること',l:4},{w:'類推',r:'るいすい',j:'似たものから推し量ること',l:4},
+{w:'俯瞰',r:'ふかん',j:'高い所から全体を見渡すこと',l:4},{w:'捨象',r:'しゃしょう',j:'不要な要素を取り除いて考えること',l:4},
+{w:'措定',r:'そてい',j:'確定したものとして立てること',l:4},{w:'布置',r:'ふち',j:'ものを適切な場所に配置すること',l:4},
+{w:'収斂',r:'しゅうれん',j:'一点に向かって集まること',l:4},{w:'乖離',r:'かいり',j:'本来一緒であるべきものが離れること',l:4},
+{w:'齟齬',r:'そご',j:'食い違いが生じること',l:4},{w:'恣意的',r:'しいてき',j:'規則によらず自分勝手に決める様子',l:4},
+{w:'蓋然',r:'がいぜん',j:'確実ではないがおそらくそうであること',l:4},{w:'必然',r:'ひつぜん',j:'必ずそうなるしかないこと',l:4},
+// --- Level 5 (大学・教養) ---
+{w:'アポリア',r:'あぽりあ',j:'解決不可能な難問・行き詰まり',l:5},{w:'パラドックス',r:'ぱらどっくす',j:'一見正しそうだが矛盾を含む論理',l:5},
+{w:'ディスクール',r:'でぃすくーる',j:'言説・談話（フランス語由来）',l:5},{w:'エピステーメー',r:'えぴすてーめー',j:'ある時代の知の枠組み',l:5},
+{w:'エートス',r:'えーとす',j:'共同体の倫理的性格・習慣',l:5},{w:'パトス',r:'ぱとす',j:'感情・受苦・情念',l:5},
+{w:'ロゴス',r:'ろごす',j:'理性・言葉・論理',l:5},{w:'ミメーシス',r:'みめーしす',j:'模倣・再現（アリストテレス美学）',l:5},
+{w:'カタルシス',r:'かたるしす',j:'感情の浄化・解放',l:5},{w:'テロス',r:'てろす',j:'目的・終極因',l:5},
+{w:'アルケー',r:'あるけー',j:'万物の根源',l:5},{w:'コスモス',r:'こすもす',j:'秩序ある世界・宇宙',l:5},
+{w:'カオス',r:'かおす',j:'混沌・無秩序な状態',l:5},{w:'ノモス',r:'のもす',j:'慣習・法・社会的規範',l:5},
+{w:'アナロジー',r:'あなろじー',j:'類推・似た構造から推論すること',l:5},{w:'ダイアレクティク',r:'だいあれくてぃく',j:'弁証法・対話による真理探求',l:5},
+{w:'フェノメノン',r:'ふぇのめのん',j:'現象・経験に現れるもの',l:5},{w:'ノウメノン',r:'のうめのん',j:'物自体・理性だけで捉えられるもの',l:5},
+{w:'アプリオリ',r:'あぷりおり',j:'経験に先立つ・先天的な',l:5},{w:'アポステリオリ',r:'あぽすてりおり',j:'経験によって得られる・後天的な',l:5},
+{w:'コギト',r:'こぎと',j:'我思う故に我あり（デカルト）',l:5},{w:'モナド',r:'もなど',j:'ライプニッツの単子論における基本単位',l:5},
+{w:'アンチノミー',r:'あんちのみー',j:'同じ前提から互いに矛盾する結論が出ること',l:5},{w:'ジンテーゼ',r:'じんてーぜ',j:'テーゼとアンチテーゼの止揚・総合',l:5},
+{w:'ザッヘ',r:'ざっへ',j:'事象そのもの・フッサール現象学の用語',l:5},{w:'レーベンスヴェルト',r:'れーべんすう゛ぇると',j:'生活世界',l:5},
+{w:'インテルスブイェクティビテート',r:'いんてるすぶいぇくてぃびてーと',j:'間主観性',l:5},{w:'フロネーシス',r:'ふろねーしす',j:'実践的知恵（アリストテレス）',l:5},
+{w:'デイモン',r:'でいもん',j:'ソクラテスの内なる声・守護霊',l:5},{w:'アガトン',r:'あがとん',j:'善・最高の善（プラトン哲学）',l:5},
+// --- Level 6 (漢検2級) ---
+{w:'蒙昧',r:'もうまい',j:'知識が乏しく道理をわきまえないこと',l:6},{w:'跛行',r:'はこう',j:'バランスが悪く偏った進み方',l:6},
+{w:'喧噪',r:'けんそう',j:'非常に騒がしい様子',l:6},{w:'嬉嬉',r:'きき',j:'非常に喜んでいる様子',l:6},
+{w:'怯懦',r:'きょうだ',j:'臆病で意気地がないこと',l:6},{w:'恬淡',r:'てんたん',j:'物事に執着せず平然としている様子',l:6},
+{w:'勁草',r:'けいそう',j:'強い草・困難に打ち勝つ強い人',l:6},{w:'嘲弄',r:'ちょうろう',j:'馬鹿にして弄ぶこと',l:6},
+{w:'焦眉',r:'しょうび',j:'眉毛が焦げるほど迫った緊急事態',l:6},{w:'濫用',r:'らんよう',j:'むやみやたらに使うこと',l:6},
+{w:'膺懲',r:'ようちょう',j:'懲らしめること',l:6},{w:'驕傲',r:'きょうごう',j:'おごり高ぶって傲慢な様子',l:6},
+{w:'鬱屈',r:'うっくつ',j:'気持ちが晴れず塞ぎ込んでいること',l:6},{w:'矜持',r:'きょうじ',j:'自分の能力に誇りを持つこと',l:6},
+{w:'蹉跌',r:'さてつ',j:'失敗してつまずくこと',l:6},{w:'顰蹙',r:'ひんしゅく',j:'眉をひそめて嫌がること',l:6},
+{w:'逼塞',r:'ひっそく',j:'追い詰められて身動きができないこと',l:6},{w:'杞憂',r:'きゆう',j:'無用な心配',l:6},
+{w:'瓦解',r:'がかい',j:'一部の崩壊が全体の崩壊を招くこと',l:6},{w:'齷齪',r:'あくせく',j:'細かいことにこせこせと心を砕くこと',l:6},
+{w:'倦怠',r:'けんたい',j:'飽き飽きして嫌になること',l:6},{w:'憂悶',r:'ゆうもん',j:'悩み苦しむこと',l:6},
+{w:'嗚咽',r:'おえつ',j:'声を詰まらせて泣くこと',l:6},{w:'憔悴',r:'しょうすい',j:'心配や病気で痩せ細ること',l:6},
+{w:'惻隠',r:'そくいん',j:'他人の苦しみを見て哀れに思う気持ち',l:6},{w:'慚愧',r:'ざんき',j:'自分の行いを深く恥じること',l:6},
+{w:'忸怩',r:'じくじ',j:'恥ずかしくてたまらない様子',l:6},{w:'懶惰',r:'らんだ',j:'怠け者で怠惰なこと',l:6},
+{w:'颯爽',r:'さっそう',j:'姿が快活で気持ちのよい様子',l:6},{w:'朦朧',r:'もうろう',j:'ぼんやりとして意識が薄れている様子',l:6},
+// --- Level 7 (漢検準1級) ---
+{w:'闃寂',r:'げきせき',j:'ひっそりと静まり返っていること',l:7},{w:'嗜虐',r:'しぎゃく',j:'残虐行為を好む傾向',l:7},
+{w:'韜晦',r:'とうかい',j:'才能や本心を隠して目立たないようにすること',l:7},{w:'逍遥',r:'しょうよう',j:'気ままにぶらぶら歩くこと',l:7},
+{w:'氾濫',r:'はんらん',j:'川が溢れること・物事が広がりすぎること',l:7},{w:'蜿蜒',r:'えんえん',j:'蛇のように曲がりくねって続く様子',l:7},
+{w:'幽邃',r:'ゆうすい',j:'奥深くひっそりとした様子',l:7},{w:'玲瓏',r:'れいろう',j:'玉のように澄み輝く様子',l:7},
+{w:'綺羅',r:'きら',j:'美しい衣装・はなやかな様子',l:7},{w:'懊悩',r:'おうのう',j:'悩みで悶え苦しむこと',l:7},
+{w:'嗄声',r:'しゃがれごえ',j:'しゃがれた声',l:7},{w:'狷介',r:'けんかい',j:'頑固で協調性がなく意地張りなこと',l:7},
+{w:'佶屈',r:'きっくつ',j:'文章が難解でわかりにくいこと',l:7},{w:'奢靡',r:'しゃび',j:'贅沢でぜいたくな様子',l:7},
+{w:'迂遠',r:'うえん',j:'回り道が多く要領を得ないこと',l:7},{w:'峻厳',r:'しゅんげん',j:'険しく厳しい様子',l:7},
+{w:'冀求',r:'ききゅう',j:'強く望み求めること',l:7},{w:'澹然',r:'たんぜん',j:'あっさりとして淡白な様子',l:7},
+{w:'恣縦',r:'しじゅう',j:'気ままで勝手な様子',l:7},{w:'婉曲',r:'えんきょく',j:'直接言わず遠回しに表現すること',l:7},
+{w:'磊落',r:'らいらく',j:'心が広く細かいことにこだわらない様子',l:7},{w:'闊達',r:'かったつ',j:'度量が大きく物事に拘らない様子',l:7},
+{w:'迢遠',r:'ちょうえん',j:'遠くはるかな様子',l:7},{w:'窈窕',r:'ようちょう',j:'奥深くひっそりと美しい様子',l:7},
+{w:'瑰麗',r:'かいれい',j:'きわめて美しく華麗な様子',l:7},{w:'冥冥',r:'めいめい',j:'薄暗くひっそりとした様子',l:7},
+{w:'蹂躙',r:'じゅうりん',j:'踏みにじること・権利などを無視して侵すこと',l:7},{w:'憫然',r:'びんぜん',j:'気の毒に思われる様子',l:7},
+{w:'邂逅',r:'かいこう',j:'思いがけなく出会うこと',l:7},{w:'刹那',r:'せつな',j:'きわめて短い瞬間',l:7},
+// --- Level 8 (漢検1級) ---
+{w:'蟬聯',r:'せんれん',j:'連続していること・代が続くこと',l:8},{w:'掎角',r:'きかく',j:'互いに助け合って敵を挟み撃ちにする形勢',l:8},
+{w:'箝口',r:'かんこう',j:'口を閉じさせること・口止め',l:8},{w:'黜陟',r:'ちゅっちょく',j:'悪者を退け善者を進めること',l:8},
+{w:'饗応',r:'きょうおう',j:'もてなし酒食を振る舞うこと',l:8},{w:'攙扶',r:'さんぷ',j:'手を取って助けること',l:8},
+{w:'鑽仰',r:'さんごう',j:'師を敬い慕うこと',l:8},{w:'鞫問',r:'きくもん',j:'罪人を取り調べ問いただすこと',l:8},
+{w:'宸翰',r:'しんかん',j:'天皇直筆の文書',l:8},{w:'懸瓠',r:'けんこ',j:'ひょうたんをつるした形（細長い地形）',l:8},
+{w:'龕灯',r:'がんどう',j:'手持ちのちょうちん・がんどう返し（歌舞伎）',l:8},{w:'猗頓',r:'いとん',j:'大富豪の名前から転じた意味',l:8},
+{w:'翕然',r:'きゅうぜん',j:'みんなが一致する様子',l:8},{w:'齷齪',r:'あくせく',j:'細かいことで心を悩ませる様子',l:8},
+{w:'讒言',r:'ざんげん',j:'事実を偽って人を陥れる言葉',l:8},{w:'鯨飲',r:'げいいん',j:'鯨のように大量に飲むこと',l:8},
+{w:'嗾ける',r:'そそのかす',j:'そばから人をけしかけること',l:8},{w:'悃款',r:'こんかん',j:'誠実で親切なこと',l:8},
+{w:'撥剌',r:'はつらつ',j:'元気がよく生き生きしている様子',l:8},{w:'蟠踞',r:'ばんきょ',j:'勢力を張って居座ること',l:8},
+{w:'橈む',r:'たわむ',j:'重みや力で曲がること',l:8},{w:'鏤刻',r:'るこく',j:'金属や石に彫り刻むこと',l:8},
+{w:'驥足',r:'きそく',j:'すぐれた才能・俊足の馬',l:8},{w:'鞏固',r:'きょうこ',j:'しっかりと堅固なこと',l:8},
+{w:'乖戻',r:'かいれい',j:'道に外れて反逆すること',l:8},{w:'愾然',r:'がいぜん',j:'憤り嘆く様子',l:8},
+{w:'憮然',r:'ぶぜん',j:'失望・驚きでぼんやりしている様子',l:8},{w:'喟然',r:'きぜん',j:'深くため息をつく様子',l:8},
+{w:'懌ぶ',r:'よろこぶ',j:'喜ぶこと（懌の字を使う古い表現）',l:8},{w:'竦む',r:'すくむ',j:'恐れや寒さで体が縮こまること',l:8},
+// --- Level 9 (漢検1級超・超難読) ---
+{w:'齷齪恟々',r:'あくせくきょうきょう',j:'こせこせと怯えながら動く様子',l:9},{w:'椿事',r:'ちんじ',j:'思いがけない大きな出来事',l:9},
+{w:'憖',r:'なまじ',j:'中途半端に・むしろしない方がよかった',l:9},{w:'蹣跚',r:'まんさん',j:'よろよろと歩く様子',l:9},
+{w:'蓊鬱',r:'おううつ',j:'草木が生い茂っている様子',l:9},{w:'颯靡',r:'さっぴ',j:'風でなびく様子・素早く動く様子',l:9},
+{w:'忿懥',r:'ふんち',j:'激しく怒ること（大学の四病の一つ）',l:9},{w:'黌舎',r:'こうしゃ',j:'学校・孔子を祭る建物',l:9},
+{w:'馴鹿',r:'となかい',j:'北極圏に棲む大型の鹿',l:9},{w:'蟋蟀',r:'こおろぎ',j:'秋に鳴く昆虫',l:9},
+{w:'蜉蝣',r:'かげろう',j:'一日しか生きない虫・はかないもの',l:9},{w:'鸚鵡',r:'おうむ',j:'言葉を繰り返す鳥',l:9},
+{w:'鼯鼠',r:'むささび',j:'森の木から木へ滑空する動物',l:9},{w:'玳瑁',r:'たいまい',j:'熱帯産の海亀・甲羅が工芸品に使われる',l:9},
+{w:'蒟蒻',r:'こんにゃく',j:'根茎から作る食品',l:9},{w:'饂飩',r:'うどん',j:'小麦粉の太い麺料理',l:9},
+{w:'蠑螺',r:'さざえ',j:'海にいる巻き貝',l:9},{w:'鮪',r:'まぐろ',j:'大型の回遊魚・寿司ネタの王様',l:9},
+{w:'鱶',r:'ふか',j:'サメの別称',l:9},{w:'鱏',r:'えい',j:'平たい体を持つ魚',l:9},
+{w:'蠑螈',r:'いもり',j:'水辺に住む両生類',l:9},{w:'鼈',r:'すっぽん',j:'甲羅を持つ水棲の爬虫類',l:9},
+{w:'鷭',r:'ばん',j:'水辺に住む黒い鳥',l:9},{w:'鸛',r:'こうのとり',j:'幸運をもたらすとされる大型の白い鳥',l:9},
+{w:'翡翠',r:'かわせみ',j:'青緑色に輝く川の鳥',l:9},{w:'梟',r:'ふくろう',j:'夜に活動する猛禽類・知恵の象徴',l:9},
+{w:'雫',r:'しずく',j:'したたり落ちる小さな水の粒',l:9},{w:'凩',r:'こがらし',j:'晩秋から初冬に吹く冷たい風',l:9},
+{w:'木枯',r:'こがらし',j:'秋の終わりに吹く乾いた冷風',l:9},{w:'五月雨',r:'さみだれ',j:'梅雨の時期の長雨',l:9},
+// --- Level 10 (超難読・古語・特殊) ---
+{w:'剥啄',r:'はくたく',j:'戸を軽く叩く音',l:10},{w:'牛耳る',r:'ぎゅうじる',j:'団体や組織を思うままに支配すること',l:10},
+{w:'蝸牛',r:'かたつむり',j:'殻を背負った軟体動物',l:10},{w:'鬼車',r:'きしゃ',j:'九頭の怪鳥・猛禽の一種',l:10},
+{w:'罔両',r:'もうりょう',j:'川や山の精霊・幽霊',l:10},{w:'魍魎',r:'もうりょう',j:'山川の妖怪・亡霊',l:10},
+{w:'贔屓',r:'ひいき',j:'特定の人を特別に大切にすること',l:10},{w:'攫む',r:'つかむ',j:'手でしっかり握ること',l:10},
+{w:'嬲る',r:'なぶる',j:'弱い者をいじめること・もてあそぶこと',l:10},{w:'嫐る',r:'なぶる',j:'女性がからかい責めること',l:10},
+{w:'糞',r:'くそ',j:'排泄物・価値のないもの（罵倒語）',l:10},{w:'屁',r:'へ',j:'腸から出るガス（俗語）',l:10},
+{w:'燕雀',r:'えんじゃく',j:'ツバメとスズメ・小人物の比喩',l:10},{w:'鴻鵠',r:'こうこく',j:'大きな鳥・大人物の比喩',l:10},
+{w:'驥尾',r:'きび',j:'名馬の尾・優れた人の後に従うこと',l:10},{w:'麒麟',r:'きりん',j:'中国の瑞獣・優れた人材の比喩',l:10},
+{w:'鳳凰',r:'ほうおう',j:'中国の伝説の霊鳥・天子の象徴',l:10},{w:'玄武',r:'げんぶ',j:'四神の一つ・北方を守る亀と蛇',l:10},
+{w:'朱雀',r:'すざく',j:'四神の一つ・南方を守る赤い鳥',l:10},{w:'白虎',r:'びゃっこ',j:'四神の一つ・西方を守る白い虎',l:10},
+{w:'青龍',r:'せいりゅう',j:'四神の一つ・東方を守る青い龍',l:10},{w:'不知火',r:'しらぬい',j:'九州西方の海に現れる怪火',l:10},
+{w:'幽玄',r:'ゆうげん',j:'奥深く計り知れない趣・能楽の美的理念',l:10},{w:'侘寂',r:'わびさび',j:'不完全・無常の中に美を見出す日本の美意識',l:10},
+{w:'物哀',r:'もののあわれ',j:'自然や人生の無常に触れて感じる深い感慨',l:10},{w:'意気地',r:'いくじ',j:'自分の意志を通そうとする気力・気概',l:10},
+{w:'曖昧模糊',r:'あいまいもこ',j:'はっきりしない様子・ぼんやりしていること',l:10},{w:'玉石混交',r:'ぎょくせきこんこう',j:'優れたものとそうでないものが混じり合うこと',l:10},
+{w:'隴を得て蜀を望む',r:'ろうをえてしょくをのぞむ',j:'一つ手に入れるとさらに多くを欲しがること',l:10},
+{w:'朝三暮四',r:'ちょうさんぼし',j:'目先の違いに惑わされること',l:10},
+// ===== ことわざ =====
+// Level 1
+{w:'七転び八起き',r:'ななころびやおき',j:'何度失敗しても諦めずに立ち上がること',l:1},
+{w:'石の上にも三年',r:'いしのうえにもさんねん',j:'辛くても辛抱して続ければ成功する',l:1},
+{w:'棚からぼたもち',r:'たなからぼたもち',j:'何もしないで思いがけない幸運が来ること',l:1},
+{w:'猿も木から落ちる',r:'さるもきからおちる',j:'どんな名人でも失敗することがある',l:1},
+{w:'花より団子',r:'はなよりだんご',j:'風雅より実利を好むこと',l:1},
+{w:'鬼に金棒',r:'おににかなぼう',j:'強い者がさらに強力な力を得ること',l:1},
+{w:'塵も積もれば山となる',r:'ちりもつもればやまとなる',j:'わずかなものでも積み重なれば大きくなる',l:1},
+{w:'習うより慣れろ',r:'ならうよりなれろ',j:'教わるより実際に経験する方が身につく',l:1},
+// Level 2
+{w:'能ある鷹は爪を隠す',r:'のうあるたかはつめをかくす',j:'本当に実力がある人は自分を誇示しない',l:2},
+{w:'急がば回れ',r:'いそがばまわれ',j:'急ぐ時こそ安全な方法をとるべきだ',l:2},
+{w:'目から鱗が落ちる',r:'めからうろこがおちる',j:'何かをきっかけに突然真実が分かること',l:2},
+{w:'猫に小判',r:'ねこにこばん',j:'価値のわからない人に貴重なものを与えても無駄',l:2},
+{w:'馬の耳に念仏',r:'うまのみみにねんぶつ',j:'何を言っても効果がないこと',l:2},
+{w:'井の中の蛙大海を知らず',r:'いのなかのかわずたいかいをしらず',j:'視野が狭く世間知らずなこと',l:2},
+{w:'三人寄れば文殊の知恵',r:'さんにんよればもんじゅのちえ',j:'凡人でも三人集まれば良い知恵が出る',l:2},
+{w:'覆水盆に返らず',r:'ふくすいぼんにかえらず',j:'一度してしまったことは取り返せない',l:2},
+{w:'七難隠す',r:'しちなんかくす',j:'笑顔は多くの欠点を隠してくれる（笑う門には福来る の類）',l:2},
+{w:'出る杭は打たれる',r:'でるくいはうたれる',j:'目立つ人は人から非難されやすい',l:2},
+// Level 3
+{w:'虎穴に入らずんば虎子を得ず',r:'こけつにいらずんばこじをえず',j:'危険を冒さなければ大きな成果は得られない',l:3},
+{w:'禍福は糾える縄の如し',r:'かふくはあざなえるなわのごとし',j:'幸福と不幸は交互にやってくる',l:3},
+{w:'朱に交われば赤くなる',r:'しゅにまじわればあかくなる',j:'人は環境や付き合う人によって変わる',l:3},
+{w:'他山の石',r:'たざんのいし',j:'他人の失敗も自分の戒めにする',l:3},
+{w:'羊頭狗肉',r:'ようとうくにく',j:'見せかけと実態が大きく異なること',l:3},
+{w:'漁夫の利',r:'ぎょふのり',j:'二者が争う間に第三者が利益を得ること',l:3},
+{w:'蛇足',r:'だそく',j:'余計なもの・無用な付け足し',l:3},
+{w:'五十歩百歩',r:'ごじっぽひゃっぽ',j:'少しの差はあっても本質的に変わらないこと',l:3},
+{w:'杞憂',r:'きゆう',j:'取り越し苦労・無用な心配',l:3},
+{w:'矛盾',r:'むじゅん',j:'どちらも本当とは言えない前後の食い違い',l:3},
+// Level 4
+{w:'邯鄲の夢',r:'かんたんのゆめ',j:'人生の栄枯盛衰のはかなさ',l:4},
+{w:'蛍雪の功',r:'けいせつのこう',j:'苦労して勉強すること・苦学',l:4},
+{w:'臥薪嘗胆',r:'がしんしょうたん',j:'目標のために長い間苦労に耐えること',l:4},
+{w:'塞翁が馬',r:'さいおうがうま',j:'人生の吉凶は予測できない',l:4},
+{w:'呉越同舟',r:'ごえつどうしゅう',j:'仲の悪い者同士が同じ場所に居合わせること',l:4},
+{w:'断腸の思い',r:'だんちょうのおもい',j:'腸が断ち切れるほどの深い悲しみ',l:4},
+{w:'一期一会',r:'いちごいちえ',j:'一生に一度の出会いを大切にすること',l:4},
+{w:'温故知新',r:'おんこちしん',j:'古いことを学び新しい知識を得ること',l:4},
+// Level 5
+{w:'佳人薄命',r:'かじんはくめい',j:'美人は短命であることが多い',l:5},
+{w:'雲散霧消',r:'うんさんむしょう',j:'あとかたもなく消えてしまうこと',l:5},
+{w:'行雲流水',r:'こううんりゅうすい',j:'物事に執着せず自然に従って生きること',l:5},
+{w:'鶏口牛後',r:'けいこうぎゅうご',j:'大きな組織の末端より小さな組織のトップの方がよい',l:5},
+{w:'白眉',r:'はくび',j:'多くの中で最もすぐれた人・もの',l:5},
+{w:'破顔一笑',r:'はがんいっしょう',j:'にっこりと笑うこと',l:5},
+{w:'捲土重来',r:'けんどちょうらい',j:'一度敗れた者が再び勢いを盛り返すこと',l:5},
+{w:'虎視眈々',r:'こしたんたん',j:'鋭い目で機会をうかがっている様子',l:5},
+// Level 6
+{w:'万緑叢中紅一点',r:'ばんりょくそうちゅうこういってん',j:'多くの中に際立った一つがあること',l:6},
+{w:'天衣無縫',r:'てんいむほう',j:'自然で飾り気がなく完全であること',l:6},
+{w:'魑魅魍魎',r:'ちみもうりょう',j:'さまざまな化け物・悪人たちの比喩',l:6},
+{w:'附和雷同',r:'ふわらいどう',j:'自分の意見を持たず他人に同調すること',l:6},
+{w:'玉石混淆',r:'ぎょくせきこんこう',j:'優れたものと劣ったものが入り混じっていること',l:6},
+{w:'一葉落ちて天下の秋を知る',r:'いちようおちててんかのあきをしる',j:'小さな変化から大きな変化を予知する',l:6},
+// ===== 慣用句 =====
+// Level 1-2
+{w:'手を焼く',r:'てをやく',j:'扱いに困ること',l:1},
+{w:'足を引っ張る',r:'あしをひっぱる',j:'人の邪魔をすること',l:1},
+{w:'鼻が高い',r:'はながたかい',j:'得意になってい誇らしい様子',l:1},
+{w:'耳が痛い',r:'みみがいたい',j:'自分の弱点をつかれて辛いこと',l:1},
+{w:'目をつむる',r:'めをつむる',j:'見て見ぬふりをすること',l:1},
+{w:'口が軽い',r:'くちがかるい',j:'秘密を守れずすぐ話してしまう様子',l:2},
+{w:'頭が下がる',r:'あたまがさがる',j:'深く敬服すること',l:2},
+{w:'肩を持つ',r:'かたをもつ',j:'一方の味方をすること',l:2},
+{w:'腰が引ける',r:'こしがひける',j:'恐れや遠慮で積極的になれない様子',l:2},
+{w:'胸を張る',r:'むねをはる',j:'誇らしく堂々と構えること',l:2},
+{w:'骨を折る',r:'ほねをおる',j:'苦労して力を尽くすこと',l:2},
+{w:'水を差す',r:'みずをさす',j:'うまくいっているものに邪魔をすること',l:2},
+{w:'油を売る',r:'あぶらをうる',j:'仕事をさぼって無駄話をすること',l:2},
+{w:'歯が立たない',r:'はがたたない',j:'力が及ばず勝負にならないこと',l:2},
+// Level 3
+{w:'腹を割る',r:'はらをわる',j:'本音をさらけ出して話すこと',l:3},
+{w:'気が置けない',r:'きがおけない',j:'気兼ねなく付き合える（良い意味）',l:3},
+{w:'一肌脱ぐ',r:'ひとはだぬぐ',j:'人のために積極的に力を貸すこと',l:3},
+{w:'暗礁に乗り上げる',r:'あんしょうにのりあげる',j:'物事が障害に当たって行き詰まること',l:3},
+{w:'二の足を踏む',r:'にのあしをふむ',j:'決断できずためらうこと',l:3},
+{w:'さじを投げる',r:'さじをなげる',j:'どうにもならないと諦めること',l:3},
+{w:'身を粉にする',r:'みをこにする',j:'懸命に働くこと',l:3},
+{w:'焼け石に水',r:'やけいしにみず',j:'わずかな努力では効果がないこと',l:3},
+{w:'藪から棒',r:'やぶからぼう',j:'突然で唐突なこと',l:3},
+{w:'雲をつかむ',r:'くもをつかむ',j:'手がかりがなくはっきりしないこと',l:3},
+// Level 4
+{w:'杓子定規',r:'しゃくしじょうぎ',j:'規則を融通なく当てはめること',l:4},
+{w:'八方美人',r:'はっぽうびじん',j:'誰にでも良い顔をする人',l:4},
+{w:'岡目八目',r:'おかめはちもく',j:'傍観者の方が物事の判断が正確なこと',l:4},
+{w:'虻蜂取らず',r:'あぶはちとらず',j:'欲張って両方とも得られないこと',l:4},
+{w:'総花的',r:'そうはなてき',j:'全員に利益を分散させてどれも中途半端なこと',l:4},
+{w:'蟻の一穴',r:'ありのいっけつ',j:'小さなことが大きな事故の原因になること',l:4},
+{w:'濡れ手で粟',r:'ぬれてであわ',j:'何もせずに利益を得ること',l:4},
+// Level 5-6
+{w:'天衣無縫',r:'てんいむほう',j:'飾り気なく自然でのびのびしている様子',l:5},
+{w:'針小棒大',r:'しんしょうぼうだい',j:'小さいことを大げさに言うこと',l:5},
+{w:'木で鼻をくくる',r:'きではなをくくる',j:'冷淡で無愛想な対応をすること',l:5},
+{w:'情けは人のためならず',r:'なさけはひとのためならず',j:'人に親切にすると巡り巡って自分に返ってくる',l:5},
+{w:'蓼食う虫も好き好き',r:'たでくうむしもすきずき',j:'人の好みはそれぞれ異なる',l:6},
+{w:'遠慮に逃げる',r:'えんりょにげる',j:'本当の理由を隠して遠慮を口実にすること',l:6},
+// ===== 和語（やまとことば）=====
+// Level 1-2
+{w:'たそがれ',r:'たそがれ',j:'夕暮れ時・「誰そ彼」から来た言葉',l:2},
+{w:'こもれび',r:'こもれび',j:'木の葉の間から差し込む日光',l:1},
+{w:'なごり',r:'なごり',j:'去り際に感じる惜しい気持ち・余韻',l:2},
+{w:'さざなみ',r:'さざなみ',j:'水面に立つ細かい波',l:1},
+{w:'ほたる',r:'ほたる',j:'夏の夜に光る昆虫',l:1},
+{w:'しぐれ',r:'しぐれ',j:'晩秋から初冬にかけて降る通り雨',l:2},
+{w:'かすみ',r:'かすみ',j:'春に遠くをぼんやり霞ませる大気現象',l:1},
+{w:'そぞろ',r:'そぞろ',j:'なんとなく落ち着かない様子・そわそわ',l:2},
+{w:'うつろ',r:'うつろ',j:'空虚でぼんやりした様子',l:2},
+{w:'まどろむ',r:'まどろむ',j:'うとうとと眠ること',l:2},
+// Level 3-4
+{w:'ゆかり',r:'ゆかり',j:'縁・つながり・縁故',l:3},
+{w:'しじま',r:'しじま',j:'静寂・しんとした静けさ',l:3},
+{w:'おもかげ',r:'おもかげ',j:'心に浮かぶ人の顔・面影',l:3},
+{w:'いにしえ',r:'いにしえ',j:'遠い昔・古代',l:3},
+{w:'たゆたう',r:'たゆたう',j:'ゆらゆらと揺れ漂う・迷う',l:3},
+{w:'まほろば',r:'まほろば',j:'素晴らしい場所・理想郷',l:3},
+{w:'ほとり',r:'ほとり',j:'近く・そば・水辺など',l:3},
+{w:'あわい',r:'あわい',j:'間・境界・隙間（「間」の和語）',l:4},
+{w:'かたわら',r:'かたわら',j:'傍ら・そばに・傍ら（ながら）',l:3},
+{w:'もののあはれ',r:'もののあはれ',j:'無常や自然に感じる深い感慨（王朝文学の美意識）',l:4},
+{w:'をかし',r:'をかし',j:'趣がある・おもしろい（枕草子の美意識）',l:4},
+{w:'あはれ',r:'あはれ',j:'しみじみとした感動・趣・哀れ',l:4},
+{w:'なまめかし',r:'なまめかし',j:'優雅で上品な様子・色っぽい（古語）',l:4},
+{w:'けはひ',r:'けはい',j:'雰囲気・気配（「気配」の古語）',l:4},
+{w:'をりをり',r:'をりをり',j:'時々・折々（「折」の和語表現）',l:3},
+// Level 5-6
+{w:'たをやめ',r:'たをやめ',j:'しなやかで優美な女性・女性的な歌の様式',l:5},
+{w:'ますらをぶり',r:'ますらをぶり',j:'男性的で力強い歌の様式',l:5},
+{w:'みやび',r:'みやび',j:'宮廷風の上品で優雅な様式美',l:5},
+{w:'はかなし',r:'はかなし',j:'頼りなくむなしい・はかない（古語）',l:5},
+{w:'あだなり',r:'あだなり',j:'はかなく実体のない様子・浮気な様子（古語）',l:5},
+{w:'つれなし',r:'つれなし',j:'素知らぬ顔・冷淡な様子（古語）',l:5},
+{w:'さうざうし',r:'さうざうし',j:'物足りなく寂しい様子（古語）',l:5},
+{w:'こころにくし',r:'こころにくし',j:'奥ゆかしく魅力的だ（古語・良い意味）',l:5},
+{w:'やをら',r:'やをら',j:'そっと静かにゆっくりと（古語）',l:5},
+{w:'つきづきし',r:'つきづきし',j:'似合っている・ふさわしい（古語）',l:5},
+{w:'いとほし',r:'いとほし',j:'かわいそうだ・いとしい（古語）',l:5},
+{w:'ゆゆし',r:'ゆゆし',j:'不吉だ・はなはだしい（古語）',l:5},
+// Level 7-8
+{w:'たゆみなく',r:'たゆみなく',j:'絶え間なく・たゆまず続ける様子',l:7},
+{w:'さびしろ',r:'さびしろ',j:'余白・余裕・間（日本美術の概念）',l:7},
+{w:'ま',r:'ま',j:'空間・時間の間・余白（日本的美意識）',l:7},
+{w:'むすび',r:'むすび',j:'結び・霊的な力・縁をつなぐこと',l:7},
+{w:'けがれ',r:'けがれ',j:'穢れ・神道における不浄の状態',l:7},
+{w:'はらへ',r:'はらえ',j:'祓え・穢れを払う神道の儀式',l:7},
+{w:'たまふり',r:'たまふり',j:'魂振り・魂の力を高める儀式',l:7},
+{w:'かむながら',r:'かむながら',j:'神のままに・神の心のままに（神道語）',l:8},
+{w:'ちはやぶる',r:'ちはやぶる',j:'神・かみ（枕詞）',l:8},
+{w:'あをによし',r:'あをによし',j:'奈良（枕詞）',l:8},
+{w:'たらちねの',r:'たらちねの',j:'母・親（枕詞）',l:8},
+{w:'ぬばたまの',r:'ぬばたまの',j:'黒・夜・髪（枕詞）',l:8},
+{w:'あしびきの',r:'あしびきの',j:'山（枕詞）',l:8},
+{w:'ひさかたの',r:'ひさかたの',j:'天・光・月（枕詞）',l:8},
+// Level 9-10
+{w:'よばひ',r:'よばい',j:'古代の求婚の習俗・夜這い',l:9},
+{w:'もののけ',r:'もののけ',j:'人に取り憑いて病気などを引き起こす霊',l:9},
+{w:'たまきはる',r:'たまきはる',j:'命・うち（枕詞）',l:9},
+{w:'うちつけ',r:'うちつけ',j:'唐突な・分別のない様子（古語）',l:9},
+{w:'こちたし',r:'こちたし',j:'大げさだ・立派すぎる（古語）',l:9},
+{w:'さすがに',r:'さすがに',j:'そうはいってもやはり（古語では現代と異なる用法）',l:9},
+{w:'なかなか',r:'なかなか',j:'かえって・むしろ（古語での用法）',l:9},
+{w:'いみじ',r:'いみじ',j:'非常に・はなはだしい（良くも悪くも）（古語）',l:9},
+{w:'あさまし',r:'あさまし',j:'驚きあきれる・嘆かわしい（古語）',l:9},
+{w:'めでたし',r:'めでたし',j:'すばらしい・立派だ（古語）',l:9},
+{w:'をこなり',r:'をこなり',j:'馬鹿げている・みっともない（古語）',l:10},
+{w:'あなかしこ',r:'あなかしこ',j:'恐れ多いことです・手紙の末尾語（古語）',l:10},
+{w:'はた',r:'はた',j:'あるいは・それとも・また（古語の接続詞）',l:10},
+{w:'つとめて',r:'つとめて',j:'早朝・翌朝（古語）',l:10},
+{w:'くだかけ',r:'くだかけ',j:'鶏の古名（和語）',l:10},
+{w:'とつくに',r:'とつくに',j:'遠い異国・外国（古語）',l:10},
+{w:'わたつみ',r:'わたつみ',j:'海の神・海（「海の霊」の意）',l:10},
+{w:'たかまがはら',r:'たかまがはら',j:'高天原・神々の住む天上の世界',l:10},
+{w:'くにつかみ',r:'くにつかみ',j:'国津神・地上に住む神々',l:10},
+{w:'あまつかみ',r:'あまつかみ',j:'天津神・天にいる神々',l:10},
+];
+
+const JQ_LEVEL_INFO = [
+    {label:'小学低学年',  sub:'日常基礎語レベル',       color:'#f87171', pct:5},
+    {label:'小学高学年',  sub:'教科書基本語レベル',      color:'#fb923c', pct:15},
+    {label:'中学生',      sub:'標準教育語彙レベル',      color:'#fbbf24', pct:25},
+    {label:'高校生',      sub:'論述・思考語彙レベル',    color:'#a3e635', pct:35},
+    {label:'大学・教養',  sub:'哲学・人文教養レベル',    color:'#34d399', pct:45},
+    {label:'漢検2級',    sub:'常用漢字マスターレベル',   color:'#38bdf8', pct:55},
+    {label:'漢検準1級',  sub:'難読語・古典語レベル',     color:'#818cf8', pct:65},
+    {label:'漢検1級',    sub:'最難関漢字レベル',         color:'#c084fc', pct:75},
+    {label:'超難読 ★1', sub:'難読固有名詞・古語レベル', color:'#e879f9', pct:85},
+    {label:'超難読 ★2', sub:'語彙の達人・碩学レベル',   color:'#f43f5e', pct:96},
+];
+const JQ_BADGE = ['📗','📘','📙','🥉','🥈','🥇','🏆','💎','👑','🌟'];
+
+let jqDir        = 'wordToMeaning';
+let jqStartLevel = 4;
+let jqAbility    = 4.0;
+let jqAnswered   = 0;
+let jqCorrect    = 0;
+let jqHistory    = [];
+let jqUsed       = new Set();
+let jqCurrent    = null;
+
+const JQ_K_EARLY = 0.7;
+const JQ_K_MID   = 0.5;
+const JQ_K_LATE  = 0.35;
+function jqGetK(){ if(jqAnswered<10)return JQ_K_EARLY; if(jqAnswered<20)return JQ_K_MID; return JQ_K_LATE; }
+
+document.querySelectorAll('[data-jdir]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-jdir]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); jqDir=btn.dataset.jdir;
+    });
+});
+document.querySelectorAll('[data-jlv]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-jlv]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); jqStartLevel=parseInt(btn.dataset.jlv);
+    });
+});
+
+document.getElementById('jq-start-btn').addEventListener('click', jqStart);
+document.getElementById('jq-next-btn').addEventListener('click', jqNextQuestion);
+document.getElementById('jq-finish-btn').addEventListener('click', jqShowResult);
+document.getElementById('jq-retry-btn').addEventListener('click',()=>{
+    document.getElementById('jq-result').classList.add('hidden'); jqStart();
+});
+
+function jqStart(){
+    jqAbility=jqStartLevel; jqAnswered=0; jqCorrect=0;
+    jqHistory=[]; jqUsed=new Set(); jqCurrent=null;
+    document.getElementById('jq-setup').classList.add('hidden');
+    document.getElementById('jq-result').classList.add('hidden');
+    document.getElementById('jq-main').classList.remove('hidden');
+    jqUpdateLevelBar();
+    jqNextQuestion();
+}
+
+function jqPickWord(){
+    const pool=JQ_WORDS.filter(w=>!jqUsed.has(w.w+w.r));
+    if(pool.length===0){jqUsed.clear();return jqPickWord();}
+    const scored=pool.map(w=>{
+        const dist=Math.abs(w.l-jqAbility);
+        const score=Math.exp(-dist*dist*0.8)+Math.random()*0.15;
+        return{w,score};
+    });
+    scored.sort((a,b)=>b.score-a.score);
+    return scored[0].w;
+}
+
+function jqMakeChoices(correct){
+    const sameLevel=shuffle(JQ_WORDS.filter(w=>w.w!==correct.w&&w.l===correct.l));
+    const wrong=[...sameLevel.slice(0,3)];
+    if(wrong.length<3){
+        const neighbors=shuffle(JQ_WORDS.filter(w=>w.w!==correct.w&&!wrong.some(x=>x.w===w.w)&&Math.abs(w.l-correct.l)===1));
+        while(wrong.length<3&&neighbors.length>0)wrong.push(neighbors.shift());
+    }
+    return shuffle([correct,...wrong]);
+}
+
+function jqNextQuestion(){
+    document.getElementById('jq-feedback-bar').classList.add('hidden');
+    document.getElementById('jq-choices').innerHTML='';
+    jqCurrent=jqPickWord();
+    jqUsed.add(jqCurrent.w+jqCurrent.r);
+
+    document.getElementById('jq-qnum').textContent=`第${jqAnswered+1}問`;
+    document.getElementById('jq-correct-count').textContent=`${jqCorrect}正解`;
+    document.getElementById('jq-total-count').textContent=`${jqAnswered}問`;
+
+    const choices=jqMakeChoices(jqCurrent);
+
+    if(jqDir==='wordToMeaning'){
+        document.getElementById('jq-q-label').textContent='言葉';
+        document.getElementById('jq-q-word').textContent=jqCurrent.w;
+        document.getElementById('jq-q-hint').textContent=`（${jqCurrent.r}）`;
+        choices.forEach(w=>{
+            const btn=document.createElement('button');
+            btn.className='eq-choice-btn';
+            btn.textContent=w.j;
+            btn.addEventListener('click',()=>jqAnswer(w,jqCurrent));
+            document.getElementById('jq-choices').appendChild(btn);
+        });
+    } else {
+        document.getElementById('jq-q-label').textContent='意味';
+        document.getElementById('jq-q-word').textContent=jqCurrent.j;
+        document.getElementById('jq-q-hint').textContent='';
+        choices.forEach(w=>{
+            const btn=document.createElement('button');
+            btn.className='eq-choice-btn';
+            btn.innerHTML=`${w.w}<span class="text-slate-400 text-xs font-normal ml-1">（${w.r}）</span>`;
+            btn.addEventListener('click',()=>jqAnswer(w,jqCurrent));
+            document.getElementById('jq-choices').appendChild(btn);
+        });
+    }
+}
+
+function jqAnswer(chosen,correct){
+    const isCorrect=chosen.w===correct.w&&chosen.r===correct.r;
+    jqAnswered++; if(isCorrect)jqCorrect++;
+    jqHistory.push({word:correct,correct:isCorrect,level:correct.l});
+
+    const expected=1/(1+Math.exp(-(jqAbility-correct.l)));
+    const update=jqGetK()*((isCorrect?1:0)-expected);
+    jqAbility=Math.max(1,Math.min(10,jqAbility+update));
+
+    document.querySelectorAll('#jq-choices .eq-choice-btn').forEach(btn=>{
+        const isThisCorrect=jqDir==='wordToMeaning'
+            ?btn.textContent===correct.j
+            :btn.textContent.includes(correct.w);
+        if(isThisCorrect)btn.classList.add('correct');
+        else if(btn===event.target&&!isCorrect)btn.classList.add('wrong');
+        btn.disabled=true;
+    });
+
+    const fb=document.getElementById('jq-feedback-bar');
+    fb.classList.remove('hidden');
+    const fbMsg=document.getElementById('jq-feedback-msg');
+    fbMsg.className=`p-4 rounded-2xl text-center mb-3 ${isCorrect?'bg-green-50':'bg-red-50'}`;
+    document.getElementById('jq-fb-icon').textContent=isCorrect?'✅':'❌';
+    document.getElementById('jq-fb-text').textContent=isCorrect?'正解！':'不正解…';
+    document.getElementById('jq-fb-ans').textContent=`${correct.w}（${correct.r}）＝ ${correct.j}`;
+
+    document.getElementById('jq-correct-count').textContent=`${jqCorrect}正解`;
+    document.getElementById('jq-total-count').textContent=`${jqAnswered}問`;
+    jqUpdateLevelBar();
+}
+
+function jqUpdateLevelBar(){
+    const pct=((jqAbility-1)/9)*90+5;
+    document.getElementById('jq-level-bar').style.width=pct+'%';
+    const idx=Math.max(0,Math.min(9,Math.round(jqAbility)-1));
+    document.getElementById('jq-current-level-label').textContent=`推定レベル: ${JQ_LEVEL_INFO[idx].label}`;
+}
+
+function jqShowResult(){
+    document.getElementById('jq-main').classList.add('hidden');
+    document.getElementById('jq-result').classList.remove('hidden');
+    const idx=Math.max(0,Math.min(9,Math.round(jqAbility)-1));
+    const info=JQ_LEVEL_INFO[idx];
+    document.getElementById('jq-result-level').textContent=info.label;
+    document.getElementById('jq-result-sub').textContent=info.sub;
+    document.getElementById('jq-result-badge').textContent=JQ_BADGE[idx];
+    const pct=((jqAbility-1)/9)*90+5;
+    document.getElementById('jq-result-bar').style.width=pct+'%';
+    document.getElementById('jq-res-total').textContent=jqAnswered;
+    document.getElementById('jq-res-correct').textContent=jqCorrect;
+    const acc=jqAnswered>0?Math.round(jqCorrect/jqAnswered*100):0;
+    document.getElementById('jq-res-pct').textContent=acc+'%';
+
+    const breakdown={};
+    jqHistory.forEach(h=>{
+        if(!breakdown[h.level])breakdown[h.level]={total:0,correct:0};
+        breakdown[h.level].total++;
+        if(h.correct)breakdown[h.level].correct++;
+    });
+    const bEl=document.getElementById('jq-level-breakdown');
+    bEl.innerHTML='';
+    for(let lv=1;lv<=10;lv++){
+        if(!breakdown[lv])continue;
+        const info2=JQ_LEVEL_INFO[lv-1];
+        const a=Math.round(breakdown[lv].correct/breakdown[lv].total*100);
+        bEl.innerHTML+=`<div><div class="flex justify-between text-xs font-bold mb-1"><span class="text-slate-600">${info2.label}</span><span class="text-slate-400">${breakdown[lv].correct}/${breakdown[lv].total}問 (${a}%)</span></div><div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 rounded-full transition-all" style="width:${a}%;background:${info2.color}"></div></div></div>`;
+    }
 }
 
 // ============================================================
@@ -933,7 +1938,7 @@ function startTimer(){
 function resetTimer(){clearInterval(timerId);timerId=null;isWorking=true;isLongBreak=false;completedSets=0;timeLeft=workMinutes*60;localStorage.setItem('timerRunning','false');localStorage.removeItem('timerStartTime');localStorage.removeItem('timerStartTimeLeft');saveState();startBtn.textContent='スタート';startBtn.className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";updateDisplay();updateStatus();}
 
 function showPage(pageId){
-    ['home','timer','settings','quiz','english'].forEach(id=>{
+    ['home','timer','settings','quiz','english','japanese'].forEach(id=>{
         document.getElementById(`page-${id}`).classList.add('hidden');
         const nav=document.getElementById(`nav-${id}`);
         if(nav){nav.classList.remove('text-indigo-600');nav.classList.add('text-slate-400');}
@@ -944,6 +1949,7 @@ function showPage(pageId){
     if(pageId==='settings'){inputWork.value=workMinutes;inputBreak.value=breakMinutes;inputLongBreak.value=longBreakMinutes;inputSets.value=setsBeforeLongBreak;inputVolume.value=volume;volumeLabel.textContent=volume+'%';}
     if(pageId==='quiz')resetQuizToSetup();
     if(pageId==='english'){document.getElementById('eq-setup').classList.remove('hidden');document.getElementById('eq-main').classList.add('hidden');document.getElementById('eq-result').classList.add('hidden');}
+    if(pageId==='japanese'){document.getElementById('jq-setup').classList.remove('hidden');document.getElementById('jq-main').classList.add('hidden');document.getElementById('jq-result').classList.add('hidden');}
 }
 
 startBtn.addEventListener('click',startTimer);
@@ -954,7 +1960,7 @@ document.getElementById('clear-logs-btn').addEventListener('click',()=>{if(!conf
 document.getElementById('update-btn').addEventListener('click',()=>{caches.keys().then(k=>Promise.all(k.map(c=>caches.delete(c)))).then(()=>window.location.reload());});
 saveBtn.addEventListener('click',()=>{
     let w=parseInt(inputWork.value),b=parseInt(inputBreak.value),lb=parseInt(inputLongBreak.value),s=parseInt(inputSets.value),v=parseInt(inputVolume.value);
-    if(isNaN(w)||w<1)w=1;if(isNaN(b)||b<1)b=1;if(isNaN(lb)||lb<1)lb=1;if(isNaN(s)||s<1)s=1;if(isNaN(v))v=80;
+    if(isNaN(w)||w<0)w=0;if(isNaN(b)||b<0)b=0;if(isNaN(lb)||lb<0)lb=0;if(isNaN(s)||s<1)s=1;if(isNaN(v))v=80;
     workMinutes=w;breakMinutes=b;longBreakMinutes=lb;setsBeforeLongBreak=s;volume=v;
     localStorage.setItem('workMinutes',w);localStorage.setItem('breakMinutes',b);localStorage.setItem('longBreakMinutes',lb);localStorage.setItem('setsBeforeLongBreak',s);localStorage.setItem('volume',v);
     resetTimer();alert("設定を保存しました");showPage('timer');
