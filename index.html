@@ -34,6 +34,66 @@
         .correct-flash{animation:correctFlash .5s ease;}
         @keyframes correctFlash{0%{background:#dcfce7}100%{background:white}}
         .level-bar{transition:width .8s ease;}
+
+        /* ===== ダークモード ===== */
+        html.dark body                    { background:#0f172a; color:#e2e8f0; }
+        html.dark .bg-white               { background:#1e293b !important; }
+        html.dark .bg-slate-50            { background:#0f172a !important; }
+        html.dark .bg-slate-100           { background:#334155 !important; }
+        html.dark .bg-slate-200           { background:#475569 !important; }
+        html.dark .border-slate-100       { border-color:#334155 !important; }
+        html.dark .border-slate-200       { border-color:#475569 !important; }
+        html.dark .text-slate-700         { color:#e2e8f0 !important; }
+        html.dark .text-slate-800         { color:#f1f5f9 !important; }
+        html.dark .text-slate-600         { color:#cbd5e1 !important; }
+        html.dark .text-slate-500         { color:#94a3b8 !important; }
+        html.dark .text-slate-400         { color:#64748b !important; }
+        html.dark .text-slate-300         { color:#475569 !important; }
+        html.dark .shadow-lg              { box-shadow:0 10px 30px rgba(0,0,0,.5) !important; }
+        html.dark .shadow-sm              { box-shadow:0 1px 6px rgba(0,0,0,.4) !important; }
+        html.dark .shadow-md              { box-shadow:0 4px 12px rgba(0,0,0,.4) !important; }
+        html.dark nav                     { background:rgba(15,23,42,.85) !important; border-color:#334155 !important; }
+        html.dark input[type=number],
+        html.dark input[type=text]        { background:#334155 !important; color:#e2e8f0 !important; border-color:#475569 !important; }
+        html.dark input[type=range]       { background:#475569 !important; }
+        html.dark .border-dashed          { border-color:#334155 !important; }
+        html.dark .bg-indigo-50           { background:#1e1b4b !important; }
+        html.dark .bg-green-50            { background:#052e16 !important; }
+        html.dark .bg-red-50              { background:#2d0a0a !important; }
+        html.dark .bg-amber-50            { background:#1c1007 !important; }
+        html.dark .bg-violet-50           { background:#1e1030 !important; }
+        html.dark .bg-orange-50           { background:#1c0e04 !important; }
+        html.dark .bg-sky-100             { background:#0c2640 !important; }
+        html.dark .bg-rose-100            { background:#2d0a15 !important; }
+        html.dark .bg-emerald-100         { background:#022c22 !important; }
+        html.dark .bg-indigo-100          { background:#1e1b4b !important; }
+        html.dark .bg-violet-100          { background:#1e1030 !important; }
+        html.dark .bg-amber-100           { background:#1c1007 !important; }
+        html.dark .bg-slate-800           { background:#334155 !important; }
+        html.dark .border-amber-200       { border-color:#78350f !important; }
+        html.dark .border-amber-300       { border-color:#92400e !important; }
+        html.dark .border-violet-300      { border-color:#5b21b6 !important; }
+        html.dark .border-rose-300        { border-color:#9f1239 !important; }
+        html.dark .border-indigo-100,
+        html.dark .border-indigo-200      { border-color:#312e81 !important; }
+        html.dark .hover\:shadow-md:hover { box-shadow:0 4px 16px rgba(0,0,0,.5) !important; }
+        html.dark .eq-choice-btn,
+        html.dark .math-key               { background:#334155 !important; border-color:#475569 !important; color:#e2e8f0 !important; }
+        html.dark .eq-choice-btn.correct  { background:#052e16 !important; border-color:#22c55e !important; color:#4ade80 !important; }
+        html.dark .eq-choice-btn.wrong    { background:#2d0a0a !important; border-color:#ef4444 !important; color:#f87171 !important; }
+        html.dark #math-answer-display    { background:#334155 !important; color:#f1f5f9 !important; }
+        html.dark .ind-el-btn:not(.bg-indigo-500) { background:#334155 !important; color:#e2e8f0 !important; border-color:#475569 !important; }
+        html.dark .quiz-tab-btn           { background:#1e293b !important; }
+        html.dark .qrange-btn:not(.active),
+        html.dark .qgroup-btn:not(.active),
+        html.dark .sel-btn:not(.active)   { background:#334155 !important; color:#94a3b8 !important; border-color:#475569 !important; }
+        html.dark .bg-amber-200           { background:#78350f !important; }
+        html.dark #math-result-badge + p,
+        html.dark .text-amber-700         { color:#fcd34d !important; }
+        html.dark .text-amber-600         { color:#fbbf24 !important; }
+        html.dark .text-amber-500         { color:#f59e0b !important; }
+        html.dark .border-b               { border-color:#334155 !important; }
+        html.dark hr                      { border-color:#334155 !important; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
@@ -43,7 +103,7 @@
 <section id="page-home">
     <div class="flex justify-between items-start mb-8">
         <h1 class="text-2xl font-bold text-slate-700">ホーム</h1>
-        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.5.0</span>
+        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.6.0</span>
     </div>
     <div class="grid grid-cols-2 gap-4">
         <button onclick="showPage('timer')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
@@ -81,6 +141,12 @@
                 <span class="text-2xl font-black text-amber-500">⚡</span>
             </div>
             <span class="text-sm font-black text-slate-700">暗算タイムアタック</span>
+        </button>
+        <button onclick="showPage('dashboard')" class="col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-16 h-16 bg-sky-100 rounded-2xl flex items-center justify-center">
+                <span class="text-2xl font-black text-sky-500">📊</span>
+            </div>
+            <span class="text-sm font-black text-slate-700">学習ダッシュボード</span>
         </button>
     </div>
     <div class="mt-6 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
@@ -129,6 +195,18 @@
         <hr class="border-slate-100">
         <button id="save-settings" class="w-full bg-slate-800 text-white py-4 rounded-xl font-bold shadow-md active:scale-95 transition-all">設定を保存してリセット</button>
         <button id="update-btn" class="w-full text-slate-400 py-3 text-sm font-bold hover:text-indigo-600 border border-slate-100 rounded-xl transition-colors">アップデートを確認</button>
+                <hr class="border-slate-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-bold text-slate-600">ダークモード</p>
+                        <p class="text-xs text-slate-400 mt-0.5">画面を暗くして目に優しく</p>
+                    </div>
+                    <button id="dark-mode-toggle" onclick="toggleDarkMode()"
+                        class="relative w-14 h-7 rounded-full transition-all duration-300 focus:outline-none"
+                        style="background:#e2e8f0">
+                        <span id="dark-mode-knob" class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-all duration-300"></span>
+                    </button>
+                </div>
     </div>
 </section>
 
@@ -718,6 +796,86 @@
     </div>
 </section>
 
+<!-- ===== ダッシュボード ===== -->
+<section id="page-dashboard" class="hidden">
+    <div class="flex items-center gap-3 mb-6">
+        <button onclick="showPage('home')" class="text-slate-400 hover:text-slate-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+        <h1 class="text-2xl font-bold text-slate-700">学習ダッシュボード</h1>
+    </div>
+
+    <!-- サマリーカード -->
+    <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">累計学習時間</p>
+            <p id="db-total-time" class="text-2xl font-black text-indigo-600">-</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">総挑戦回数</p>
+            <p id="db-total-sessions" class="text-2xl font-black text-slate-700">-</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">英語 最高レベル</p>
+            <p id="db-eq-best" class="text-lg font-black text-rose-500">-</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">日本語 最高レベル</p>
+            <p id="db-jq-best" class="text-lg font-black text-violet-500">-</p>
+        </div>
+    </div>
+
+    <!-- 英語レベル推移 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">英語力レベル推移</h3>
+            <span class="text-[10px] text-slate-400">最新10回</span>
+        </div>
+        <div id="db-eq-chart" class="w-full" style="height:120px"></div>
+        <p id="db-eq-empty" class="text-xs text-slate-300 text-center py-8 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 日本語レベル推移 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">日本語力レベル推移</h3>
+            <span class="text-[10px] text-slate-400">最新10回</span>
+        </div>
+        <div id="db-jq-chart" class="w-full" style="height:120px"></div>
+        <p id="db-jq-empty" class="text-xs text-slate-300 text-center py-8 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 暗算スコア推移 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">暗算スコア推移</h3>
+            <span class="text-[10px] text-slate-400">最新10回</span>
+        </div>
+        <div id="db-math-chart" class="w-full" style="height:120px"></div>
+        <p id="db-math-empty" class="text-xs text-slate-300 text-center py-8 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 暗算 難易度別正答率 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">暗算 難易度別 正答率</h3>
+        <div id="db-math-diff" class="space-y-3"></div>
+        <p id="db-math-diff-empty" class="text-xs text-slate-300 text-center py-4 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 元素クイズ 苦手分析 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">元素クイズ 苦手元素 TOP5</h3>
+        <div id="db-quiz-weak" class="space-y-2"></div>
+        <p id="db-quiz-weak-empty" class="text-xs text-slate-300 text-center py-4 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 学習時間 週間グラフ -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-3">今週の学習時間（分）</h3>
+        <div id="db-week-chart" class="w-full" style="height:100px"></div>
+    </div>
+
+    <button id="db-clear-btn" class="w-full text-xs text-slate-300 hover:text-red-400 font-bold transition-colors py-3 px-3 rounded-xl border border-slate-100 hover:border-red-200">学習履歴をすべてリセット</button>
+</section>
+
 </main>
 
 <!-- ナビゲーション -->
@@ -923,7 +1081,405 @@ const EQ_WORDS = [
 {e:'paracosm',j:'詳細な空想世界',l:10},{e:'pareidolia',j:'無関係なものに顔などを見出す現象',l:10},
 {e:'perendinate',j:'翌々日まで延期する',l:10},{e:'perissology',j:'冗長な言い回し',l:10},
 {e:'philippize',j:'外国の利益のために働く',l:10},{e:'pogonotrophy',j:'ひげを生やすこと',l:10},
-];
+// ===== 追加単語 =====
+// --- Level 1 追加 ---
+{e:'ball',j:'ボール',l:1},{e:'bed',j:'ベッド',l:1},{e:'big',j:'大きい',l:1},{e:'black',j:'黒い',l:1},
+{e:'blue',j:'青い',l:1},{e:'boy',j:'男の子',l:1},{e:'bread',j:'パン',l:1},{e:'bring',l:1,j:'持ってくる'},
+{e:'brother',j:'兄弟',l:1},{e:'buy',j:'買う',l:1},{e:'cake',j:'ケーキ',l:1},{e:'call',j:'呼ぶ',l:1},
+{e:'can',j:'〜できる',l:1},{e:'clean',j:'きれいな',l:1},{e:'cold',j:'冷たい・寒い',l:1},{e:'cook',j:'料理する',l:1},
+{e:'cup',j:'カップ',l:1},{e:'cut',j:'切る',l:1},{e:'day',j:'日・昼',l:1},{e:'drink',j:'飲む',l:1},
+{e:'fast',j:'速い',l:1},{e:'find',j:'見つける',l:1},{e:'five',j:'5・五つ',l:1},{e:'food',j:'食べ物',l:1},
+{e:'four',j:'4・四つ',l:1},{e:'friend',j:'友達',l:1},{e:'fun',j:'楽しみ',l:1},{e:'give',j:'与える',l:1},
+{e:'help',j:'助ける',l:1},{e:'here',j:'ここに',l:1},{e:'home',j:'家・自宅',l:1},{e:'horse',j:'馬',l:1},
+{e:'house',j:'家',l:1},{e:'know',j:'知っている',l:1},{e:'like',j:'好きだ',l:1},{e:'little',j:'小さい・少し',l:1},
+{e:'look',j:'見る',l:1},{e:'make',j:'作る',l:1},{e:'many',j:'たくさんの',l:1},{e:'money',j:'お金',l:1},
+{e:'nice',j:'素敵な',l:1},{e:'night',j:'夜',l:1},{e:'nine',j:'9・九つ',l:1},{e:'park',j:'公園',l:1},
+{e:'people',j:'人々',l:1},{e:'put',j:'置く',l:1},{e:'rain',j:'雨が降る',l:1},{e:'read',j:'読む',l:1},
+{e:'rice',j:'ご飯・米',l:1},{e:'room',j:'部屋',l:1},{e:'school',j:'学校',l:1},{e:'see',j:'見える',l:1},
+{e:'seven',j:'7・七つ',l:1},{e:'sing',j:'歌う',l:1},{e:'sister',j:'姉妹',l:1},{e:'six',j:'6・六つ',l:1},
+{e:'sleep',j:'眠る',l:1},{e:'small',j:'小さい',l:1},{e:'snow',j:'雪が降る',l:1},{e:'speak',j:'話す',l:1},
+{e:'stand',j:'立つ',l:1},{e:'start',j:'始まる',l:1},{e:'stop',j:'止まる',l:1},{e:'sun',j:'太陽',l:1},
+{e:'swim',j:'泳ぐ',l:1},{e:'table',j:'テーブル',l:1},{e:'take',j:'取る',l:1},{e:'ten',j:'10・十',l:1},
+{e:'think',j:'考える',l:1},{e:'three',j:'3・三つ',l:1},{e:'time',j:'時間',l:1},{e:'today',j:'今日',l:1},
+{e:'two',j:'2・二つ',l:1},{e:'under',j:'〜の下に',l:1},{e:'white',j:'白い',l:1},{e:'window',j:'窓',l:1},
+{e:'write',j:'書く',l:1},{e:'yellow',j:'黄色い',l:1},
+// --- Level 2 追加 ---
+{e:'absent',j:'欠席している',l:2},{e:'accident',j:'事故',l:2},{e:'address',j:'住所',l:2},{e:'advice',j:'アドバイス',l:2},
+{e:'age',j:'年齢',l:2},{e:'agree',j:'同意する',l:2},{e:'airport',j:'空港',l:2},{e:'angry',j:'怒った',l:2},
+{e:'animal',j:'動物',l:2},{e:'answer',j:'答える',l:2},{e:'appear',j:'現れる',l:2},{e:'arrive',j:'到着する',l:2},
+{e:'ask',j:'尋ねる',l:2},{e:'beautiful',j:'美しい',l:2},{e:'become',j:'なる',l:2},{e:'birthday',j:'誕生日',l:2},
+{e:'borrow',j:'借りる',l:2},{e:'break',j:'壊す・休憩',l:2},{e:'camp',j:'キャンプ',l:2},{e:'catch',j:'捕まえる',l:2},
+{e:'cheap',j:'安い',l:2},{e:'choose',j:'選ぶ',l:2},{e:'class',j:'授業・クラス',l:2},{e:'clean',j:'掃除する',l:2},
+{e:'climb',j:'登る',l:2},{e:'club',j:'クラブ・部活',l:2},{e:'continue',j:'続ける',l:2},{e:'country',j:'国',l:2},
+{e:'cousin',j:'いとこ',l:2},{e:'danger',j:'危険',l:2},{e:'dark',j:'暗い',l:2},{e:'dear',j:'親愛な',l:2},
+{e:'decide',j:'決める',l:2},{e:'design',j:'デザイン',l:2},{e:'dinner',j:'夕食',l:2},{e:'direction',j:'方向',l:2},
+{e:'draw',j:'描く',l:2},{e:'drop',j:'落とす',l:2},{e:'during',j:'〜の間',l:2},{e:'explain',j:'説明する',l:2},
+{e:'express',j:'表現する',l:2},{e:'fact',j:'事実',l:2},{e:'fail',j:'失敗する',l:2},{e:'fall',j:'落ちる・秋',l:2},
+{e:'far',j:'遠い',l:2},{e:'feel',j:'感じる',l:2},{e:'field',j:'分野・野原',l:2},{e:'fight',j:'戦う',l:2},
+{e:'finish',j:'終わらせる',l:2},{e:'follow',j:'従う・追う',l:2},{e:'free',j:'自由な・無料の',l:2},{e:'fresh',j:'新鮮な',l:2},
+{e:'full',j:'満杯の',l:2},{e:'future',j:'未来',l:2},{e:'gift',j:'贈り物',l:2},{e:'glad',j:'嬉しい',l:2},
+{e:'grow',j:'育つ',l:2},{e:'hard',j:'難しい・硬い',l:2},{e:'heavy',j:'重い',l:2},{e:'hold',j:'持つ・開催する',l:2},
+{e:'hope',j:'望む',l:2},{e:'hospital',j:'病院',l:2},{e:'hotel',j:'ホテル',l:2},{e:'hour',l:2,j:'時間'},
+{e:'hungry',j:'空腹の',l:2},{e:'hurry',j:'急ぐ',l:2},{e:'hurt',j:'傷つく',l:2},{e:'important',j:'重要な',l:2},
+{e:'instrument',j:'楽器',l:2},{e:'introduce',j:'紹介する',l:2},{e:'invite',j:'招待する',l:2},{e:'large',j:'大きい',l:2},
+{e:'late',j:'遅い',l:2},{e:'leave',j:'去る・残す',l:2},{e:'letter',j:'手紙・文字',l:2},{e:'library',j:'図書館',l:2},
+{e:'listen',j:'聞く',l:2},{e:'lend',j:'貸す',l:2},{e:'lose',j:'失う・負ける',l:2},{e:'lot',j:'たくさん',l:2},
+{e:'lunch',j:'昼食',l:2},{e:'meet',j:'会う',l:2},{e:'minute',j:'分',l:2},{e:'miss',j:'恋しく思う・乗り遅れる',l:2},
+{e:'move',j:'動く・引越す',l:2},{e:'museum',j:'博物館',l:2},{e:'near',j:'近い',l:2},{e:'need',j:'必要とする',l:2},
+{e:'never',j:'決して〜ない',l:2},{e:'often',j:'しばしば',l:2},{e:'once',j:'一度・かつて',l:2},{e:'only',j:'だけ',l:2},
+{e:'order',j:'注文する・順序',l:2},{e:'own',j:'自分自身の',l:2},{e:'pass',j:'通過する',l:2},{e:'past',j:'過去',l:2},
+{e:'pet',j:'ペット',l:2},{e:'picture',j:'写真・絵',l:2},{e:'place',j:'場所',l:2},{e:'plan',j:'計画',l:2},
+{e:'plant',j:'植物・植える',l:2},{e:'point',j:'要点・指す',l:2},{e:'problem',j:'問題',l:2},{e:'程',j:'ほど',l:2},
+{e:'race',j:'競走・人種',l:2},{e:'ready',j:'準備ができた',l:2},{e:'receive',j:'受け取る',l:2},{e:'remember',j:'覚えている',l:2},
+{e:'rest',j:'休む',l:2},{e:'return',j:'戻る',l:2},{e:'right',j:'正しい・右',l:2},{e:'road',j:'道路',l:2},
+{e:'safe',j:'安全な',l:2},{e:'same',j:'同じ',l:2},{e:'save',j:'救う・貯める',l:2},{e:'send',j:'送る',l:2},
+{e:'serious',j:'深刻な',l:2},{e:'share',j:'共有する',l:2},{e:'show',j:'見せる',l:2},{e:'sick',j:'病気の',l:2},
+{e:'simple',j:'シンプルな',l:2},{e:'slow',j:'遅い',l:2},{e:'smile',j:'微笑む',l:2},{e:'sorry',j:'申し訳ない',l:2},
+{e:'sound',j:'音',l:2},{e:'spend',j:'過ごす・使う',l:2},{e:'station',j:'駅',l:2},{e:'store',j:'店・貯蔵する',l:2},
+{e:'story',j:'物語',l:2},{e:'strange',j:'奇妙な',l:2},{e:'strong',j:'強い',l:2},{e:'study',j:'勉強する',l:2},
+{e:'sure',j:'確かな',l:2},{e:'surprised',j:'驚いた',l:2},{e:'take care',j:'気をつける',l:2},{e:'talk',j:'話す',l:2},
+{e:'teach',j:'教える',l:2},{e:'team',j:'チーム',l:2},{e:'tell',j:'伝える',l:2},{e:'thing',j:'もの・こと',l:2},
+{e:'tired',j:'疲れた',l:2},{e:'town',j:'町',l:2},{e:'try',j:'試みる',l:2},{e:'turn',j:'曲がる・回転する',l:2},
+{e:'type',j:'種類・タイプ',l:2},{e:'wait',j:'待つ',l:2},{e:'want',j:'欲しい',l:2},{e:'warm',j:'暖かい',l:2},
+{e:'watch',j:'見る・腕時計',l:2},{e:'way',j:'方法・道',l:2},{e:'week',j:'週',l:2},{e:'win',j:'勝つ',l:2},
+{e:'wonderful',j:'素晴らしい',l:2},{e:'word',j:'言葉',l:2},{e:'world',j:'世界',l:2},{e:'worry',j:'心配する',l:2},
+// --- Level 3 追加 ---
+{e:'abandon',j:'捨てる',l:3},{e:'absence',j:'欠席・不在',l:3},{e:'abstract',j:'抽象的な',l:3},{e:'accurate',j:'正確な',l:3},
+{e:'achieve',j:'達成する',l:3},{e:'admit',j:'認める',l:3},{e:'advantage',j:'利点',l:3},{e:'advertise',j:'広告する',l:3},
+{e:'afford',j:'余裕がある',l:3},{e:'agency',j:'代理店',l:3},{e:'allow',j:'許可する',l:3},{e:'amount',j:'量',l:3},
+{e:'ancient',j:'古代の',l:3},{e:'announce',j:'発表する',l:3},{e:'apologize',j:'謝罪する',l:3},{e:'apply',j:'応募する・適用する',l:3},
+{e:'approach',j:'近づく・方法',l:3},{e:'approve',j:'承認する',l:3},{e:'argue',j:'議論する',l:3},{e:'arrange',j:'手配する',l:3},
+{e:'associate',j:'関連づける',l:3},{e:'atmosphere',j:'雰囲気・大気',l:3},{e:'attach',j:'取り付ける',l:3},{e:'attend',j:'出席する',l:3},
+{e:'attract',j:'引きつける',l:3},{e:'avoid',j:'避ける',l:3},{e:'award',j:'賞',l:3},{e:'aware',j:'気づいている',l:3},
+{e:'basic',j:'基本的な',l:3},{e:'battle',j:'戦い',l:3},{e:'behave',j:'振る舞う',l:3},{e:'billion',j:'10億',l:3},
+{e:'blame',j:'責める',l:3},{e:'bother',j:'悩ます',l:3},{e:'brave',j:'勇敢な',l:3},{e:'budget',j:'予算',l:3},
+{e:'campaign',j:'キャンペーン',l:3},{e:'cancel',j:'キャンセルする',l:3},{e:'capable',j:'能力がある',l:3},{e:'capital',j:'首都・資本',l:3},
+{e:'career',j:'職業・経歴',l:3},{e:'cause',j:'引き起こす・原因',l:3},{e:'certain',j:'確かな',l:3},{e:'challenge',j:'挑戦する',l:3},
+{e:'charity',j:'慈善',l:3},{e:'citizen',j:'市民',l:3},{e:'claim',j:'主張する',l:3},{e:'climate',j:'気候',l:3},
+{e:'colleague',j:'同僚',l:3},{e:'combine',j:'結合する',l:3},{e:'comment',j:'コメント',l:3},{e:'community',j:'地域社会',l:3},
+{e:'compare',j:'比較する',l:3},{e:'compete',j:'競争する',l:3},{e:'complete',j:'完成させる',l:3},{e:'complex',j:'複雑な',l:3},
+{e:'concern',j:'懸念',l:3},{e:'condition',j:'状態・条件',l:3},{e:'confident',j:'自信がある',l:3},{e:'connect',j:'つなぐ',l:3},
+{e:'contact',j:'連絡する',l:3},{e:'contain',j:'含む',l:3},{e:'control',j:'制御する',l:3},{e:'convenient',j:'便利な',l:3},
+{e:'correct',j:'正しい',l:3},{e:'cost',j:'費用がかかる',l:3},{e:'create',j:'作る',l:3},{e:'crime',j:'犯罪',l:3},
+{e:'culture',j:'文化',l:3},{e:'current',j:'現在の・電流',l:3},{e:'custom',j:'習慣',l:3},{e:'damage',j:'損害',l:3},
+{e:'deal',j:'取り引きする',l:3},{e:'decrease',j:'減少する',l:3},{e:'defend',j:'守る',l:3},{e:'delay',j:'遅らせる',l:3},
+{e:'demand',j:'要求する',l:3},{e:'depend',j:'依存する',l:3},{e:'detail',j:'詳細',l:3},{e:'determine',j:'決定する',l:3},
+{e:'direction',j:'方向',l:3},{e:'disappear',j:'消える',l:3},{e:'disaster',j:'災害',l:3},{e:'discover',j:'発見する',l:3},
+{e:'display',j:'展示する',l:3},{e:'distance',j:'距離',l:3},{e:'divide',j:'分ける',l:3},{e:'donate',j:'寄付する',l:3},
+{e:'doubt',j:'疑う',l:3},{e:'drive',j:'運転する',l:3},{e:'earn',j:'稼ぐ',l:3},{e:'economy',j:'経済',l:3},
+{e:'effort',j:'努力',l:3},{e:'elect',j:'選ぶ（選挙で）',l:3},{e:'emergency',j:'緊急事態',l:3},{e:'encourage',j:'励ます',l:3},
+{e:'energy',j:'エネルギー',l:3},{e:'enter',j:'入る',l:3},{e:'entire',j:'全体の',l:3},{e:'equal',j:'等しい',l:3},
+{e:'escape',j:'逃げる',l:3},{e:'event',j:'行事・イベント',l:3},{e:'exactly',j:'正確に',l:3},{e:'examine',j:'調べる',l:3},
+{e:'excellent',j:'優れた',l:3},{e:'exercise',j:'運動する',l:3},{e:'exist',j:'存在する',l:3},{e:'expect',j:'期待する',l:3},
+{e:'experience',j:'経験する',l:3},{e:'experiment',j:'実験',l:3},{e:'expert',j:'専門家',l:3},{e:'explain',j:'説明する',l:3},
+{e:'express',j:'表現する',l:3},{e:'extra',j:'余分な',l:3},{e:'factor',j:'要因',l:3},{e:'fair',j:'公平な',l:3},
+{e:'familiar',j:'よく知っている',l:3},{e:'field',j:'分野',l:3},{e:'figure',j:'数字・人物',l:3},{e:'finally',j:'ついに',l:3},
+{e:'force',j:'力・強制する',l:3},{e:'form',j:'形・形成する',l:3},{e:'formal',j:'正式な',l:3},{e:'forward',j:'前へ',l:3},
+{e:'frequent',j:'頻繁な',l:3},{e:'function',j:'機能する',l:3},{e:'fund',j:'資金',l:3},{e:'gain',j:'得る',l:3},
+{e:'gather',j:'集まる',l:3},{e:'goal',j:'目標',l:3},{e:'handle',j:'扱う',l:3},{e:'harm',j:'害を与える',l:3},
+{e:'huge',j:'巨大な',l:3},{e:'identify',j:'特定する',l:3},{e:'image',j:'画像・イメージ',l:3},{e:'impact',j:'影響',l:3},
+{e:'increase',j:'増加する',l:3},{e:'independent',j:'独立した',l:3},{e:'industry',j:'産業',l:3},{e:'inform',j:'知らせる',l:3},
+{e:'inspect',j:'検査する',l:3},{e:'institution',j:'機関・施設',l:3},{e:'intend',j:'意図する',l:3},{e:'issue',j:'問題・発行する',l:3},
+{e:'item',j:'項目・品物',l:3},{e:'join',j:'参加する',l:3},{e:'journalism',j:'ジャーナリズム',l:3},{e:'judge',j:'判断する',l:3},
+{e:'major',j:'主要な',l:3},{e:'material',j:'素材',l:3},{e:'measure',j:'測る',l:3},{e:'media',j:'メディア',l:3},
+{e:'mental',j:'精神的な',l:3},{e:'million',j:'100万',l:3},{e:'minor',j:'小さな',l:3},{e:'missing',j:'行方不明の',l:3},
+{e:'modern',j:'現代の',l:3},{e:'moment',j:'瞬間',l:3},{e:'movement',j:'動き',l:3},{e:'natural',j:'自然な',l:3},
+{e:'necessary',j:'必要な',l:3},{e:'negative',j:'否定的な',l:3},{e:'neighbor',j:'隣人',l:3},{e:'network',j:'ネットワーク',l:3},
+{e:'normal',j:'普通の',l:3},{e:'obvious',j:'明らかな',l:3},{e:'official',j:'公式の',l:3},{e:'order',j:'命じる',l:3},
+{e:'organize',j:'整理する',l:3},{e:'outcome',j:'結果',l:3},{e:'overcome',j:'克服する',l:3},{e:'particular',j:'特定の',l:3},
+{e:'perform',j:'実行する',l:3},{e:'permit',j:'許可する',l:3},{e:'physical',j:'身体的な',l:3},{e:'plenty',j:'たくさん',l:3},
+{e:'policy',j:'政策',l:3},{e:'political',j:'政治的な',l:3},{e:'positive',j:'肯定的な',l:3},{e:'possible',j:'可能な',l:3},
+{e:'prepare',j:'準備する',l:3},{e:'present',j:'提示する・現在の',l:3},{e:'preserve',j:'保存する',l:3},{e:'process',j:'過程・処理する',l:3},
+{e:'progress',j:'進歩',l:3},{e:'project',j:'計画・プロジェクト',l:3},{e:'proper',j:'適切な',l:3},{e:'protect',j:'保護する',l:3},
+{e:'prove',j:'証明する',l:3},{e:'public',j:'公共の',l:3},{e:'purpose',j:'目的',l:3},{e:'raise',j:'育てる・上げる',l:3},
+{e:'range',j:'範囲',l:3},{e:'react',j:'反応する',l:3},{e:'reality',j:'現実',l:3},{e:'refer',j:'言及する',l:3},
+{e:'reflect',j:'反映する',l:3},{e:'refuse',j:'断る',l:3},{e:'region',j:'地域',l:3},{e:'relate',j:'関連する',l:3},
+{e:'release',j:'解放する',l:3},{e:'rely',j:'頼る',l:3},{e:'repeat',j:'繰り返す',l:3},{e:'replace',j:'取り替える',l:3},
+{e:'report',j:'報告する',l:3},{e:'respond',j:'反応する',l:3},{e:'result',j:'結果',l:3},{e:'review',j:'見直す',l:3},
+{e:'risk',j:'リスク',l:3},{e:'role',j:'役割',l:3},{e:'rule',j:'規則',l:3},{e:'scale',j:'規模・目盛り',l:3},
+{e:'science',j:'科学',l:3},{e:'search',j:'探す',l:3},{e:'section',j:'部門・区域',l:3},{e:'select',j:'選ぶ',l:3},
+{e:'separate',j:'分ける・別々の',l:3},{e:'serve',j:'奉仕する',l:3},{e:'settle',j:'解決する',l:3},{e:'several',j:'いくつかの',l:3},
+{e:'sign',j:'兆候・署名する',l:3},{e:'similar',j:'似ている',l:3},{e:'situation',j:'状況',l:3},{e:'skill',j:'技術',l:3},
+{e:'solve',j:'解く',l:3},{e:'source',j:'源',l:3},{e:'specific',j:'具体的な',l:3},{e:'spread',j:'広がる',l:3},
+{e:'statement',j:'声明',l:3},{e:'structure',j:'構造',l:3},{e:'subject',j:'主題・科目',l:3},{e:'survey',j:'調査する',l:3},
+{e:'symbol',j:'象徴',l:3},{e:'system',j:'システム',l:3},{e:'technology',j:'技術',l:3},{e:'tend',j:'傾向がある',l:3},
+{e:'term',j:'用語・期間',l:3},{e:'therefore',j:'それゆえ',l:3},{e:'title',j:'題名',l:3},{e:'topic',j:'話題',l:3},
+{e:'total',j:'合計',l:3},{e:'towards',j:'〜に向かって',l:3},{e:'track',j:'追う・線路',l:3},{e:'treat',j:'扱う・治療する',l:3},
+{e:'trend',j:'傾向',l:3},{e:'typical',j:'典型的な',l:3},{e:'unit',j:'単位',l:3},{e:'value',j:'価値',l:3},
+{e:'version',j:'バージョン',l:3},{e:'view',j:'見る・意見',l:3},{e:'wide',j:'広い',l:3},{e:'willing',j:'進んで〜する',l:3},
+// --- Level 4 追加 ---
+{e:'abolish',j:'廃止する',l:4},{e:'ambiguity',j:'曖昧さ',l:4},{e:'analogy',j:'類推',l:4},{e:'anticipate',j:'予期する',l:4},
+{e:'apparatus',j:'装置',l:4},{e:'arbitrary',j:'恣意的な',l:4},{e:'assert',j:'断言する',l:4},{e:'assumption',j:'前提',l:4},
+{e:'authentic',j:'本物の',l:4},{e:'authorize',j:'承認する',l:4},{e:'autonomous',j:'自律的な',l:4},{e:'breakthrough',j:'飛躍的進歩',l:4},
+{e:'bystander',j:'傍観者',l:4},{e:'collaborate',j:'協力する',l:4},{e:'commitment',j:'約束・取り組み',l:4},{e:'commodity',j:'商品',l:4},
+{e:'competent',j:'有能な',l:4},{e:'compelling',j:'説得力のある',l:4},{e:'comprehensive',j:'包括的な',l:4},{e:'conceive',j:'思いつく',l:4},
+{e:'concise',j:'簡潔な',l:4},{e:'consistent',j:'一貫した',l:4},{e:'construct',j:'建設する',l:4},{e:'controversy',j:'論争',l:4},
+{e:'convert',j:'変換する',l:4},{e:'conviction',j:'信念',l:4},{e:'cooperate',j:'協力する',l:4},{e:'correlate',j:'相関する',l:4},
+{e:'counterpart',j:'相当するもの',l:4},{e:'credible',j:'信頼できる',l:4},{e:'criteria',j:'基準（複数）',l:4},{e:'crucial',j:'重大な',l:4},
+{e:'cultivate',j:'栽培する・養う',l:4},{e:'debate',j:'討論する',l:4},{e:'decline',j:'断る・衰退する',l:4},{e:'dedicate',j:'捧げる',l:4},
+{e:'deficit',j:'赤字・欠乏',l:4},{e:'deliberate',j:'意図的な',l:4},{e:'deploy',j:'展開する',l:4},{e:'derive',j:'引き出す',l:4},
+{e:'detect',j:'発見する',l:4},{e:'devote',j:'専念する',l:4},{e:'dimension',j:'次元・寸法',l:4},{e:'diplomatic',j:'外交的な',l:4},
+{e:'discipline',j:'規律',l:4},{e:'dominant',j:'支配的な',l:4},{e:'dynamic',j:'動的な',l:4},{e:'efficient',j:'効率的な',l:4},
+{e:'eliminate',j:'排除する',l:4},{e:'emerge',j:'現れる',l:4},{e:'emphasis',j:'強調',l:4},{e:'enforce',j:'施行する',l:4},
+{e:'enhance',j:'高める',l:4},{e:'enterprise',j:'企業',l:4},{e:'evaluate',j:'評価する',l:4},{e:'evolve',j:'進化する',l:4},
+{e:'exclude',j:'除外する',l:4},{e:'expand',j:'拡大する',l:4},{e:'exploit',j:'利用する・搾取する',l:4},{e:'expose',j:'さらす',l:4},
+{e:'extensive',j:'広範な',l:4},{e:'extract',j:'抽出する',l:4},{e:'fluctuation',j:'変動',l:4},{e:'fundamental',j:'基本的な',l:4},
+{e:'hence',j:'それゆえに',l:4},{e:'hierarchy',j:'階層',l:4},{e:'hypothesis',j:'仮説',l:4},{e:'identical',j:'同一の',l:4},
+{e:'ideology',j:'イデオロギー',l:4},{e:'illustrate',j:'例示する',l:4},{e:'impose',j:'課す',l:4},{e:'incentive',j:'奨励策',l:4},
+{e:'incorporate',j:'取り込む',l:4},{e:'indicate',j:'示す',l:4},{e:'infrastructure',j:'基盤',l:4},{e:'initiative',j:'主導権',l:4},
+{e:'innovation',j:'革新',l:4},{e:'insight',j:'洞察',l:4},{e:'integrate',j:'統合する',l:4},{e:'integrity',j:'誠実さ',l:4},
+{e:'interpret',j:'解釈する',l:4},{e:'intervene',j:'介入する',l:4},{e:'investigate',j:'調査する',l:4},{e:'isolate',j:'孤立させる',l:4},
+{e:'maintain',j:'維持する',l:4},{e:'manipulate',j:'操作する',l:4},{e:'margin',j:'余白・利益率',l:4},{e:'mechanism',j:'仕組み',l:4},
+{e:'mission',j:'使命',l:4},{e:'monitor',j:'監視する',l:4},{e:'objective',j:'目標・客観的な',l:4},{e:'occupy',j:'占める',l:4},
+{e:'operate',j:'運営する',l:4},{e:'option',j:'選択肢',l:4},{e:'outcome',j:'結果',l:4},{e:'overcome',j:'克服する',l:4},
+{e:'overlap',j:'重複する',l:4},{e:'parameter',j:'パラメータ',l:4},{e:'participant',j:'参加者',l:4},{e:'perceive',j:'知覚する',l:4},
+{e:'phenomenon',j:'現象',l:4},{e:'priority',j:'優先事項',l:4},{e:'proceed',j:'進む',l:4},{e:'promote',j:'促進する',l:4},
+{e:'propose',j:'提案する',l:4},{e:'pursue',j:'追求する',l:4},{e:'recover',j:'回復する',l:4},{e:'reform',j:'改革する',l:4},
+{e:'regulate',j:'規制する',l:4},{e:'reinforce',j:'強化する',l:4},{e:'represent',j:'代表する',l:4},{e:'resource',j:'資源',l:4},
+{e:'restrict',j:'制限する',l:4},{e:'retain',j:'保持する',l:4},{e:'reveal',j:'明らかにする',l:4},{e:'sector',j:'部門',l:4},
+{e:'shift',j:'移動する・変化',l:4},{e:'simulate',j:'シミュレートする',l:4},{e:'sophisticated',j:'洗練された',l:4},{e:'stabilize',j:'安定させる',l:4},
+{e:'stance',j:'立場',l:4},{e:'submit',j:'提出する',l:4},{e:'substitute',j:'代わりになるもの',l:4},{e:'sustain',j:'持続する',l:4},
+{e:'synthesize',j:'合成する',l:4},{e:'target',j:'目標にする',l:4},{e:'technical',j:'技術的な',l:4},{e:'theoretical',j:'理論的な',l:4},
+{e:'thereby',j:'それによって',l:4},{e:'transition',j:'移行',l:4},{e:'transmit',j:'伝達する',l:4},{e:'trigger',j:'引き起こす',l:4},
+{e:'utilize',j:'利用する',l:4},{e:'verify',j:'確認する',l:4},{e:'violate',j:'違反する',l:4},{e:'visible',j:'目に見える',l:4},
+// --- Level 5 追加 ---
+{e:'abate',j:'和らぐ・減少する',l:5},{e:'aberration',j:'逸脱・異常',l:5},{e:'abstain',j:'控える・禁欲する',l:5},{e:'accrue',j:'生じる・累積する',l:5},
+{e:'acrimonious',j:'辛辣な・険悪な',l:5},{e:'adhere',j:'固守する・付着する',l:5},{e:'admonish',j:'戒める',l:5},{e:'advent',j:'到来',l:5},
+{e:'adversary',j:'敵対者',l:5},{e:'adversity',j:'逆境',l:5},{e:'affinity',j:'親和性',l:5},{e:'affluent',j:'裕福な',l:5},
+{e:'aggregate',j:'集合させる',l:5},{e:'alleviate',j:'軽減する',l:5},{e:'allure',j:'魅力・誘惑する',l:5},{e:'altruism',j:'利他主義',l:5},
+{e:'ambivalent',j:'相反する感情を持つ',l:5},{e:'ameliorate',j:'改善する',l:5},{e:'anarchy',j:'無政府状態',l:5},{e:'antagonize',j:'敵対させる',l:5},
+{e:'apathy',j:'無関心・無気力',l:5},{e:'appease',j:'なだめる',l:5},{e:'arbitrary',j:'恣意的な',l:5},{e:'arduous',j:'困難な',l:5},
+{e:'articulate',j:'明確に述べる',l:5},{e:'aspire',j:'熱望する',l:5},{e:'astute',j:'機敏な・抜け目のない',l:5},{e:'atrocity',j:'残虐行為',l:5},
+{e:'attenuate',j:'弱める・薄める',l:5},{e:'audacious',j:'大胆な',l:5},{e:'austere',j:'質素な・厳格な',l:5},{e:'avert',j:'防ぐ・そらす',l:5},
+{e:'baffle',j:'当惑させる',l:5},{e:'belittle',j:'軽視する',l:5},{e:'benign',j:'良性の・温和な',l:5},{e:'bolster',j:'強化する',l:5},
+{e:'candid',j:'率直な',l:5},{e:'capitulate',j:'降伏する',l:5},{e:'catalyst',j:'触媒・きっかけ',l:5},{e:'chronic',j:'慢性的な',l:5},
+{e:'circumspect',j:'慎重な',l:5},{e:'clandestine',j:'秘密の',l:5},{e:'coerce',j:'強制する',l:5},{e:'cogent',j:'説得力のある',l:5},
+{e:'collateral',j:'担保・付随的な',l:5},{e:'complacent',j:'自己満足した',l:5},{e:'concede',j:'認める・譲歩する',l:5},{e:'confront',j:'立ち向かう',l:5},
+{e:'convoluted',j:'複雑な・込み入った',l:5},{e:'corrode',j:'腐食する',l:5},{e:'cynical',j:'冷笑的な',l:5},{e:'daunting',j:'おじけさせる',l:5},
+{e:'decimate',j:'大幅に減らす',l:5},{e:'defiance',j:'反抗',l:5},{e:'delude',j:'欺く',l:5},{e:'depict',j:'描写する',l:5},
+{e:'desolate',j:'荒廃した',l:5},{e:'deter',j:'思いとどまらせる',l:5},{e:'devious',j:'ずる賢い',l:5},{e:'discord',j:'不和',l:5},
+{e:'disdain',j:'軽蔑する',l:5},{e:'disentangle',j:'もつれをほどく',l:5},{e:'disparity',j:'格差',l:5},{e:'dissent',j:'異議を唱える',l:5},
+{e:'divert',j:'そらす',l:5},{e:'dubious',j:'疑わしい',l:5},{e:'eccentric',j:'風変わりな',l:5},{e:'elicit',j:'引き出す',l:5},
+{e:'eloquent',j:'雄弁な',l:5},{e:'embody',j:'具現化する',l:5},{e:'enigmatic',j:'謎めいた',l:5},{e:'eradicate',j:'根絶する',l:5},
+{e:'erratic',j:'不安定な',l:5},{e:'evade',j:'回避する',l:5},{e:'exacerbate',j:'悪化させる',l:5},{e:'exemplify',j:'例示する',l:5},
+{e:'explicit',j:'明示的な',l:5},{e:'exploit',j:'搾取する',l:5},{e:'exponent',j:'提唱者',l:5},{e:'extravagant',j:'浪費する・法外な',l:5},
+{e:'flaw',j:'欠陥',l:5},{e:'flourish',j:'繁栄する',l:5},{e:'forbid',j:'禁じる',l:5},{e:'foster',j:'育てる',l:5},
+{e:'fragile',j:'壊れやすい',l:5},{e:'frugal',j:'倹約家の',l:5},{e:'futile',j:'無駄な',l:5},{e:'glaring',j:'明白な・眩しい',l:5},
+{e:'grim',j:'厳しい・陰鬱な',l:5},{e:'harbor',j:'抱く・港',l:5},{e:'harsh',j:'過酷な',l:5},{e:'havoc',j:'大混乱',l:5},
+{e:'hypocrite',j:'偽善者',l:5},{e:'imminent',j:'差し迫った',l:5},{e:'impartial',j:'公平な',l:5},{e:'impede',j:'妨げる',l:5},
+{e:'implicate',j:'関与させる',l:5},{e:'implicit',j:'暗黙の',l:5},{e:'incessant',j:'絶え間ない',l:5},{e:'incite',j:'扇動する',l:5},
+{e:'indulge',j:'耽る・甘やかす',l:5},{e:'inept',j:'不適切な',l:5},{e:'inevitable',j:'避けられない',l:5},{e:'inflate',j:'膨らませる',l:5},
+{e:'inhibit',j:'抑制する',l:5},{e:'innate',j:'生まれつきの',l:5},{e:'innovate',j:'革新する',l:5},{e:'instigate',j:'扇動する',l:5},
+{e:'integrity',j:'誠実さ・完全性',l:5},{e:'intervene',j:'介入する',l:5},{e:'intricate',j:'複雑な',l:5},{e:'irony',j:'皮肉',l:5},
+{e:'jeopardize',j:'危険にさらす',l:5},{e:'magnify',j:'拡大する',l:5},{e:'malicious',j:'悪意のある',l:5},{e:'manipulate',j:'操る',l:5},
+{e:'meticulous',j:'細心の注意を払う',l:5},{e:'misconception',j:'誤解',l:5},{e:'mislead',j:'誤解させる',l:5},{e:'motive',j:'動機',l:5},
+{e:'naive',j:'素朴な・世間知らずの',l:5},{e:'negate',j:'否定する',l:5},{e:'notorious',j:'悪名高い',l:5},{e:'omit',j:'省略する',l:5},
+{e:'opaque',j:'不透明な',l:5},{e:'oppressive',j:'抑圧的な',l:5},{e:'outrage',j:'激怒させる',l:5},{e:'overlook',j:'見落とす',l:5},
+{e:'pacify',j:'なだめる',l:5},{e:'parody',j:'パロディ',l:5},{e:'partisan',j:'党派的な',l:5},{e:'passive',j:'受動的な',l:5},
+{e:'peril',j:'危険',l:5},{e:'pessimistic',j:'悲観的な',l:5},{e:'plausible',j:'もっともらしい',l:5},{e:'plummet',j:'急落する',l:5},
+{e:'pompous',j:'尊大な',l:5},{e:'ponder',j:'熟考する',l:5},{e:'pose',j:'提起する',l:5},{e:'premise',j:'前提',l:5},
+{e:'prevalent',j:'広く行き渡っている',l:5},{e:'prolong',j:'延長する',l:5},{e:'propaganda',j:'プロパガンダ',l:5},{e:'prosecute',j:'起訴する',l:5},
+{e:'provoke',j:'刺激する',l:5},{e:'radical',j:'急進的な',l:5},{e:'rampant',j:'蔓延した',l:5},{e:'rebuke',j:'叱責する',l:5},
+{e:'recede',j:'後退する',l:5},{e:'reckless',j:'無謀な',l:5},{e:'refute',j:'反論する',l:5},{e:'reluctant',j:'気が進まない',l:5},
+{e:'renounce',j:'放棄する',l:5},{e:'repel',j:'撃退する',l:5},{e:'reprehensible',j:'非難に値する',l:5},{e:'resilient',j:'回復力のある',l:5},
+{e:'restrain',j:'抑制する',l:5},{e:'retaliate',j:'報復する',l:5},{e:'revere',j:'崇拝する',l:5},{e:'rhetoric',j:'修辞法',l:5},
+{e:'rigid',j:'堅固な',l:5},{e:'ruthless',j:'無慈悲な',l:5},{e:'sabotage',j:'妨害する',l:5},{e:'sarcastic',j:'皮肉な',l:5},
+{e:'scapegoat',j:'スケープゴート・身代わり',l:5},{e:'seize',j:'つかむ・占拠する',l:5},{e:'shrewd',j:'抜け目のない',l:5},{e:'simultaneously',j:'同時に',l:5},
+{e:'solemn',j:'厳粛な',l:5},{e:'sovereign',j:'主権を持つ',l:5},{e:'speculate',j:'推測する',l:5},{e:'stereotype',j:'固定観念',l:5},
+{e:'stimulate',j:'刺激する',l:5},{e:'stoic',j:'禁欲的な',l:5},{e:'subordinate',j:'部下・下位の',l:5},{e:'subvert',j:'転覆する',l:5},
+{e:'suppress',j:'抑圧する',l:5},{e:'surge',j:'急増する',l:5},{e:'susceptible',j:'影響を受けやすい',l:5},{e:'sustain',j:'維持する',l:5},
+{e:'tactful',j:'如才ない',l:5},{e:'tedious',j:'退屈な',l:5},{e:'tolerate',j:'耐える・容認する',l:5},{e:'toxic',j:'有毒な',l:5},
+{e:'transcend',j:'超える',l:5},{e:'treacherous',j:'裏切りの',l:5},{e:'trivial',j:'些細な',l:5},{e:'tyranny',j:'専制政治',l:5},
+{e:'unanimous',j:'全員一致の',l:5},{e:'underestimate',j:'過小評価する',l:5},{e:'unprecedented',j:'前例のない',l:5},{e:'unwavering',j:'揺るぎない',l:5},
+{e:'uphold',j:'支持する',l:5},{e:'urge',j:'強く促す',l:5},{e:'utmost',j:'最大限の',l:5},{e:'utter',j:'完全な・発する',l:5},
+{e:'vanity',j:'虚栄心',l:5},{e:'venture',j:'冒険する',l:5},{e:'versatile',j:'多才な',l:5},{e:'vindicate',j:'正当化する',l:5},
+{e:'virtuous',j:'高潔な',l:5},{e:'wield',j:'振るう',l:5},{e:'wrath',j:'激怒',l:5},{e:'yield',j:'譲る・産出する',l:5},
+// ===== Level 6 追加 (英検準1級) =====
+{e:'abridge',j:'短縮する・要約する',l:6},{e:'accolade',j:'称賛・表彰',l:6},{e:'acquiesce',j:'黙って従う',l:6},
+{e:'acumen',j:'鋭敏な判断力',l:6},{e:'affable',j:'気さくな',l:6},{e:'aggrandize',j:'誇張する',l:6},
+{e:'alacrity',j:'敏速さ',l:6},{e:'aloof',j:'よそよそしい',l:6},{e:'amalgamate',j:'合併する',l:6},
+{e:'ambivalence',j:'相反する感情の共存',l:6},{e:'amiable',j:'愛想の良い',l:6},{e:'anodyne',j:'当たり障りのない',l:6},
+{e:'antagonism',j:'敵対',l:6},{e:'approbation',j:'承認・賞賛',l:6},{e:'archaic',j:'古風な',l:6},
+{e:'ardor',j:'熱情',l:6},{e:'arid',j:'乾燥した・退屈な',l:6},{e:'ascertain',j:'確認する',l:6},
+{e:'ascetic',j:'禁欲的な',l:6},{e:'assiduous',j:'勤勉な',l:6},{e:'assuage',j:'和らげる',l:6},
+{e:'atrophy',j:'萎縮する',l:6},{e:'auspicious',j:'縁起の良い',l:6},{e:'avarice',j:'強欲',l:6},
+{e:'avid',j:'熱心な・貪欲な',l:6},{e:'banal',j:'陳腐な',l:6},{e:'belie',j:'裏切る・矛盾する',l:6},
+{e:'bemoan',j:'嘆く',l:6},{e:'bereft',j:'〜を奪われた',l:6},{e:'blatant',j:'露骨な',l:6},
+{e:'blithe',j:'のんきな',l:6},{e:'broach',j:'話題を切り出す',l:6},{e:'buffoon',j:'道化師',l:6},
+{e:'burnish',j:'磨く',l:6},{e:'cacophony',j:'不協和音',l:6},{e:'callous',j:'冷淡な',l:6},
+{e:'candor',j:'率直さ',l:6},{e:'caveat',j:'警告・但し書き',l:6},{e:'censure',j:'非難する',l:6},
+{e:'chagrin',j:'くやしさ',l:6},{e:'churlish',j:'無礼な',l:6},{e:'circumscribe',j:'制限する',l:6},
+{e:'clamor',j:'騒ぎ・強く求める',l:6},{e:'clemency',j:'寛大さ',l:6},{e:'coalesce',j:'合体する',l:6},
+{e:'cogitate',j:'熟考する',l:6},{e:'colloquial',j:'口語的な',l:6},{e:'commensurate',j:'釣り合った',l:6},
+{e:'confound',j:'混乱させる',l:6},{e:'congenial',j:'気の合う',l:6},{e:'conjecture',j:'推測する',l:6},
+{e:'contentious',j:'論争的な',l:6},{e:'contrite',j:'深く後悔した',l:6},{e:'copious',j:'豊富な',l:6},
+{e:'corpulent',j:'肥満した',l:6},{e:'counterintuitive',j:'直感に反する',l:6},{e:'covert',j:'秘密の',l:6},
+{e:'craven',j:'臆病な',l:6},{e:'credulous',j:'信じやすい',l:6},{e:'culpable',j:'過失のある',l:6},
+{e:'cursory',j:'大雑把な',l:6},{e:'daunt',j:'おびえさせる',l:6},{e:'debunk',j:'暴く',l:6},
+{e:'decadent',j:'退廃的な',l:6},{e:'deference',j:'敬意・従うこと',l:6},{e:'degenerate',j:'退化する',l:6},
+{e:'demagogue',j:'扇動政治家',l:6},{e:'demeanor',j:'態度・振る舞い',l:6},{e:'denounce',j:'非難する',l:6},
+{e:'deride',j:'あざ笑う',l:6},{e:'despondent',j:'意気消沈した',l:6},{e:'destitute',j:'極貧の',l:6},
+{e:'dexterous',j:'器用な',l:6},{e:'diffident',j:'内気な',l:6},{e:'digress',j:'話題をそらす',l:6},
+{e:'dilettante',j:'素人愛好家',l:6},{e:'din',j:'騒音',l:6},{e:'disconsolate',j:'慰めようのない',l:6},
+{e:'discordant',j:'不調和な',l:6},{e:'discreet',j:'慎重な',l:6},{e:'disdainful',j:'軽蔑的な',l:6},
+{e:'dismal',j:'陰気な',l:6},{e:'disparage',j:'けなす',l:6},{e:'dissemble',j:'隠す・見せかける',l:6},
+{e:'dissipate',j:'散らす・浪費する',l:6},{e:'docile',j:'従順な',l:6},{e:'dogmatic',j:'教条的な',l:6},
+{e:'dupe',j:'だます',l:6},{e:'ebullient',j:'活発な',l:6},{e:'eclectic',j:'折衷的な',l:6},
+{e:'effervescent',j:'泡立つ・活発な',l:6},{e:'effusive',j:'感情を過剰に表す',l:6},{e:'elated',j:'大喜びの',l:6},
+{e:'elusive',j:'捉えにくい',l:6},{e:'embellish',j:'飾る・誇張する',l:6},{e:'eminent',j:'著名な',l:6},
+{e:'engross',j:'没頭させる',l:6},{e:'enrage',j:'激怒させる',l:6},{e:'enumerate',j:'列挙する',l:6},
+{e:'ephemeral',j:'短命な',l:6},{e:'equable',j:'穏やかで均等な',l:6},{e:'equivocal',j:'曖昧な',l:6},
+{e:'erudite',j:'博識な',l:6},{e:'estrange',j:'疎遠にする',l:6},{e:'exalt',j:'称える',l:6},
+{e:'exasperate',j:'激怒させる',l:6},{e:'expedient',j:'便宜的な',l:6},{e:'expunge',j:'抹消する',l:6},
+{e:'exquisite',j:'精巧な・非常に美しい',l:6},{e:'extol',j:'称賛する',l:6},{e:'exuberant',j:'活気あふれる',l:6},
+{e:'fallacious',j:'誤った・詭弁の',l:6},{e:'fawn',j:'へつらう',l:6},{e:'feckless',j:'無能な',l:6},
+{e:'feign',j:'ふりをする',l:6},{e:'felicity',j:'幸福・適切さ',l:6},{e:'fervor',j:'熱意',l:6},
+{e:'fickle',j:'気まぐれな',l:6},{e:'finesse',j:'巧みな技',l:6},{e:'fitful',j:'断続的な',l:6},
+{e:'flagrant',j:'目に余る',l:6},{e:'flaunt',j:'見せびらかす',l:6},{e:'flippant',j:'軽率な',l:6},
+{e:'foment',j:'扇動する',l:6},{e:'forbearance',j:'忍耐・自制',l:6},{e:'forestall',j:'先手を打つ',l:6},
+{e:'forsake',j:'見捨てる',l:6},{e:'fortuitous',j:'偶然の・幸運な',l:6},{e:'fractious',j:'怒りっぽい',l:6},
+{e:'garish',j:'けばけばしい',l:6},{e:'gaunt',j:'やつれた',l:6},{e:'germane',j:'密接に関係した',l:6},
+{e:'glut',j:'過剰供給',l:6},{e:'grandiose',j:'壮大な',l:6},{e:'gratuitous',j:'不必要な',l:6},
+{e:'hackneyed',j:'使い古された',l:6},{e:'haphazard',j:'行き当たりばったりの',l:6},{e:'harangue',j:'長々と説教する',l:6},
+{e:'harrowing',j:'苦悩させる',l:6},{e:'haughty',j:'傲慢な',l:6},{e:'headstrong',j:'強情な',l:6},
+{e:'hedonist',j:'快楽主義者',l:6},{e:'heed',j:'注意を払う',l:6},{e:'heinous',j:'凶悪な',l:6},
+{e:'heretical',j:'異端の',l:6},{e:'histrionic',j:'芝居がかった',l:6},{e:'idiosyncrasy',j:'個人特有の癖',l:6},
+{e:'illicit',j:'不法の',l:6},{e:'immutable',j:'不変の',l:6},{e:'impassive',j:'感情を表さない',l:6},
+{e:'impertinent',j:'生意気な',l:6},{e:'impetuous',j:'衝動的な',l:6},{e:'implacable',j:'なだめられない',l:6},
+{e:'incorrigible',j:'矯正できない',l:6},{e:'indignant',j:'憤慨した',l:6},{e:'indolent',j:'怠惰な',l:6},
+{e:'ineffable',j:'言葉では表せない',l:6},{e:'inert',j:'不活性の',l:6},{e:'infallible',j:'絶対確実な',l:6},
+{e:'inquisitive',j:'好奇心の強い',l:6},{e:'irksome',j:'うんざりさせる',l:6},{e:'irreverent',j:'不敬な',l:6},
+{e:'jocular',j:'冗談好きな',l:6},{e:'jubilant',j:'歓喜に満ちた',l:6},{e:'lackluster',j:'生気のない',l:6},
+{e:'laud',j:'称賛する',l:6},{e:'lavish',j:'惜しみない・豪華な',l:6},{e:'lethargic',j:'無気力な',l:6},
+{e:'listless',j:'無気力な',l:6},{e:'lofty',j:'高尚な',l:6},{e:'ludicrous',j:'ばかばかしい',l:6},
+{e:'magnanimous',j:'寛大な',l:6},{e:'malevolent',j:'悪意のある',l:6},{e:'malleable',j:'柔軟な',l:6},
+{e:'martyr',j:'殉教者',l:6},{e:'melancholy',j:'憂うつ',l:6},{e:'mendacious',j:'うそつきの',l:6},
+{e:'mercurial',j:'変わりやすい',l:6},{e:'meritorious',j:'功績のある',l:6},{e:'mirth',j:'陽気・笑い',l:6},
+{e:'mundane',j:'平凡な・世俗的な',l:6},{e:'narcissistic',j:'自己陶酔的な',l:6},{e:'nonchalant',j:'無頓着な',l:6},
+{e:'obdurate',j:'頑固な',l:6},{e:'oblivious',j:'気づかない',l:6},{e:'obstinate',j:'頑固な',l:6},
+{e:'officious',j:'おせっかいな',l:6},{e:'onerous',j:'重荷となる',l:6},{e:'opulent',j:'豊かな・贅沢な',l:6},
+{e:'ostentatious',j:'見せびらかした',l:6},{e:'overt',j:'公然の',l:6},{e:'pacifist',j:'平和主義者',l:6},
+{e:'palliate',j:'緩和する',l:6},{e:'paltry',j:'ちっぽけな',l:6},{e:'pedantic',j:'学者ぶった',l:6},
+{e:'pejorative',j:'軽蔑的な',l:6},{e:'penchant',j:'傾向・好み',l:6},{e:'perturb',j:'動揺させる',l:6},
+{e:'petulant',j:'怒りっぽい',l:6},{e:'phlegmatic',j:'冷静な',l:6},{e:'pious',j:'信心深い',l:6},
+{e:'pliant',j:'柔軟な',l:6},{e:'poignant',j:'痛切な',l:6},{e:'polarize',j:'二極化する',l:6},
+{e:'ponderous',j:'重苦しい・退屈な',l:6},{e:'portent',j:'前兆',l:6},{e:'precarious',j:'不安定な',l:6},
+{e:'predilection',j:'偏愛',l:6},{e:'preempt',j:'先取りする',l:6},{e:'presumptuous',j:'厚かましい',l:6},
+{e:'pristine',j:'元のままの・汚れのない',l:6},{e:'prodigal',j:'放蕩な',l:6},{e:'prodigious',j:'驚異的な',l:6},
+{e:'prolific',j:'多産な',l:6},{e:'proponent',j:'支持者',l:6},{e:'prosaic',j:'散文的な・平凡な',l:6},
+{e:'provincial',j:'地方的な・偏狭な',l:6},{e:'prudent',j:'思慮深い',l:6},{e:'punctilious',j:'細部にうるさい',l:6},
+{e:'pungent',j:'刺激的な・辛辣な',l:6},{e:'pusillanimous',j:'臆病な',l:6},{e:'quell',j:'鎮圧する',l:6},
+{e:'quintessential',j:'典型的な',l:6},{e:'ramification',j:'結果・影響',l:6},{e:'rancor',j:'深い恨み',l:6},
+{e:'rapacious',j:'強欲な',l:6},{e:'raucous',j:'騒々しい',l:6},{e:'ravage',j:'荒廃させる',l:6},
+{e:'recompense',j:'報酬・補償',l:6},{e:'redress',j:'是正する',l:6},{e:'reprieve',j:'刑の執行猶予',l:6},
+{e:'reproach',j:'非難する',l:6},{e:'repudiate',j:'拒絶する',l:6},{e:'resigned',j:'諦めた',l:6},
+{e:'resilience',j:'回復力',l:6},{e:'retort',j:'言い返す',l:6},{e:'revile',j:'ののしる',l:6},
+{e:'ribald',j:'卑猥な',l:6},{e:'robust',j:'強健な',l:6},{e:'rogue',j:'悪漢',l:6},
+{e:'ruse',j:'策略',l:6},{e:'saccharine',j:'過度に甘い',l:6},{e:'sagacious',j:'賢明な',l:6},
+{e:'sanctimonious',j:'聖人ぶった',l:6},{e:'sardonic',j:'冷笑的な',l:6},{e:'satiate',j:'満足させる',l:6},
+{e:'savvy',j:'知識のある・抜け目のない',l:6},{e:'sedulous',j:'勤勉な',l:6},{e:'serendipity',j:'思いがけない幸運',l:6},
+{e:'servile',j:'卑屈な',l:6},{e:'sinister',j:'不吉な',l:6},{e:'slander',j:'中傷する',l:6},
+{e:'soporific',j:'眠気を催す',l:6},{e:'spurious',j:'偽の',l:6},{e:'squeamish',j:'潔癖な',l:6},
+{e:'stagnate',j:'停滞する',l:6},{e:'steadfast',j:'不動の',l:6},{e:'stentorian',j:'大声の',l:6},
+{e:'stringent',j:'厳格な',l:6},{e:'stupefy',j:'呆然とさせる',l:6},{e:'suave',j:'洗練された',l:6},
+{e:'submissive',j:'従順な',l:6},{e:'subservient',j:'卑屈な',l:6},{e:'subterfuge',j:'言い逃れ',l:6},
+{e:'sullen',j:'ふくれっ面の',l:6},{e:'supercilious',j:'傲慢な',l:6},{e:'superfluous',j:'余分な',l:6},
+{e:'surreptitious',j:'ひそかな',l:6},{e:'tacit',j:'暗黙の',l:6},{e:'tangential',j:'本題からそれた',l:6},
+{e:'temerity',j:'向こう見ず',l:6},{e:'tenacious',j:'粘り強い',l:6},{e:'tepid',j:'生ぬるい',l:6},
+{e:'terse',j:'簡潔な',l:6},{e:'thwart',j:'妨げる',l:6},{e:'timorous',j:'臆病な',l:6},
+{e:'toady',j:'へつらう人',l:6},{e:'torpor',j:'無気力・冬眠',l:6},{e:'tortuous',j:'曲がりくねった',l:6},
+{e:'tractable',j:'御しやすい',l:6},{e:'transgress',j:'違反する',l:6},{e:'turgid',j:'大げさな',l:6},
+{e:'unbridled',j:'抑制されない',l:6},{e:'uncanny',j:'不思議な',l:6},{e:'unequivocal',j:'明確な',l:6},
+{e:'unkempt',j:'だらしない',l:6},{e:'unwieldy',j:'扱いにくい',l:6},{e:'upbraid',j:'叱責する',l:6},
+{e:'usurp',j:'奪う',l:6},{e:'vacillate',j:'ためらう',l:6},{e:'vapid',j:'面白みのない',l:6},
+{e:'venerable',j:'尊敬すべき',l:6},{e:'venomous',j:'毒のある・悪意のある',l:6},{e:'vex',j:'いらだたせる',l:6},
+{e:'vile',j:'卑劣な',l:6},{e:'vindictive',j:'報復心の強い',l:6},{e:'virulent',j:'有毒な',l:6},
+{e:'visceral',j:'本能的な',l:6},{e:'vociferous',j:'声高な',l:6},{e:'voracious',j:'大食の・貪欲な',l:6},
+{e:'wary',j:'用心深い',l:6},{e:'wayward',j:'気まぐれな',l:6},{e:'wistful',j:'物悲しい',l:6},
+// ===== Level 7 追加 (英検1級) =====
+{e:'abjure',j:'誓って放棄する',l:7},{e:'abnegate',j:'放棄する',l:7},{e:'abscond',j:'逃亡する',l:7},
+{e:'abstemious',j:'節制した',l:7},{e:'acerbic',j:'辛辣な',l:7},{e:'actuate',j:'作動させる',l:7},
+{e:'adumbrate',j:'おぼろに示す',l:7},{e:'afflict',j:'苦しめる',l:7},{e:'allay',j:'和らげる',l:7},
+{e:'altercation',j:'口論',l:7},{e:'amalgam',j:'混合物',l:7},{e:'amorphous',j:'形のない',l:7},
+{e:'anachronism',j:'時代錯誤',l:7},{e:'anathema',j:'呪い・忌み嫌われるもの',l:7},{e:'ancillary',j:'補助的な',l:7},
+{e:'anomalous',j:'異常な',l:7},{e:'antediluvian',j:'時代遅れの',l:7},{e:'antipathy',j:'反感',l:7},
+{e:'apotheosis',j:'神格化',l:7},{e:'apprise',j:'知らせる',l:7},{e:'archetype',j:'原型',l:7},
+{e:'arrogate',j:'不当に主張する',l:7},{e:'ascribe',j:'〜のせいにする',l:7},{e:'atavism',j:'先祖返り',l:7},
+{e:'attenuate',j:'弱める',l:7},{e:'audacity',j:'大胆さ',l:7},{e:'augment',j:'増やす',l:7},
+{e:'auspice',j:'後援・前兆',l:7},{e:'aver',j:'断言する',l:7},{e:'bane',j:'災いの元',l:7},
+{e:'baroque',j:'バロック式の・奇異な',l:7},{e:'bastion',j:'砦・堡塁',l:7},{e:'beleaguer',j:'包囲する',l:7},
+{e:'belligerent',j:'好戦的な',l:7},{e:'bemuse',j:'困惑させる',l:7},{e:'benighted',j:'無知な',l:7},
+{e:'bilk',j:'だます',l:7},{e:'blight',j:'荒廃させる',l:7},{e:'boorish',j:'粗野な',l:7},
+{e:'bowdlerize',j:'不適切な部分を削除する',l:7},{e:'calumniate',j:'中傷する',l:7},{e:'cant',j:'偽善的な言葉',l:7},
+{e:'captious',j:'あら探しをする',l:7},{e:'catharsis',j:'浄化',l:7},{e:'cavil',j:'些細な批判をする',l:7},
+{e:'censorious',j:'批判的な',l:7},{e:'charlatan',j:'詐欺師',l:7},{e:'chastise',j:'懲らしめる',l:7},
+{e:'circumlocution',j:'遠回しな言い方',l:7},{e:'circumspection',j:'慎重さ',l:7},{e:'clamorous',j:'騒々しい',l:7},
+{e:'cloistered',j:'世俗を離れた',l:7},{e:'cogent',j:'説得力のある',l:7},{e:'collusion',j:'共謀',l:7},
+{e:'complacency',j:'自己満足',l:7},{e:'conciliatory',j:'宥和的な',l:7},{e:'condescending',j:'見下した',l:7},
+{e:'conflagration',j:'大火災',l:7},{e:'consternation',j:'狼狽',l:7},{e:'contemptuous',j:'軽蔑的な',l:7},
+{e:'conundrum',j:'難問',l:7},{e:'cupidity',j:'強欲',l:7},{e:'dauntless',j:'恐れを知らない',l:7},
+{e:'debacle',j:'大失敗・崩壊',l:7},{e:'declaim',j:'演説する',l:7},{e:'defamation',j:'名誉毀損',l:7},
+{e:'deleterious',j:'有害な',l:7},{e:'demagogy',j:'扇動政治',l:7},{e:'demur',j:'異議を唱える',l:7},
+{e:'denote',j:'示す',l:7},{e:'depravity',j:'道徳的腐敗',l:7},{e:'dereliction',j:'義務の放棄',l:7},
+{e:'desiccate',j:'乾燥させる',l:7},{e:'diatribe',j:'激しい非難',l:7},{e:'didactic',j:'教訓的な',l:7},
+{e:'diffidence',j:'内気',l:7},{e:'dilatory',j:'引き延ばしの',l:7},{e:'discerning',j:'識別力のある',l:7},
+{e:'discomfit',j:'当惑させる',l:7},{e:'discursive',j:'散漫な',l:7},{e:'disheartened',j:'意気消沈した',l:7},
+{e:'disingenuous',j:'不誠実な',l:7},{e:'disparate',j:'本質的に異なる',l:7},{e:'dispassionate',j:'冷静な',l:7},
+{e:'disputatious',j:'議論好きな',l:7},{e:'dissimulate',j:'偽装する',l:7},{e:'dissolution',j:'解散・放蕩',l:7},
+{e:'dissonance',j:'不調和',l:7},{e:'dogmatism',j:'独断主義',l:7},{e:'dolorous',j:'悲しい',l:7},
+{e:'duplicity',j:'二枚舌',l:7},{e:'ebullience',j:'溢れる活力',l:7},{e:'edify',j:'教化する',l:7},
+{e:'effrontery',j:'厚かましさ',l:7},{e:'elucidate',j:'明快に説明する',l:7},{e:'embroil',j:'巻き込む',l:7},
+{e:'ennui',j:'退屈・倦怠感',l:7},{e:'equanimity',j:'平静さ',l:7},{e:'erudition',j:'博識',l:7},
+{e:'excoriate',j:'激しく批判する',l:7},{e:'exhort',j:'強く勧める',l:7},{e:'exigent',j:'緊急の',l:7},
+{e:'exonerate',j:'無罪にする',l:7},{e:'expatiate',j:'詳しく述べる',l:7},{e:'expeditious',j:'迅速な',l:7},
+{e:'expiate',j:'償う',l:7},{e:'expostulate',j:'抗議する',l:7},{e:'extirpate',j:'根絶する',l:7},
+{e:'extricate',j:'救い出す',l:7},{e:'fabrication',j:'でたらめ・捏造',l:7},{e:'facile',j:'安易な',l:7},
+{e:'fatuous',j:'愚かな',l:7},{e:'fawning',j:'へつらう',l:7},{e:'felicitous',j:'適切な',l:7},
+{e:'fervid',j:'熱烈な',l:7},{e:'fester',j:'悪化する',l:7},{e:'flabbergasted',j:'仰天した',l:7},
+{e:'fledgling',j:'未熟な',l:7},{e:'flippancy',j:'軽率さ',l:7},{e:'florid',j:'過度に装飾した',l:7},
+{e:'foible',j:'小さな欠点',l:7},{e:'forbear',j:'自制する',l:7},{e:'forswear',j:'誓って断念する',l:7},
+{e:'frowzy',j:'だらしない',l:7},{e:'gainsay',j:'否定する',l:7},{e:'grandiloquent',j:'大げさな言い方の',l:7},
+{e:'gregarious',j:'社交的な',l:7},{e:'guile',j:'ずるさ',l:7},{e:'harbinger',j:'先触れ',l:7},
+{e:'heresy',j:'異端',l:7},{e:'hyperbole',j:'誇張法',l:7},{e:'iconoclast',j:'偶像破壊者',l:7},
+{e:'imperturbable',j:'冷静沈着な',l:7},{e:'impudent',j:'厚かましい',l:7},{e:'impugn',j:'疑問を呈する',l:7},
+{e:'impunity',j:'罰を免れること',l:7},{e:'inadvertent',j:'不注意な',l:7},{e:'inane',j:'空虚な',l:7},
+{e:'inchoate',j:'発展途上の',l:7},{e:'indolence',j:'怠惰',l:7},{e:'inexorable',j:'容赦ない',l:7},
+{e:'ingenuous',j:'純真な',l:7},{e:'iniquitous',j:'不道徳な',l:7},{e:'innocuous',j:'無害な',l:7},
+{e:'inscrutable',j:'不可解な',l:7},{e:'insolence',j:'傲慢',l:7},{e:'intemperate',j:'不節制な',l:7},
+{e:'intractable',j:'扱いにくい',l:7},{e:'intransigence',j:'妥協しないこと',l:7},{e:'invective',j:'罵倒の言葉',l:7},
+{e:'invidious',j:'恨みを買う',l:7},{e:'irascible',j:'怒りっぽい',l:7},{e:'irresolute',j:'優柔不断な',l:7},
+{e:'lachrymose',j:'涙もろい',l:7},{e:'lassitude',j:'倦怠感',l:7},{e:'lugubrious',j:'陰気な',l:7},
+{e:'machiavellian',j:'抜け目のない',l:7},{e:'magniloquent',j:'大げさな',l:7},{e:'malefactor',j:'犯罪者',l:7},
+{e:'malign',j:'中傷する',l:7},{e:'malingerer',j:'仮病を使う人',l:7},{e:'maudlin',j:'感傷的な',l:7},
+{e:'mawkish',j:'過度に感傷的な',l:7},{e:'mendacity',j:'虚偽',l:7},{e:'mercenary',j:'金目当ての',l:7},
+{e:'misanthrope',j:'人間嫌い',l:7},{e:'morose',j:'むっつりした',l:7},{e:'mutable',j:'変わりやすい',l:7},
+{e:'myopic',j:'近視眼的な',l:7},{e:'nepotism',j:'縁故主義',l:7},{e:'nihilism',j:'虚無主義',l:7},
+{e:'nonchalance',j:'無関心',l:7},{e:'obfuscate',j:'曖昧にする',l:7},{e:'oblique',j:'遠回しな',l:7},
+{e:'oblivion',j:'忘却',l:7},{e:'obtuse',j:'鈍感な',l:7},{e:'odious',j:'憎むべき',l:7},
+{e:'opprobrium',j:'不名誉',l:7},{e:'ostracism',j:'追放',l:7},{e:'overwrought',j:'極度に興奮した',l:7},
+{e:'pallid',j:'青白い',l:7},{e:'pander',j:'欲望に迎合する',l:7},{e:'parsimony',j:'けち',l:7},
+{e:'peccadillo',j:'些細な非行',l:7},{e:'pedantry',j:'学者ぶること',l:7},{e:'perfidy',j:'裏切り',l:7},
+{e:'pernicious',j:'有害な',l:7},{e:'pertinacious',j:'頑固な',l:7},{e:'petulance',j:'怒りっぽさ',l:7},
+{e:'philistine',j:'俗物',l:7},{e:'picayune',j:'つまらない',l:7},{e:'platitude',j:'陳腐な言葉',l:7},
+{e:'polemic',j:'論争',l:7},{e:'precipitate',j:'性急な',l:7},{e:'precocious',j:'早熟な',l:7},
+{e:'prevarication',j:'言い逃れ',l:7},{e:'priggish',j:'堅苦しい',l:7},{e:'prolix',j:'冗長な',l:7},
+{e:'propitiate',j:'なだめる',l:7},{e:'proscribe',j:'禁止する',l:7},{e:'provocateur',j:'扇動者',l:7},
+{e:'prudish',j:'堅苦しい',l:7},{e:'pugnacity',j:'好戦性',l:7},{e:'rancorous',j:'根に持つ',l:7},
+{e:'recidivism',j:'再犯',l:7},{e:'reclusive',j:'隠遁した',l:7},{e:'redoubtable',j:'恐るべき',l:7},
+{e:'refulgent',j:'輝く',l:7},{e:'reprobate',j:'堕落した人',l:7},{e:'rescind',j:'取り消す',l:7},
+{e:'resentful',j:'憤慨した',l:7},{e:'resolute',j:'断固とした',l:7},{e:'ribald',j:'下品な',l:7},
+{e:'scathing',j:'痛烈な',l:7},{e:'scorn',j:'軽蔑する',l:7},{e:'slanderous',j:'中傷的な',l:7},
+{e:'specious',j:'もっともらしいが誤りの',l:7},{e:'splenetic',j:'短気な',l:7},{e:'squander',j:'浪費する',l:7},
+{e:'squalid',j:'不潔な',l:7},{e:'staid',j:'落ち着いた',l:7},{e:'stolid',j:'無感動な',l:7},
+{e:'strident',j:'耳障りな',l:7},{e:'subversive',j:'体制転覆的な',l:7},{e:'succumb',j:'負ける',l:7},
+{e:'sully',j:'汚す',l:7},{e:'supine',j:'怠惰な',l:7},{e:'surly',j:'不機嫌な',l:7},
+{e:'sycophancy',j:'おべっか',l:7},{e:'tirade',j:'長々とした非難',l:7},{e:'torpid',j:'鈍い',l:7},
+{e:'treachery',j:'裏切り',l:7},{e:'trepidation',j:'おびえ',l:7},{e:'turbulent',j:'乱気流の',l:7},
+{e:'unctuous',j:'過度に愛想の良い',l:7},{e:'unscrupulous',j:'無節操な',l:7},{e:'vacuous',j:'空虚な',l:7},
+{e:'venal',j:'買収できる',l:7},{e:'verbose',j:'冗長な',l:7},{e:'vexation',j:'苛立ち',l:7},
+{e:'vicious',j:'悪意のある',l:7},{e:'vindictiveness',j:'報復心',l:7},{e:'vituperate',j:'罵倒する',l:7},
+{e:'wanton',j:'恣意的な',l:7},{e:'wily',j:'ずる賢い',l:7},{e:'xenophobia',j:'外国人嫌い',l:7},
+{e:'zealotry',j:'狂信',l:7},{e:'zenith',j:'頂点',l:7},
 
 // ============================================================
 // 英語力診断ロジック
@@ -1125,6 +1681,7 @@ function eqUpdateLevelBar() {
 function eqShowResult() {
     document.getElementById('eq-main').classList.add('hidden');
     document.getElementById('eq-result').classList.remove('hidden');
+    dbSaveEq(eqAbility, eqCorrect, eqAnswered);
 
     const idx  = Math.max(0, Math.min(6, Math.round(eqAbility) - 1));
     const info = EQ_LEVEL_INFO[idx];
@@ -1485,6 +2042,7 @@ function showQResult(){
     const total=quizQueue.length;
     document.getElementById('quiz-main').classList.add('hidden');document.getElementById('quiz-result').classList.remove('hidden');
     document.getElementById('quiz-progress-bar').style.width='100%';
+    if(wrongList.length>0) dbSaveQuizWrong(wrongList);
     const pct=Math.round((correctCount/total)*100);
     document.getElementById('result-score').textContent=`${correctCount} / ${total}`;
     document.getElementById('result-detail').textContent=`正解率 ${pct}%`;
@@ -1954,7 +2512,7 @@ function jqNextQuestion(){
     if(jqDir==='wordToMeaning'){
         document.getElementById('jq-q-label').textContent='言葉';
         document.getElementById('jq-q-word').textContent=jqCurrent.w;
-        document.getElementById('jq-q-hint').textContent=`（${jqCurrent.r}）`;
+        document.getElementById('jq-q-hint').textContent='';
         choices.forEach(w=>{
             const btn=document.createElement('button');
             btn.className='eq-choice-btn';
@@ -2019,6 +2577,7 @@ function jqUpdateLevelBar(){
 function jqShowResult(){
     document.getElementById('jq-main').classList.add('hidden');
     document.getElementById('jq-result').classList.remove('hidden');
+    dbSaveJq(jqAbility, jqCorrect, jqAnswered);
     const idx=Math.max(0,Math.min(9,Math.round(jqAbility)-1));
     const info=JQ_LEVEL_INFO[idx];
     document.getElementById('jq-result-level').textContent=info.label;
@@ -2265,6 +2824,7 @@ function startMath(){
 function showMathResult(){
     document.getElementById('math-main').classList.add('hidden');
     document.getElementById('math-result').classList.remove('hidden');
+    dbSaveMath(mathScore, mathCorrect, mathWrong, mathDiff, mathTimeLimit);
 
     document.getElementById('math-result-score').textContent=mathScore;
     document.getElementById('math-res-correct').textContent=mathCorrect;
@@ -2304,6 +2864,287 @@ function renderMathHighscores(){
     });
     el.innerHTML=html||'<p class="text-xs text-slate-400">まだ記録がありません</p>';
 }
+
+// ============================================================
+// ダークモード
+// ============================================================
+function applyDarkMode(isDark) {
+    if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('dark-mode-toggle').style.background = '#4f46e5';
+        document.getElementById('dark-mode-knob').style.transform = 'translateX(28px)';
+    } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('dark-mode-toggle').style.background = '#e2e8f0';
+        document.getElementById('dark-mode-knob').style.transform = 'translateX(0)';
+    }
+}
+function toggleDarkMode() {
+    const isDark = !document.documentElement.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark ? '1' : '0');
+    applyDarkMode(isDark);
+}
+// 初期化（保存済み設定 or システム設定を使用）
+(function initDarkMode() {
+    const saved = localStorage.getItem('darkMode');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyDarkMode(saved !== null ? saved === '1' : prefersDark);
+})();
+
+// ============================================================
+// ダッシュボード
+// ============================================================
+
+// --- データ保存ユーティリティ ---
+function dbSave(key, entry, max=30){
+    const arr = JSON.parse(localStorage.getItem(key)||'[]');
+    arr.push(entry);
+    if(arr.length > max) arr.splice(0, arr.length - max);
+    localStorage.setItem(key, JSON.stringify(arr));
+}
+function dbLoad(key){ return JSON.parse(localStorage.getItem(key)||'[]'); }
+
+function dbSaveEq(ability, correct, total){
+    const pct = total>0 ? Math.round(correct/total*100) : 0;
+    const label = EQ_LEVEL_INFO[Math.max(0,Math.min(9,Math.round(ability)-1))].label;
+    dbSave('db_eq', {ts:Date.now(), ability:Math.round(ability*10)/10, label, correct, total, pct});
+}
+function dbSaveJq(ability, correct, total){
+    const pct = total>0 ? Math.round(correct/total*100) : 0;
+    const label = JQ_LEVEL_INFO[Math.max(0,Math.min(9,Math.round(ability)-1))].label;
+    dbSave('db_jq', {ts:Date.now(), ability:Math.round(ability*10)/10, label, correct, total, pct});
+}
+function dbSaveMath(score, correct, wrong, diff, timeSec){
+    const total = correct+wrong;
+    const pct = total>0 ? Math.round(correct/total*100) : 0;
+    dbSave('db_math', {ts:Date.now(), score, correct, wrong, diff, timeSec, pct});
+}
+function dbSaveQuizWrong(wrongElements){
+    // 苦手元素の記録（wrong元素名ごとにカウント）
+    const map = JSON.parse(localStorage.getItem('db_quiz_weak')||'{}');
+    wrongElements.forEach(el=>{
+        map[el.name] = (map[el.name]||0)+1;
+    });
+    localStorage.setItem('db_quiz_weak', JSON.stringify(map));
+}
+function dbSaveWeekTime(minutes){
+    const today = new Date().toISOString().slice(0,10);
+    const map = JSON.parse(localStorage.getItem('db_week_time')||'{}');
+    map[today] = (map[today]||0) + minutes;
+    // 8日以上前のデータを削除
+    Object.keys(map).forEach(d=>{
+        if((Date.now()-new Date(d).getTime()) > 8*86400000) delete map[d];
+    });
+    localStorage.setItem('db_week_time', JSON.stringify(map));
+}
+
+// --- SVGチャート描画 ---
+function drawLineChart(containerId, data, color, minY, maxY, labelFn){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+    const W=el.clientWidth||300, H=120;
+    if(data.length===0){ el.innerHTML=''; return; }
+    const padL=8, padR=8, padT=10, padB=20;
+    const w=W-padL-padR, h=H-padT-padB;
+    const n=data.length;
+    const xStep = n>1 ? w/(n-1) : 0;
+    const yRange = maxY-minY || 1;
+    const px = (i)=> padL + (n>1 ? i*xStep : w/2);
+    const py = (v)=> padT + h - ((v-minY)/yRange)*h;
+
+    let path=`M ${px(0)} ${py(data[0].val)}`;
+    for(let i=1;i<n;i++) path+=` L ${px(i)} ${py(data[i].val)}`;
+
+    let areaPath=`M ${px(0)} ${padT+h} L ${px(0)} ${py(data[0].val)}`;
+    for(let i=1;i<n;i++) areaPath+=` L ${px(i)} ${py(data[i].val)}`;
+    areaPath+=` L ${px(n-1)} ${padT+h} Z`;
+
+    // グリッドライン（3本）
+    let grids='';
+    for(let g=0;g<=2;g++){
+        const yv=minY+(yRange/2)*g;
+        const yp=py(yv);
+        grids+=`<line x1="${padL}" y1="${yp}" x2="${W-padR}" y2="${yp}" stroke="#f1f5f9" stroke-width="1"/>`;
+        grids+=`<text x="${padL}" y="${yp-2}" font-size="8" fill="#cbd5e1" font-family="sans-serif">${labelFn(yv)}</text>`;
+    }
+
+    // 点とラベル
+    let dots='';
+    data.forEach((d,i)=>{
+        dots+=`<circle cx="${px(i)}" cy="${py(d.val)}" r="3" fill="${color}" stroke="white" stroke-width="1.5"/>`;
+        if(i===n-1 || i===0){
+            dots+=`<text x="${px(i)}" y="${py(d.val)-6}" text-anchor="middle" font-size="9" fill="${color}" font-weight="bold" font-family="sans-serif">${labelFn(d.val)}</text>`;
+        }
+    });
+
+    el.innerHTML=`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+        ${grids}
+        <path d="${areaPath}" fill="${color}" opacity="0.08"/>
+        <path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        ${dots}
+    </svg>`;
+}
+
+function drawBarChart(containerId, data, color, labelFn){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+    const W=el.clientWidth||300, H=120;
+    if(data.length===0){ el.innerHTML=''; return; }
+    const padL=8, padR=8, padT=16, padB=20;
+    const w=W-padL-padR, h=H-padT-padB;
+    const n=data.length;
+    const maxVal=Math.max(...data.map(d=>d.val),1);
+    const barW=Math.max(4, w/n*0.6);
+    const step=w/n;
+
+    let bars='', labels='';
+    data.forEach((d,i)=>{
+        const bh=Math.max(2,(d.val/maxVal)*h);
+        const x=padL+step*i+(step-barW)/2;
+        const y=padT+h-bh;
+        bars+=`<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="3" fill="${color}" opacity="0.85"/>`;
+        bars+=`<text x="${x+barW/2}" y="${y-3}" text-anchor="middle" font-size="9" fill="${color}" font-weight="bold" font-family="sans-serif">${labelFn(d.val)}</text>`;
+        if(d.label) labels+=`<text x="${x+barW/2}" y="${H-3}" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="sans-serif">${d.label}</text>`;
+    });
+
+    el.innerHTML=`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+        <line x1="${padL}" y1="${padT+h}" x2="${W-padR}" y2="${padT+h}" stroke="#f1f5f9" stroke-width="1"/>
+        ${bars}${labels}
+    </svg>`;
+}
+
+// --- ダッシュボード描画 ---
+function renderDashboard(){
+    // サマリー
+    const h=Math.floor(totalStudyMinutes/60), m=totalStudyMinutes%60;
+    document.getElementById('db-total-time').textContent=`${h}時間${String(m).padStart(2,'0')}分`;
+
+    const eqR=dbLoad('db_eq'), jqR=dbLoad('db_jq'), mathR=dbLoad('db_math');
+    const total=(eqR.length+jqR.length+mathR.length);
+    document.getElementById('db-total-sessions').textContent=`${total}回`;
+
+    // 英語ベストレベル
+    if(eqR.length>0){
+        const best=eqR.reduce((a,b)=>a.ability>b.ability?a:b);
+        document.getElementById('db-eq-best').textContent=best.label;
+    } else document.getElementById('db-eq-best').textContent='未診断';
+
+    // 日本語ベストレベル
+    if(jqR.length>0){
+        const best=jqR.reduce((a,b)=>a.ability>b.ability?a:b);
+        document.getElementById('db-jq-best').textContent=best.label;
+    } else document.getElementById('db-jq-best').textContent='未診断';
+
+    // 英語レベル推移グラフ
+    const eqLast=eqR.slice(-10);
+    if(eqLast.length>0){
+        document.getElementById('db-eq-empty').classList.add('hidden');
+        drawLineChart('db-eq-chart', eqLast.map(r=>({val:r.ability})), '#f43f5e', 1, 10,
+            v=>{ const i=Math.max(0,Math.min(9,Math.round(v)-1)); return EQ_LEVEL_INFO[i]?.label.replace('英検','').replace('超級 ','★')||v; });
+    } else {
+        document.getElementById('db-eq-empty').classList.remove('hidden');
+        document.getElementById('db-eq-chart').innerHTML='';
+    }
+
+    // 日本語レベル推移グラフ
+    const jqLast=jqR.slice(-10);
+    if(jqLast.length>0){
+        document.getElementById('db-jq-empty').classList.add('hidden');
+        drawLineChart('db-jq-chart', jqLast.map(r=>({val:r.ability})), '#8b5cf6', 1, 10,
+            v=>{ const i=Math.max(0,Math.min(9,Math.round(v)-1)); return JQ_LEVEL_INFO[i]?.label.replace('漢検','漢').replace('超難読 ','★')||v; });
+    } else {
+        document.getElementById('db-jq-empty').classList.remove('hidden');
+        document.getElementById('db-jq-chart').innerHTML='';
+    }
+
+    // 暗算スコア推移
+    const mathLast=mathR.slice(-10);
+    if(mathLast.length>0){
+        document.getElementById('db-math-empty').classList.add('hidden');
+        drawBarChart('db-math-chart', mathLast.map(r=>({val:r.score, label:''})), '#f59e0b', v=>v);
+    } else {
+        document.getElementById('db-math-empty').classList.remove('hidden');
+        document.getElementById('db-math-chart').innerHTML='';
+    }
+
+    // 暗算 難易度別正答率
+    const diffLabels={easy:'かんたん',normal:'ふつう',hard:'むずかしい',extreme:'鬼'};
+    const diffColors={easy:'#34d399',normal:'#38bdf8',hard:'#f59e0b',extreme:'#f43f5e'};
+    const diffMap={};
+    mathR.forEach(r=>{
+        if(!diffMap[r.diff]) diffMap[r.diff]={correct:0,total:0};
+        diffMap[r.diff].correct+=r.correct;
+        diffMap[r.diff].total+=r.correct+r.wrong;
+    });
+    const dbMathDiff=document.getElementById('db-math-diff');
+    const dbMathDiffEmpty=document.getElementById('db-math-diff-empty');
+    if(Object.keys(diffMap).length>0){
+        dbMathDiffEmpty.classList.add('hidden');
+        dbMathDiff.innerHTML=Object.entries(diffMap).map(([d,v])=>{
+            const pct=v.total>0?Math.round(v.correct/v.total*100):0;
+            return `<div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                    <span class="text-slate-600">${diffLabels[d]||d}</span>
+                    <span class="text-slate-400">${v.correct}/${v.total}問 (${pct}%)</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2">
+                    <div class="h-2 rounded-full" style="width:${pct}%;background:${diffColors[d]||'#94a3b8'}"></div>
+                </div>
+            </div>`;
+        }).join('');
+    } else {
+        dbMathDiffEmpty.classList.remove('hidden');
+        dbMathDiff.innerHTML='';
+    }
+
+    // 元素クイズ 苦手TOP5
+    const weakMap=JSON.parse(localStorage.getItem('db_quiz_weak')||'{}');
+    const weakArr=Object.entries(weakMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const dbQuizWeak=document.getElementById('db-quiz-weak');
+    const dbQuizWeakEmpty=document.getElementById('db-quiz-weak-empty');
+    if(weakArr.length>0){
+        dbQuizWeakEmpty.classList.add('hidden');
+        const maxCount=weakArr[0][1];
+        dbQuizWeak.innerHTML=weakArr.map(([name,cnt],i)=>{
+            const el=ELEMENTS.find(e=>e.name===name);
+            const pct=Math.round(cnt/maxCount*100);
+            return `<div class="flex items-center gap-3">
+                <span class="text-[10px] font-black text-slate-400 w-4">${i+1}</span>
+                <span class="text-sm font-black text-slate-700 w-20">${name}</span>
+                <span class="text-xs text-indigo-500 font-bold w-8">${el?.symbol||''}</span>
+                <div class="flex-1 bg-slate-100 rounded-full h-2">
+                    <div class="h-2 rounded-full bg-rose-400" style="width:${pct}%"></div>
+                </div>
+                <span class="text-xs font-bold text-slate-400">${cnt}回</span>
+            </div>`;
+        }).join('');
+    } else {
+        dbQuizWeakEmpty.classList.remove('hidden');
+        dbQuizWeak.innerHTML='';
+    }
+
+    // 週間学習時間
+    const weekMap=JSON.parse(localStorage.getItem('db_week_time')||'{}');
+    const days=['日','月','火','水','木','金','土'];
+    const weekData=[];
+    for(let i=6;i>=0;i--){
+        const d=new Date(Date.now()-i*86400000);
+        const key=d.toISOString().slice(0,10);
+        weekData.push({val:weekMap[key]||0, label:days[d.getDay()]});
+    }
+    drawBarChart('db-week-chart', weekData, '#6366f1', v=>v>0?v+'分':'');
+
+    // 今日の学習時間を記録（ページ開くたびに更新）
+    const todayKey=new Date().toISOString().slice(0,10);
+    const wm=JSON.parse(localStorage.getItem('db_week_time')||'{}');
+    if(!wm[todayKey]) { wm[todayKey]=0; localStorage.setItem('db_week_time',JSON.stringify(wm)); }
+}
+
+document.getElementById('db-clear-btn').addEventListener('click',()=>{
+    if(!confirm('学習履歴をすべてリセットしますか？\n（累計勉強時間・設定は消えません）')) return;
+    ['db_eq','db_jq','db_math','db_quiz_weak','db_week_time'].forEach(k=>localStorage.removeItem(k));
+    renderDashboard();
+});
 
 // ============================================================
 // タイマー
@@ -2357,7 +3198,7 @@ function saveLog(type,duration){
     const label={work:'集中',break:'休憩',longBreak:'長い休憩'}[type]||type;
     const logs=JSON.parse(localStorage.getItem('studyLogs')||'[]');logs.unshift({time:ts,type:label,duration});
     localStorage.setItem('studyLogs',JSON.stringify(logs.slice(0,5)));
-    if(type==='work'){totalStudyMinutes+=duration;localStorage.setItem('totalStudyMinutes',totalStudyMinutes);displayTotalTime();}
+    if(type==='work'){totalStudyMinutes+=duration;localStorage.setItem('totalStudyMinutes',totalStudyMinutes);displayTotalTime();dbSaveWeekTime(duration);}
     displayLogs();
 }
 function updateDisplay(){const m=Math.floor(timeLeft/60),s=timeLeft%60;timerDisplay.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;setCountDisplay.textContent=completedSets;setsGoalDisplay.textContent=setsBeforeLongBreak;}
@@ -2378,7 +3219,7 @@ function startTimer(){
 function resetTimer(){clearInterval(timerId);timerId=null;isWorking=true;isLongBreak=false;completedSets=0;timeLeft=workMinutes*60;localStorage.setItem('timerRunning','false');localStorage.removeItem('timerStartTime');localStorage.removeItem('timerStartTimeLeft');saveState();startBtn.textContent='スタート';startBtn.className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";updateDisplay();updateStatus();}
 
 function showPage(pageId){
-    ['home','timer','settings','quiz','english','japanese','math'].forEach(id=>{
+    ['home','timer','settings','quiz','english','japanese','math','dashboard'].forEach(id=>{
         document.getElementById(`page-${id}`).classList.add('hidden');
         const nav=document.getElementById(`nav-${id}`);
         if(nav){nav.classList.remove('text-indigo-600');nav.classList.add('text-slate-400');}
@@ -2397,6 +3238,7 @@ function showPage(pageId){
         document.getElementById('math-result').classList.add('hidden');
         renderMathHighscores();
     }
+    if(pageId==='dashboard') renderDashboard();
 }
 
 startBtn.addEventListener('click',startTimer);
