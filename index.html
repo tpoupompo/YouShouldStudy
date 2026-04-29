@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>勉強しろ</title>
     <link rel="apple-touch-icon" href="images/icons-192.png">
     <link rel="manifest" href="manifest.json">
@@ -16,6 +16,8 @@
         .timer-display{font-variant-numeric:tabular-nums;}
         .hidden{display:none;}
         button{-webkit-tap-highlight-color:transparent;}
+        /* ダブルタップ拡大を無効化 */
+        * { touch-action: manipulation; }
         input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:9999px;outline:none;cursor:pointer;}
         input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:#4f46e5;cursor:pointer;}
         input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#4f46e5;cursor:pointer;border:none;}
@@ -97,20 +99,20 @@
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
-<main class="max-w-md mx-auto p-6 pb-32">
+<main class="max-w-md sm:max-w-2xl md:max-w-4xl lg:max-w-6xl mx-auto p-6 pb-32">
 
 <!-- ホーム -->
 <section id="page-home">
     <div class="flex justify-between items-start mb-6">
         <h1 class="text-2xl font-bold text-slate-700">ホーム</h1>
-        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.7.3</span>
+        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.7.4</span>
     </div>
     <!-- 
         grid-cols-2: スマホ（〜479px）→ 2列
         sm:grid-cols-3: 小タブレット（480px〜）→ 3列
         md:grid-cols-4: タブレット・PC（768px〜）→ 4列
     -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
 
         <button onclick="showPage('timer')" class="home-icon-btn bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col items-center gap-2 active:scale-95 transition-all hover:shadow-md">
             <div class="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -768,6 +770,3038 @@
         <!-- 問題カード -->
         <div id="math-card" class="bg-white p-5 rounded-2xl shadow-lg border border-slate-100 text-center mb-3">
             <p id="math-question" class="text-4xl font-black text-slate-800 mb-1">12 + 34</p>
+            <p id="math-feedback-text" class="text-xs font-bold h-4"></p>
+        </div>
+
+        <!-- 入力表示 -->
+        <div id="math-answer-display" class="bg-white border-2 border-amber-300 rounded-2xl py-2 px-4 text-center text-2xl font-black text-slate-800 mb-3 min-h-[48px]">
+            <span id="math-input-val">?</span>
+        </div>
+
+        <!-- テンキー -->
+        <div class="grid grid-cols-3 gap-2 mb-2">
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="7">7</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="8">8</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="9">9</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="4">4</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="5">5</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="6">6</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="1">1</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="2">2</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="3">3</button>
+            <button class="math-key bg-white border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-700 active:scale-95 transition-all" data-val="0">0</button>
+            <button class="math-key bg-amber-100 border-2 border-amber-200 rounded-xl py-3 text-lg font-black text-amber-700 active:scale-95 transition-all" data-val="-">±</button>
+            <button id="math-delete-btn" class="bg-slate-100 border-2 border-slate-200 rounded-xl py-3 text-lg font-black text-slate-500 active:scale-95 transition-all">⌫</button>
+        </div>
+        <button id="math-submit-btn" class="w-full bg-amber-500 text-white py-3 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">答える</button>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="math-result" class="hidden text-center space-y-5">
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
+            <p id="math-result-badge" class="text-6xl mb-3">🏆</p>
+            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">最終スコア</p>
+            <p id="math-result-score" class="text-6xl font-black text-amber-500 mb-1"></p>
+            <p id="math-result-rank" class="text-lg font-bold text-slate-500 mb-5"></p>
+
+            <div class="grid grid-cols-3 gap-3 text-center mb-5">
+                <div class="bg-green-50 rounded-2xl p-3">
+                    <p id="math-res-correct" class="text-2xl font-black text-green-600"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">正解数</p>
+                </div>
+                <div class="bg-red-50 rounded-2xl p-3">
+                    <p id="math-res-wrong" class="text-2xl font-black text-red-400"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">不正解数</p>
+                </div>
+                <div class="bg-orange-50 rounded-2xl p-3">
+                    <p id="math-res-maxcombo" class="text-2xl font-black text-orange-500"></p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1">最大コンボ</p>
+                </div>
+            </div>
+
+            <div id="math-highscore-msg" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-3 text-sm font-black text-amber-600 mb-3">🎉 ハイスコア更新！</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <button id="math-retry-btn" class="bg-amber-500 text-white py-4 rounded-2xl font-bold active:scale-95 transition-all">もう一度</button>
+            <button onclick="showPage('math')" class="bg-white text-slate-600 border border-slate-200 py-4 rounded-2xl font-bold active:scale-95 transition-all">設定に戻る</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ダッシュボード ===== -->
+<section id="page-dashboard" class="hidden">
+    <div class="flex items-center gap-3 mb-6">
+        <button onclick="showPage('home')" class="text-slate-400 hover:text-slate-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+        <h1 class="text-2xl font-bold text-slate-700">学習ダッシュボード</h1>
+    </div>
+
+    <!-- サマリーカード -->
+    <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">累計学習時間</p>
+            <p id="db-total-time" class="text-2xl font-black text-indigo-600">-</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">総挑戦回数</p>
+            <p id="db-total-sessions" class="text-2xl font-black text-slate-700">-</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">英語 最高レベル</p>
+            <p id="db-eq-best" class="text-lg font-black text-rose-500">-</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">日本語 最高レベル</p>
+            <p id="db-jq-best" class="text-lg font-black text-violet-500">-</p>
+        </div>
+    </div>
+
+    <!-- 英語レベル推移 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">英語力レベル推移</h3>
+            <span class="text-[10px] text-slate-400">最新10回</span>
+        </div>
+        <div id="db-eq-chart" class="w-full" style="height:120px"></div>
+        <p id="db-eq-empty" class="text-xs text-slate-300 text-center py-8 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 日本語レベル推移 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">日本語力レベル推移</h3>
+            <span class="text-[10px] text-slate-400">最新10回</span>
+        </div>
+        <div id="db-jq-chart" class="w-full" style="height:120px"></div>
+        <p id="db-jq-empty" class="text-xs text-slate-300 text-center py-8 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 暗算スコア推移 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">暗算スコア推移</h3>
+            <span class="text-[10px] text-slate-400">最新10回</span>
+        </div>
+        <div id="db-math-chart" class="w-full" style="height:120px"></div>
+        <p id="db-math-empty" class="text-xs text-slate-300 text-center py-8 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 暗算 難易度別正答率 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">暗算 難易度別 正答率</h3>
+        <div id="db-math-diff" class="space-y-3"></div>
+        <p id="db-math-diff-empty" class="text-xs text-slate-300 text-center py-4 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 元素クイズ 苦手分析 -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">元素クイズ 苦手元素 TOP5</h3>
+        <div id="db-quiz-weak" class="space-y-2"></div>
+        <p id="db-quiz-weak-empty" class="text-xs text-slate-300 text-center py-4 hidden">まだ記録がありません</p>
+    </div>
+
+    <!-- 学習時間 週間グラフ -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 mb-4">
+        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-3">今週の学習時間（分）</h3>
+        <div id="db-week-chart" class="w-full" style="height:100px"></div>
+    </div>
+
+    <button id="db-clear-btn" class="w-full text-xs text-slate-300 hover:text-red-400 font-bold transition-colors py-3 px-3 rounded-xl border border-slate-100 hover:border-red-200">学習履歴をすべてリセット</button>
+</section>
+
+<!-- ===== 学習カレンダー ===== -->
+<section id="page-calendar" class="hidden">
+    <div class="flex items-center gap-3 mb-6">
+        <button onclick="showPage('home')" class="text-slate-400 hover:text-slate-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+        <h1 class="text-2xl font-bold text-slate-700">学習カレンダー</h1>
+    </div>
+
+    <!-- テストまでのカウントダウン -->
+    <div id="cal-countdown-area" class="space-y-3 mb-5"></div>
+
+    <!-- テスト追加ボタン -->
+    <button id="cal-add-exam-btn" class="w-full bg-white border-2 border-dashed border-teal-300 text-teal-500 font-bold py-3 rounded-2xl text-sm active:scale-95 transition-all mb-5">
+        ＋ テストの日を追加
+    </button>
+
+    <!-- テスト追加フォーム -->
+    <div id="cal-exam-form" class="hidden bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5 space-y-4">
+        <h3 class="text-sm font-black text-slate-600">テストを登録</h3>
+        <div>
+            <label class="block text-xs font-bold text-slate-400 mb-1">テスト名</label>
+            <input type="text" id="cal-exam-name" placeholder="例: 英検2級" class="w-full p-3 bg-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-400">
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-slate-400 mb-1">試験日</label>
+            <input type="date" id="cal-exam-date" class="w-full p-3 bg-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-400">
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-slate-400 mb-1">色</label>
+            <div class="flex gap-2" id="cal-color-picker">
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all ring-2 ring-offset-2 ring-teal-400" style="background:#14b8a6" data-color="#14b8a6"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#6366f1" data-color="#6366f1"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#f43f5e" data-color="#f43f5e"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#f59e0b" data-color="#f59e0b"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#8b5cf6" data-color="#8b5cf6"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#10b981" data-color="#10b981"></button>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button id="cal-exam-cancel" class="flex-1 py-3 rounded-xl border border-slate-200 text-slate-400 font-bold text-sm active:scale-95 transition-all">キャンセル</button>
+            <button id="cal-exam-save" class="flex-1 py-3 rounded-xl bg-teal-500 text-white font-bold text-sm active:scale-95 transition-all">登録</button>
+        </div>
+    </div>
+
+    <!-- カレンダー本体 -->
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
+        <!-- 月ナビ -->
+        <div class="flex items-center justify-between mb-4">
+            <button id="cal-prev-month" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 active:scale-95 transition-all font-bold">‹</button>
+            <h2 id="cal-month-title" class="text-base font-black text-slate-700"></h2>
+            <button id="cal-next-month" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 active:scale-95 transition-all font-bold">›</button>
+        </div>
+        <!-- 曜日ヘッダー -->
+        <div class="grid grid-cols-7 mb-2">
+            <div class="text-center text-[10px] font-black text-red-400">日</div>
+            <div class="text-center text-[10px] font-black text-slate-400">月</div>
+            <div class="text-center text-[10px] font-black text-slate-400">火</div>
+            <div class="text-center text-[10px] font-black text-slate-400">水</div>
+            <div class="text-center text-[10px] font-black text-slate-400">木</div>
+            <div class="text-center text-[10px] font-black text-slate-400">金</div>
+            <div class="text-center text-[10px] font-black text-blue-400">土</div>
+        </div>
+        <!-- 日付グリッド -->
+        <div id="cal-grid" class="grid grid-cols-7 gap-y-1"></div>
+
+        <!-- 凡例 -->
+        <div class="flex items-center gap-4 mt-4 pt-4 border-t border-slate-100 flex-wrap">
+            <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-teal-400"></div><span class="text-[10px] text-slate-400 font-bold">勉強あり</span></div>
+            <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-slate-200"></div><span class="text-[10px] text-slate-400 font-bold">勉強なし</span></div>
+            <div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-indigo-100 border border-indigo-300"></div><span class="text-[10px] text-slate-400 font-bold">今日</span></div>
+            <div class="flex items-center gap-1"><span class="text-[10px]">★</span><span class="text-[10px] text-slate-400 font-bold">テスト</span></div>
+        </div>
+    </div>
+
+    <!-- 選択日の詳細 -->
+    <div id="cal-day-detail" class="hidden bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
+        <h3 id="cal-detail-date" class="text-sm font-black text-slate-600 mb-3"></h3>
+        <div id="cal-detail-content"></div>
+    </div>
+
+    <!-- テスト一覧 -->
+    <div id="cal-exam-list-area" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-5">
+        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">登録中のテスト</h3>
+        <div id="cal-exam-list" class="space-y-2"></div>
+        <p id="cal-exam-empty" class="text-xs text-slate-300 text-center py-4">テストが登録されていません</p>
+    </div>
+</section>
+
+</main>
+
+<!-- ナビゲーション -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-slate-200 flex justify-around py-4 shadow-2xl">
+    <button onclick="showPage('home')" id="nav-home" class="flex flex-col items-center text-indigo-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span class="text-[10px] mt-1 font-bold">ホーム</span>
+    </button>
+    <button onclick="showPage('timer')" id="nav-timer" class="flex flex-col items-center text-slate-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span class="text-[10px] mt-1 font-bold">タイマー</span>
+    </button>
+    <button onclick="showPage('settings')" id="nav-settings" class="flex flex-col items-center text-slate-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span class="text-[10px] mt-1 font-bold">設定</span>
+    </button>
+</nav>
+
+<script>
+// ============================================================
+// 英単語データベース  level 1〜7 (各60語以上, 計約470語)
+// level: 1=英検5級, 2=英検4級, 3=英検3級, 4=英検準2級
+//        5=英検2級,  6=英検準1級, 7=英検1級
+// ============================================================
+const EQ_WORDS = [
+// --- Level 1 (英検5級) ---
+{e:'apple',j:'りんご',l:1},{e:'book',j:'本',l:1},{e:'cat',j:'猫',l:1},{e:'dog',j:'犬',l:1},
+{e:'eat',j:'食べる',l:1},{e:'fish',j:'魚',l:1},{e:'go',j:'行く',l:1},{e:'hand',j:'手',l:1},
+{e:'ice',j:'氷',l:1},{e:'jump',j:'跳ぶ',l:1},{e:'key',j:'鍵',l:1},{e:'leg',j:'足・脚',l:1},
+{e:'milk',j:'牛乳',l:1},{e:'name',j:'名前',l:1},{e:'open',j:'開ける',l:1},{e:'pen',j:'ペン',l:1},
+{e:'run',j:'走る',l:1},{e:'sit',j:'座る',l:1},{e:'tree',j:'木',l:1},{e:'use',j:'使う',l:1},
+{e:'water',j:'水',l:1},{e:'year',j:'年',l:1},{e:'zero',j:'ゼロ',l:1},{e:'bird',j:'鳥',l:1},
+{e:'bus',j:'バス',l:1},{e:'color',j:'色',l:1},{e:'desk',j:'机',l:1},{e:'egg',j:'卵',l:1},
+{e:'face',j:'顔',l:1},{e:'girl',j:'女の子',l:1},{e:'hat',j:'帽子',l:1},{e:'ink',j:'インク',l:1},
+{e:'jam',j:'ジャム',l:1},{e:'kind',j:'親切な',l:1},{e:'long',j:'長い',l:1},{e:'map',j:'地図',l:1},
+{e:'nose',j:'鼻',l:1},{e:'old',j:'年老いた',l:1},{e:'play',j:'遊ぶ',l:1},{e:'queen',j:'女王',l:1},
+{e:'red',j:'赤い',l:1},{e:'sky',j:'空',l:1},{e:'tall',j:'背が高い',l:1},{e:'up',j:'上に',l:1},
+{e:'very',j:'とても',l:1},{e:'walk',j:'歩く',l:1},{e:'box',j:'箱',l:1},{e:'chair',j:'椅子',l:1},
+{e:'door',j:'ドア',l:1},{e:'ear',l:1,j:'耳'},{e:'flower',j:'花',l:1},{e:'green',j:'緑',l:1},
+{e:'hot',j:'熱い',l:1},{e:'in',j:'〜の中に',l:1},{e:'juice',j:'ジュース',l:1},{e:'lake',j:'湖',l:1},
+{e:'moon',j:'月',l:1},{e:'new',j:'新しい',l:1},{e:'orange',j:'オレンジ',l:1},{e:'park',j:'公園',l:1},
+// --- Level 2 (英検4級) ---
+{e:'abroad',j:'海外に',l:2},{e:'begin',j:'始める',l:2},{e:'careful',j:'注意深い',l:2},{e:'decide',j:'決める',l:2},
+{e:'enjoy',j:'楽しむ',l:2},{e:'famous',j:'有名な',l:2},{e:'grade',j:'成績・学年',l:2},{e:'habit',j:'習慣',l:2},
+{e:'idea',j:'考え・アイデア',l:2},{e:'join',j:'参加する',l:2},{e:'language',j:'言語',l:2},{e:'member',j:'メンバー',l:2},
+{e:'nature',j:'自然',l:2},{e:'other',j:'他の',l:2},{e:'popular',j:'人気のある',l:2},{e:'quiet',j:'静かな',l:2},
+{e:'reason',j:'理由',l:2},{e:'season',j:'季節',l:2},{e:'travel',j:'旅行する',l:2},{e:'usually',j:'たいてい',l:2},
+{e:'visit',j:'訪問する',l:2},{e:'winner',j:'優勝者',l:2},{e:'young',j:'若い',l:2},{e:'above',j:'〜の上に',l:2},
+{e:'build',j:'建てる',l:2},{e:'city',j:'都市',l:2},{e:'dream',j:'夢',l:2},{e:'early',j:'早い',l:2},
+{e:'front',j:'前',l:2},{e:'group',j:'グループ',l:2},{e:'happen',j:'起こる',l:2},{e:'imagine',j:'想像する',l:2},
+{e:'junior',j:'年下の',l:2},{e:'keep',j:'保つ',l:2},{e:'learn',j:'学ぶ',l:2},{e:'message',j:'メッセージ',l:2},
+{e:'noise',j:'騒音',l:2},{e:'offer',j:'提案する',l:2},{e:'practice',j:'練習する',l:2},{e:'question',j:'質問',l:2},
+{e:'river',j:'川',l:2},{e:'sports',j:'スポーツ',l:2},{e:'together',j:'一緒に',l:2},{e:'understand',j:'理解する',l:2},
+{e:'vacation',j:'休暇',l:2},{e:'weather',j:'天気',l:2},{e:'already',j:'すでに',l:2},{e:'both',j:'両方',l:2},
+{e:'change',j:'変える',l:2},{e:'difficult',j:'難しい',l:2},{e:'enough',j:'十分な',l:2},{e:'festival',j:'祭り',l:2},
+{e:'guess',j:'推測する',l:2},{e:'history',j:'歴史',l:2},{e:'interest',j:'興味',l:2},{e:'just',j:'ちょうど',l:2},
+{e:'kitchen',j:'台所',l:2},{e:'local',j:'地元の',l:2},{e:'morning',j:'朝',l:2},{e:'next',j:'次の',l:2},
+// --- Level 3 (英検3級) ---
+{e:'achieve',j:'達成する',l:3},{e:'believe',j:'信じる',l:3},{e:'collect',j:'集める',l:3},{e:'describe',j:'描写する',l:3},
+{e:'effect',j:'効果',l:3},{e:'focus',j:'集中する',l:3},{e:'global',j:'世界的な',l:3},{e:'human',j:'人間の',l:3},
+{e:'improve',j:'改善する',l:3},{e:'involve',j:'含む',l:3},{e:'knowledge',j:'知識',l:3},{e:'likely',j:'ありそうな',l:3},
+{e:'method',j:'方法',l:3},{e:'notice',j:'気づく',l:3},{e:'opinion',j:'意見',l:3},{e:'provide',j:'提供する',l:3},
+{e:'require',j:'必要とする',l:3},{e:'society',j:'社会',l:3},{e:'tradition',j:'伝統',l:3},{e:'unable',j:'できない',l:3},
+{e:'various',j:'様々な',l:3},{e:'website',j:'ウェブサイト',l:3},{e:'accept',j:'受け入れる',l:3},{e:'behavior',j:'行動',l:3},
+{e:'common',j:'一般的な',l:3},{e:'develop',j:'発達する',l:3},{e:'education',j:'教育',l:3},{e:'foreign',j:'外国の',l:3},
+{e:'generally',j:'一般的に',l:3},{e:'health',j:'健康',l:3},{e:'instead',j:'代わりに',l:3},{e:'junior',j:'下級生',l:3},
+{e:'labor',j:'労働',l:3},{e:'mainly',j:'主に',l:3},{e:'national',j:'国家の',l:3},{e:'opportunity',j:'機会',l:3},
+{e:'prevent',j:'防ぐ',l:3},{e:'reduce',j:'減らす',l:3},{e:'support',j:'支持する',l:3},{e:'throughout',j:'〜を通じて',l:3},
+{e:'unique',j:'独自の',l:3},{e:'volunteer',j:'ボランティア',l:3},{e:'whether',j:'〜かどうか',l:3},{e:'affect',j:'影響する',l:3},
+{e:'broad',j:'幅広い',l:3},{e:'consider',j:'考慮する',l:3},{e:'discuss',j:'議論する',l:3},{e:'environment',j:'環境',l:3},
+{e:'feature',j:'特徴',l:3},{e:'government',j:'政府',l:3},{e:'helpful',j:'役に立つ',l:3},{e:'include',j:'含む',l:3},
+{e:'judge',j:'判断する',l:3},{e:'lack',j:'不足',l:3},{e:'manage',j:'管理する',l:3},{e:'nearly',j:'ほぼ',l:3},
+{e:'original',j:'独創的な',l:3},{e:'produce',j:'生産する',l:3},{e:'recent',j:'最近の',l:3},{e:'suggest',j:'提案する',l:3},
+// --- Level 4 (英検準2級) ---
+{e:'adapt',j:'適応する',l:4},{e:'benefit',j:'利益・恩恵',l:4},{e:'circumstance',j:'状況',l:4},{e:'diverse',j:'多様な',l:4},
+{e:'efficient',j:'効率的な',l:4},{e:'foundation',j:'基礎・財団',l:4},{e:'generate',j:'生み出す',l:4},{e:'hypothesis',j:'仮説',l:4},
+{e:'implement',j:'実施する',l:4},{e:'justify',j:'正当化する',l:4},{e:'legislation',j:'法律・立法',l:4},{e:'moreover',j:'さらに',l:4},
+{e:'negotiate',j:'交渉する',l:4},{e:'obtain',j:'入手する',l:4},{e:'perspective',j:'観点',l:4},{e:'qualify',j:'資格を得る',l:4},
+{e:'recognize',j:'認識する',l:4},{e:'significant',j:'重要な',l:4},{e:'tendency',j:'傾向',l:4},{e:'ultimately',j:'最終的に',l:4},
+{e:'vulnerable',j:'脆弱な',l:4},{e:'whereas',j:'一方で',l:4},{e:'abandon',j:'放棄する',l:4},{e:'bias',j:'偏見',l:4},
+{e:'colleague',j:'同僚',l:4},{e:'demonstrate',j:'示す・実証する',l:4},{e:'ethical',j:'倫理的な',l:4},{e:'fierce',j:'激しい',l:4},
+{e:'grant',j:'付与する・補助金',l:4},{e:'hesitate',j:'ためらう',l:4},{e:'inevitable',j:'避けられない',l:4},{e:'journalist',j:'ジャーナリスト',l:4},
+{e:'launch',j:'開始する・打ち上げる',l:4},{e:'manipulate',j:'操る',l:4},{e:'novel',j:'小説・新しい',l:4},{e:'oppose',j:'反対する',l:4},
+{e:'precise',j:'正確な',l:4},{e:'relevant',j:'関連した',l:4},{e:'sufficient',j:'十分な',l:4},{e:'transform',j:'変換する',l:4},
+{e:'urban',j:'都市の',l:4},{e:'valid',j:'有効な',l:4},{e:'acknowledge',j:'認める',l:4},{e:'bound',j:'〜する予定の・縛られた',l:4},
+{e:'consult',j:'相談する',l:4},{e:'distribute',j:'配布する',l:4},{e:'elaborate',j:'詳しく述べる・精巧な',l:4},{e:'facilitate',j:'促進する',l:4},
+{e:'genuine',j:'本物の',l:4},{e:'highlight',j:'強調する',l:4},{e:'imply',j:'暗示する',l:4},{e:'latter',j:'後者の',l:4},
+{e:'moderate',j:'適度な',l:4},{e:'notion',j:'概念',l:4},{e:'overwhelm',j:'圧倒する',l:4},{e:'presume',j:'推定する',l:4},
+{e:'resolve',j:'解決する',l:4},{e:'strategy',j:'戦略',l:4},{e:'transparent',j:'透明な',l:4},{e:'underlying',j:'根底にある',l:4},
+// --- Level 5 (英検2級) ---
+{e:'ambiguous',j:'曖昧な',l:5},{e:'assert',j:'主張する',l:5},{e:'coherent',j:'一貫した',l:5},{e:'deploy',j:'展開する',l:5},
+{e:'empirical',j:'経験的な',l:5},{e:'fluctuate',j:'変動する',l:5},{e:'grasp',j:'把握する',l:5},{e:'hierarchy',j:'階層',l:5},
+{e:'incentive',j:'動機・奨励金',l:5},{e:'jurisdiction',j:'管轄権',l:5},{e:'landmark',j:'画期的な出来事・目印',l:5},{e:'mechanism',j:'仕組み・機構',l:5},
+{e:'negate',j:'否定する',l:5},{e:'objective',j:'客観的な・目標',l:5},{e:'paradigm',j:'パラダイム・典型',l:5},{e:'quantify',j:'定量化する',l:5},
+{e:'reinforce',j:'強化する',l:5},{e:'scrutinize',j:'精査する',l:5},{e:'tentative',j:'暫定的な',l:5},{e:'unprecedented',j:'前例のない',l:5},
+{e:'volatile',j:'不安定な',l:5},{e:'widespread',j:'広範囲な',l:5},{e:'allocate',j:'割り当てる',l:5},{e:'bureaucracy',j:'官僚主義',l:5},
+{e:'compensate',j:'補償する',l:5},{e:'discourse',j:'談話・議論',l:5},{e:'endorse',j:'支持する',l:5},{e:'formulate',j:'定式化する',l:5},
+{e:'genuine',j:'真の・本物の',l:5},{e:'hinder',j:'妨げる',l:5},{e:'indigenous',j:'先住民の・固有の',l:5},{e:'lament',j:'嘆く',l:5},
+{e:'mitigate',j:'緩和する',l:5},{e:'negligible',j:'無視できるほど小さい',l:5},{e:'orthodox',j:'正統な',l:5},{e:'perpetuate',j:'永続させる',l:5},
+{e:'rationale',j:'根拠・論理的根拠',l:5},{e:'sanctuary',j:'聖域・避難所',l:5},{e:'thrive',j:'繁栄する',l:5},{e:'undermine',j:'徐々に弱める',l:5},
+{e:'vague',j:'漠然とした',l:5},{e:'accelerate',j:'加速する',l:5},{e:'benchmark',j:'基準・指標',l:5},{e:'consolidate',j:'統合する',l:5},
+{e:'diminish',j:'減少する',l:5},{e:'enact',j:'制定する',l:5},{e:'forthcoming',j:'近づいている・率直な',l:5},{e:'groundbreaking',j:'画期的な',l:5},
+{e:'inherent',j:'固有の・本来の',l:5},{e:'legitimate',j:'合法的な・正当な',l:5},{e:'manifest',j:'明らかにする・明白な',l:5},{e:'nuance',j:'微妙なニュアンス',l:5},
+{e:'obsolete',j:'時代遅れの',l:5},{e:'pragmatic',j:'実用的な',l:5},{e:'resonate',j:'共鳴する',l:5},{e:'skeptical',j:'懐疑的な',l:5},
+{e:'turmoil',j:'混乱',l:5},{e:'unambiguous',j:'明確な',l:5},{e:'vigorous',j:'精力的な',l:5},{e:'withhold',j:'差し控える',l:5},
+// --- Level 6 (英検準1級) ---
+{e:'aberrant',j:'異常な',l:6},{e:'benevolent',j:'慈悲深い',l:6},{e:'capricious',j:'気まぐれな',l:6},{e:'debilitate',j:'衰弱させる',l:6},
+{e:'elucidate',j:'解明する',l:6},{e:'fabricate',j:'捏造する',l:6},{e:'galvanize',j:'刺激して行動させる',l:6},{e:'hamper',j:'妨害する',l:6},
+{e:'impede',j:'妨げる',l:6},{e:'judicious',j:'賢明な',l:6},{e:'kinetic',j:'運動の・活発な',l:6},{e:'lucid',j:'明晰な',l:6},
+{e:'meticulous',j:'細心の注意を払う',l:6},{e:'nonchalant',j:'無関心な',l:6},{e:'ostracize',j:'追放する',l:6},{e:'placate',j:'なだめる',l:6},
+{e:'quandary',j:'困惑・苦境',l:6},{e:'relentless',j:'執拗な・容赦ない',l:6},{e:'stagnant',j:'停滞した',l:6},{e:'trite',j:'陳腐な',l:6},
+{e:'ubiquitous',j:'どこにでもある',l:6},{e:'venerate',j:'崇敬する',l:6},{e:'whimsical',j:'気まぐれな・奇妙な',l:6},{e:'admonish',j:'戒める',l:6},
+{e:'bolster',j:'強化する',l:6},{e:'circumvent',j:'回避する',l:6},{e:'discern',j:'識別する',l:6},{e:'espouse',j:'支持する・採用する',l:6},
+{e:'foreboding',j:'不吉な予感',l:6},{e:'gregarious',j:'社交的な',l:6},{e:'hapless',j:'不運な',l:6},{e:'incessant',j:'絶え間ない',l:6},
+{e:'jeopardize',j:'危険にさらす',l:6},{e:'laborious',j:'骨の折れる',l:6},{e:'mollify',j:'なだめる',l:6},{e:'nebulous',j:'漠然とした',l:6},
+{e:'ominous',j:'不吉な',l:6},{e:'perilous',j:'危険な',l:6},{e:'querulous',j:'不平を言う',l:6},{e:'raucous',j:'騒々しい',l:6},
+{e:'stolid',j:'感情を表さない',l:6},{e:'taciturn',j:'無口な',l:6},{e:'unwitting',j:'知らずにやる',l:6},{e:'verbose',j:'くどい・冗長な',l:6},
+{e:'xenophobia',j:'外国人嫌い',l:6},{e:'zealot',j:'熱狂的な信奉者',l:6},{e:'abhor',j:'嫌悪する',l:6},{e:'beguile',j:'たぶらかす',l:6},
+{e:'coerce',j:'強制する',l:6},{e:'didactic',j:'教訓的な',l:6},{e:'emulate',j:'見習う・模倣する',l:6},{e:'fervent',j:'熱烈な',l:6},
+{e:'gullible',j:'だまされやすい',l:6},{e:'harangue',j:'長い演説・叱責',l:6},{e:'impeccable',j:'非の打ちどころのない',l:6},{e:'laconic',j:'簡潔な',l:6},
+// --- Level 7 (英検1級) ---
+{e:'abeyance',j:'一時停止状態',l:7},{e:'bellicose',j:'好戦的な',l:7},{e:'capitulate',j:'降伏する',l:7},{e:'deleterious',j:'有害な',l:7},
+{e:'egregious',j:'目に余る・はなはだしい',l:7},{e:'fastidious',j:'好みがうるさい',l:7},{e:'garrulous',j:'おしゃべりな',l:7},{e:'hegemony',j:'覇権',l:7},
+{e:'ignominious',j:'恥ずかしい',l:7},{e:'juxtapose',j:'並置する',l:7},{e:'knavish',j:'悪意のある',l:7},{e:'loquacious',j:'おしゃべりな',l:7},
+{e:'malfeasance',j:'不正行為',l:7},{e:'nadir',j:'最低点・どん底',l:7},{e:'obfuscate',j:'曖昧にする',l:7},{e:'perfidious',j:'不誠実な',l:7},
+{e:'quixotic',j:'非現実的な・夢想的な',l:7},{e:'recalcitrant',j:'反抗的な',l:7},{e:'sycophant',j:'おべっか使い',l:7},{e:'truculent',j:'好戦的な・反抗的な',l:7},
+{e:'unconscionable',j:'法外な・良心に反する',l:7},{e:'veracious',j:'正直な・真実の',l:7},{e:'wanton',j:'みだらな・恣意的な',l:7},{e:'acrimony',j:'激しい怒り',l:7},
+{e:'brazen',j:'厚かましい',l:7},{e:'castigate',j:'厳しく批判する',l:7},{e:'duplicitous',j:'二枚舌の',l:7},{e:'enervate',j:'活力を奪う',l:7},
+{e:'furtive',j:'こそこそした',l:7},{e:'grandiloquent',j:'大げさな',l:7},{e:'hubris',j:'傲慢',l:7},{e:'inimical',j:'敵対的な・有害な',l:7},
+{e:'jingoist',j:'排外的愛国主義者',l:7},{e:'lugubrious',j:'悲嘆に暮れた',l:7},{e:'mendacious',j:'うそつきの',l:7},{e:'nefarious',j:'極悪な',l:7},
+{e:'obsequious',j:'こびへつらう',l:7},{e:'parsimonious',j:'けちな',l:7},{e:'querulous',j:'不平をよく言う',l:7},{e:'remonstrate',j:'抗議する',l:7},
+{e:'sophistry',j:'詭弁',l:7},{e:'tendentious',j:'偏った',l:7},{e:'unctuous',j:'うわべだけ親切な',l:7},{e:'vitriolic',j:'辛辣な',l:7},
+{e:'wily',j:'狡猾な',l:7},{e:'xenial',j:'客人に親切な',l:7},{e:'yoke',j:'くびき・束縛',l:7},{e:'zealous',j:'熱心な',l:7},
+{e:'acumen',j:'洞察力',l:7},{e:'blandish',j:'おだてる',l:7},{e:'chicanery',j:'詐欺・ごまかし',l:7},{e:'denouement',j:'結末',l:7},
+{e:'equivocate',j:'言葉を濁す',l:7},{e:'finagle',j:'ずる賢く手に入れる',l:7},{e:'gourmand',j:'大食家',l:7},{e:'halcyon',j:'平和な・穏やかな',l:7},
+{e:'imbroglio',j:'混乱した状況',l:7},{e:'lambaste',j:'厳しく批判する',l:7},
+// --- Level 8 (超級 ★1) ---
+{e:'abstruse',j:'難解な',l:8},{e:'apocryphal',j:'真偽不明の・外典の',l:8},{e:'bathetic',j:'感傷的すぎる・陳腐な',l:8},
+{e:'calumniate',j:'中傷する',l:8},{e:'contumacious',j:'命令に従わない',l:8},{e:'defenestration',j:'窓外への放出',l:8},
+{e:'edacious',j:'大食の・貪欲な',l:8},{e:'effulgent',j:'輝かしい',l:8},{e:'encomium',j:'称賛の言葉',l:8},
+{e:'execrable',j:'最悪の・忌まわしい',l:8},{e:'fecund',j:'多産の・豊かな',l:8},{e:'flagitious',j:'極めて悪質な',l:8},
+{e:'fulsome',j:'過度に媚びた',l:8},{e:'gainsay',j:'否定する・反論する',l:8},{e:'hegemonic',j:'覇権的な',l:8},
+{e:'hieratic',j:'聖職者の・格式ある',l:8},{e:'ignominy',j:'恥辱・不名誉',l:8},{e:'impecunious',j:'貧しい・無一文の',l:8},
+{e:'ineluctable',j:'避けられない・必然的な',l:8},{e:'jejune',j:'面白みのない・単純な',l:8},{e:'lassitude',j:'倦怠感・疲労',l:8},
+{e:'logorrhea',j:'多弁症・言葉の洪水',l:8},{e:'malediction',j:'呪い・悪口',l:8},{e:'meretricious',j:'見かけだけ魅力的な',l:8},
+{e:'miscreant',j:'悪人・不信心者',l:8},{e:'nugatory',j:'無価値な・取るに足らない',l:8},{e:'obstreperous',j:'騒々しい・手に負えない',l:8},
+{e:'opprobrium',j:'不名誉・非難',l:8},{e:'palimpsest',j:'書き直した羊皮紙・痕跡',l:8},{e:'pellucid',j:'透明な・明快な',l:8},
+{e:'peregrinate',j:'旅する・放浪する',l:8},{e:'phantasmagoric',j:'幻想的な・奇怪な',l:8},{e:'pleonasm',j:'冗語・重複表現',l:8},
+{e:'propitious',j:'好都合な・吉兆の',l:8},{e:'puerile',j:'子供っぽい・幼稚な',l:8},{e:'recondite',j:'難解な・あまり知られていない',l:8},
+{e:'refractory',j:'扱いにくい・頑固な',l:8},{e:'scurrilous',j:'粗野な・中傷的な',l:8},{e:'stertorous',j:'いびきをかく・喘ぐ',l:8},
+{e:'susurrus',j:'ささやき・かすかな音',l:8},{e:'tendentiously',j:'偏った形で',l:8},{e:'truculent',j:'残忍な・好戦的な',l:8},
+{e:'turpitude',j:'道徳的堕落',l:8},{e:'ululation',j:'長い遠吠え・哀泣',l:8},{e:'venal',j:'買収できる・金で動く',l:8},
+{e:'vitiate',j:'損なう・無効にする',l:8},{e:'voluble',j:'よくしゃべる・流暢な',l:8},{e:'weltanschauung',j:'世界観',l:8},
+{e:'xenophilia',j:'外国文化好き',l:8},{e:'yahoo',j:'粗野な人・野蛮人',l:8},{e:'zealotry',j:'狂信的行為',l:8},
+// --- Level 9 (超級 ★2) ---
+{e:'anacoluthon',j:'文法的不連続・文脈の断絶',l:9},{e:'antinomian',j:'道徳律廃棄論者の',l:9},
+{e:'apophenia',j:'無関係な物事に関連を見出す傾向',l:9},{e:'bathysphere',j:'深海潜水球',l:9},
+{e:'casuistry',j:'決疑論・こじつけの詭弁',l:9},{e:'clerisy',j:'知識人階層',l:9},
+{e:'contumely',j:'軽蔑・侮辱',l:9},{e:'couvade',j:'疑似分娩・父親の出産共感症状',l:9},
+{e:'demiurge',j:'創造神・職人的神',l:9},{e:'dysphemism',j:'悪化表現・遠回しでない言い方',l:9},
+{e:'eleemosynary',j:'慈善の・施しによる',l:9},{e:'epopee',j:'叙事詩・英雄詩',l:9},
+{e:'eschatology',j:'終末論',l:9},{e:'etiolate',j:'日光不足で白化する・弱める',l:9},
+{e:'exiguous',j:'わずかな・乏しい',l:9},{e:'flibbertigibbet',j:'おしゃべりで軽率な人',l:9},
+{e:'fugacious',j:'はかない・すぐ消える',l:9},{e:'gasconade',j:'大げさな自慢話',l:9},
+{e:'gnomon',j:'日時計の指針',l:9},{e:'hamartia',j:'悲劇的欠陥・致命的欠点',l:9},
+{e:'hapax legomenon',j:'一度しか使われない語',l:9},{e:'hierophant',j:'秘儀の解説者・神秘の案内人',l:9},
+{e:'hypnagogic',j:'入眠時の幻覚に関する',l:9},{e:'illeism',j:'自分を三人称で語る癖',l:9},
+{e:'interstice',j:'隙間・間隙',l:9},{e:'inveigle',j:'甘言で誘い込む',l:9},
+{e:'irenicism',j:'平和主義・和解主義',l:9},{e:'kakistocracy',j:'最悪の者による政治',l:9},
+{e:'liminal',j:'境界の・過渡期の',l:9},{e:'loquacity',j:'おしゃべり・多弁',l:9},
+{e:'maieutic',j:'産婆術的な・思考を引き出す',l:9},{e:'meliorism',j:'世界は改善できるという信念',l:9},
+{e:'mnemonics',j:'記憶術・語呂合わせ',l:9},{e:'moiety',j:'半分・一部分',l:9},
+{e:'nacreous',j:'真珠のような',l:9},{e:'noctilucent',j:'夜光雲の',l:9},
+{e:'omphalos',j:'世界の中心・へそ',l:9},{e:'panegyric',j:'称賛演説・頌詩',l:9},
+{e:'paroemia',j:'ことわざ',l:9},{e:'persiflage',j:'軽い冗談・からかい',l:9},
+{e:'petrichor',j:'雨後の土の匂い',l:9},{e:'philippic',j:'痛烈な非難演説',l:9},
+{e:'plangent',j:'鳴り響く・哀愁を帯びた',l:9},{e:'psephology',j:'選挙学',l:9},
+{e:'pyrrhic',j:'勝っても意味のない（勝利）',l:9},{e:'reification',j:'抽象概念の実体化',l:9},
+{e:'rodomontade',j:'空威張り・大げさな自慢',l:9},{e:'solecism',j:'文法上の誤り・非礼',l:9},
+{e:'subfusc',j:'暗い・地味な',l:9},{e:'syzygy',j:'朔望・天体の一直線配置',l:9},
+// --- Level 10 (超級 ★3) ---
+{e:'abderian',j:'馬鹿笑いをする',l:10},{e:'accismus',j:'わざと拒否するふりをする修辞法',l:10},
+{e:'agelast',j:'笑わない人',l:10},{e:'alexithymia',j:'感情失認・感情を言語化できない状態',l:10},
+{e:'anfractuous',j:'迂回した・複雑な',l:10},{e:'anopisthographic',j:'片面だけに書かれた',l:10},
+{e:'apotropaic',j:'邪悪を退ける・魔除けの',l:10},{e:'battology',j:'無意味な繰り返し',l:10},
+{e:'boustrophedon',j:'左右交互に書く古代の書法',l:10},{e:'cachinnate',j:'大声で笑う',l:10},
+{e:'callipygian',j:'美しい臀部を持つ',l:10},{e:'catachresis',j:'語の誤用・無理な比喩',l:10},
+{e:'chrestomathy',j:'学習用の文章集',l:10},{e:'chryselephantine',j:'金と象牙でできた',l:10},
+{e:'cicisbeo',j:'既婚女性の公認の愛人',l:10},{e:'colporteur',j:'宗教書の行商人',l:10},
+{e:'compossible',j:'共存できる',l:10},{e:'deasil',j:'時計回りに',l:10},
+{e:'deipnosophist',j:'食卓での談義を楽しむ人',l:10},{e:'eldritch',j:'不気味な・超自然的な',l:10},
+{e:'epexegesis',j:'説明的付加語',l:10},{e:'esemplastic',j:'多様なものを一つに統合する',l:10},
+{e:'eudaemonia',j:'幸福・繁栄（アリストテレス哲学）',l:10},{e:'floccinaucinihilipilification',j:'無価値と見なす行為',l:10},
+{e:'gossypiboma',j:'手術で体内に置き忘れた綿製品',l:10},{e:'hadeharia',j:'地獄という言葉を多用する癖',l:10},
+{e:'hirundine',j:'ツバメの・ツバメに似た',l:10},{e:'ithyphallic',j:'勃起した男根像の',l:10},
+{e:'jentacular',j:'朝食に関する',l:10},{e:'jouissance',j:'享楽・快楽（ラカン的概念）',l:10},
+{e:'kenopsia',j:'人がいなくなった場所の不気味さ',l:10},{e:'lethologica',j:'単語が思い出せない状態',l:10},
+{e:'lucubration',j:'夜を徹した勉学・苦心の作',l:10},{e:'meraki',j:'情熱と魂を込めて行う行為',l:10},
+{e:'mimsy',j:'弱々しい・物足りない',l:10},{e:'mumpsimus',j:'間違いと知りながら続ける慣習',l:10},
+{e:'naevus',j:'母斑・あざ',l:10},{e:'nelipot',j:'裸足で歩く人',l:10},
+{e:'numinous',j:'霊的な畏怖感を呼び起こす',l:10},{e:'obnubilate',j:'曇らせる・混乱させる',l:10},
+{e:'opsimath',j:'晩年になって学び始めた人',l:10},{e:'ostranenie',j:'異化・見慣れたものを新鮮に見せる手法',l:10},
+{e:'paracosm',j:'詳細な空想世界',l:10},{e:'pareidolia',j:'無関係なものに顔などを見出す現象',l:10},
+{e:'perendinate',j:'翌々日まで延期する',l:10},{e:'perissology',j:'冗長な言い回し',l:10},
+{e:'philippize',j:'外国の利益のために働く',l:10},{e:'pogonotrophy',j:'ひげを生やすこと',l:10},
+// ===== 追加単語 =====
+// --- Level 1 追加 ---
+{e:'ball',j:'ボール',l:1},{e:'bed',j:'ベッド',l:1},{e:'big',j:'大きい',l:1},{e:'black',j:'黒い',l:1},
+{e:'blue',j:'青い',l:1},{e:'boy',j:'男の子',l:1},{e:'bread',j:'パン',l:1},{e:'bring',l:1,j:'持ってくる'},
+{e:'brother',j:'兄弟',l:1},{e:'buy',j:'買う',l:1},{e:'cake',j:'ケーキ',l:1},{e:'call',j:'呼ぶ',l:1},
+{e:'can',j:'〜できる',l:1},{e:'clean',j:'きれいな',l:1},{e:'cold',j:'冷たい・寒い',l:1},{e:'cook',j:'料理する',l:1},
+{e:'cup',j:'カップ',l:1},{e:'cut',j:'切る',l:1},{e:'day',j:'日・昼',l:1},{e:'drink',j:'飲む',l:1},
+{e:'fast',j:'速い',l:1},{e:'find',j:'見つける',l:1},{e:'five',j:'5・五つ',l:1},{e:'food',j:'食べ物',l:1},
+{e:'four',j:'4・四つ',l:1},{e:'friend',j:'友達',l:1},{e:'fun',j:'楽しみ',l:1},{e:'give',j:'与える',l:1},
+{e:'help',j:'助ける',l:1},{e:'here',j:'ここに',l:1},{e:'home',j:'家・自宅',l:1},{e:'horse',j:'馬',l:1},
+{e:'house',j:'家',l:1},{e:'know',j:'知っている',l:1},{e:'like',j:'好きだ',l:1},{e:'little',j:'小さい・少し',l:1},
+{e:'look',j:'見る',l:1},{e:'make',j:'作る',l:1},{e:'many',j:'たくさんの',l:1},{e:'money',j:'お金',l:1},
+{e:'nice',j:'素敵な',l:1},{e:'night',j:'夜',l:1},{e:'nine',j:'9・九つ',l:1},{e:'park',j:'公園',l:1},
+{e:'people',j:'人々',l:1},{e:'put',j:'置く',l:1},{e:'rain',j:'雨が降る',l:1},{e:'read',j:'読む',l:1},
+{e:'rice',j:'ご飯・米',l:1},{e:'room',j:'部屋',l:1},{e:'school',j:'学校',l:1},{e:'see',j:'見える',l:1},
+{e:'seven',j:'7・七つ',l:1},{e:'sing',j:'歌う',l:1},{e:'sister',j:'姉妹',l:1},{e:'six',j:'6・六つ',l:1},
+{e:'sleep',j:'眠る',l:1},{e:'small',j:'小さい',l:1},{e:'snow',j:'雪が降る',l:1},{e:'speak',j:'話す',l:1},
+{e:'stand',j:'立つ',l:1},{e:'start',j:'始まる',l:1},{e:'stop',j:'止まる',l:1},{e:'sun',j:'太陽',l:1},
+{e:'swim',j:'泳ぐ',l:1},{e:'table',j:'テーブル',l:1},{e:'take',j:'取る',l:1},{e:'ten',j:'10・十',l:1},
+{e:'think',j:'考える',l:1},{e:'three',j:'3・三つ',l:1},{e:'time',j:'時間',l:1},{e:'today',j:'今日',l:1},
+{e:'two',j:'2・二つ',l:1},{e:'under',j:'〜の下に',l:1},{e:'white',j:'白い',l:1},{e:'window',j:'窓',l:1},
+{e:'write',j:'書く',l:1},{e:'yellow',j:'黄色い',l:1},
+// --- Level 2 追加 ---
+{e:'absent',j:'欠席している',l:2},{e:'accident',j:'事故',l:2},{e:'address',j:'住所',l:2},{e:'advice',j:'アドバイス',l:2},
+{e:'age',j:'年齢',l:2},{e:'agree',j:'同意する',l:2},{e:'airport',j:'空港',l:2},{e:'angry',j:'怒った',l:2},
+{e:'animal',j:'動物',l:2},{e:'answer',j:'答える',l:2},{e:'appear',j:'現れる',l:2},{e:'arrive',j:'到着する',l:2},
+{e:'ask',j:'尋ねる',l:2},{e:'beautiful',j:'美しい',l:2},{e:'become',j:'なる',l:2},{e:'birthday',j:'誕生日',l:2},
+{e:'borrow',j:'借りる',l:2},{e:'break',j:'壊す・休憩',l:2},{e:'camp',j:'キャンプ',l:2},{e:'catch',j:'捕まえる',l:2},
+{e:'cheap',j:'安い',l:2},{e:'choose',j:'選ぶ',l:2},{e:'class',j:'授業・クラス',l:2},{e:'clean',j:'掃除する',l:2},
+{e:'climb',j:'登る',l:2},{e:'club',j:'クラブ・部活',l:2},{e:'continue',j:'続ける',l:2},{e:'country',j:'国',l:2},
+{e:'cousin',j:'いとこ',l:2},{e:'danger',j:'危険',l:2},{e:'dark',j:'暗い',l:2},{e:'dear',j:'親愛な',l:2},
+{e:'decide',j:'決める',l:2},{e:'design',j:'デザイン',l:2},{e:'dinner',j:'夕食',l:2},{e:'direction',j:'方向',l:2},
+{e:'draw',j:'描く',l:2},{e:'drop',j:'落とす',l:2},{e:'during',j:'〜の間',l:2},{e:'explain',j:'説明する',l:2},
+{e:'express',j:'表現する',l:2},{e:'fact',j:'事実',l:2},{e:'fail',j:'失敗する',l:2},{e:'fall',j:'落ちる・秋',l:2},
+{e:'far',j:'遠い',l:2},{e:'feel',j:'感じる',l:2},{e:'field',j:'分野・野原',l:2},{e:'fight',j:'戦う',l:2},
+{e:'finish',j:'終わらせる',l:2},{e:'follow',j:'従う・追う',l:2},{e:'free',j:'自由な・無料の',l:2},{e:'fresh',j:'新鮮な',l:2},
+{e:'full',j:'満杯の',l:2},{e:'future',j:'未来',l:2},{e:'gift',j:'贈り物',l:2},{e:'glad',j:'嬉しい',l:2},
+{e:'grow',j:'育つ',l:2},{e:'hard',j:'難しい・硬い',l:2},{e:'heavy',j:'重い',l:2},{e:'hold',j:'持つ・開催する',l:2},
+{e:'hope',j:'望む',l:2},{e:'hospital',j:'病院',l:2},{e:'hotel',j:'ホテル',l:2},{e:'hour',l:2,j:'時間'},
+{e:'hungry',j:'空腹の',l:2},{e:'hurry',j:'急ぐ',l:2},{e:'hurt',j:'傷つく',l:2},{e:'important',j:'重要な',l:2},
+{e:'instrument',j:'楽器',l:2},{e:'introduce',j:'紹介する',l:2},{e:'invite',j:'招待する',l:2},{e:'large',j:'大きい',l:2},
+{e:'late',j:'遅い',l:2},{e:'leave',j:'去る・残す',l:2},{e:'letter',j:'手紙・文字',l:2},{e:'library',j:'図書館',l:2},
+{e:'listen',j:'聞く',l:2},{e:'lend',j:'貸す',l:2},{e:'lose',j:'失う・負ける',l:2},{e:'lot',j:'たくさん',l:2},
+{e:'lunch',j:'昼食',l:2},{e:'meet',j:'会う',l:2},{e:'minute',j:'分',l:2},{e:'miss',j:'恋しく思う・乗り遅れる',l:2},
+{e:'move',j:'動く・引越す',l:2},{e:'museum',j:'博物館',l:2},{e:'near',j:'近い',l:2},{e:'need',j:'必要とする',l:2},
+{e:'never',j:'決して〜ない',l:2},{e:'often',j:'しばしば',l:2},{e:'once',j:'一度・かつて',l:2},{e:'only',j:'だけ',l:2},
+{e:'order',j:'注文する・順序',l:2},{e:'own',j:'自分自身の',l:2},{e:'pass',j:'通過する',l:2},{e:'past',j:'過去',l:2},
+{e:'pet',j:'ペット',l:2},{e:'picture',j:'写真・絵',l:2},{e:'place',j:'場所',l:2},{e:'plan',j:'計画',l:2},
+{e:'plant',j:'植物・植える',l:2},{e:'point',j:'要点・指す',l:2},{e:'problem',j:'問題',l:2},{e:'程',j:'ほど',l:2},
+{e:'race',j:'競走・人種',l:2},{e:'ready',j:'準備ができた',l:2},{e:'receive',j:'受け取る',l:2},{e:'remember',j:'覚えている',l:2},
+{e:'rest',j:'休む',l:2},{e:'return',j:'戻る',l:2},{e:'right',j:'正しい・右',l:2},{e:'road',j:'道路',l:2},
+{e:'safe',j:'安全な',l:2},{e:'same',j:'同じ',l:2},{e:'save',j:'救う・貯める',l:2},{e:'send',j:'送る',l:2},
+{e:'serious',j:'深刻な',l:2},{e:'share',j:'共有する',l:2},{e:'show',j:'見せる',l:2},{e:'sick',j:'病気の',l:2},
+{e:'simple',j:'シンプルな',l:2},{e:'slow',j:'遅い',l:2},{e:'smile',j:'微笑む',l:2},{e:'sorry',j:'申し訳ない',l:2},
+{e:'sound',j:'音',l:2},{e:'spend',j:'過ごす・使う',l:2},{e:'station',j:'駅',l:2},{e:'store',j:'店・貯蔵する',l:2},
+{e:'story',j:'物語',l:2},{e:'strange',j:'奇妙な',l:2},{e:'strong',j:'強い',l:2},{e:'study',j:'勉強する',l:2},
+{e:'sure',j:'確かな',l:2},{e:'surprised',j:'驚いた',l:2},{e:'take care',j:'気をつける',l:2},{e:'talk',j:'話す',l:2},
+{e:'teach',j:'教える',l:2},{e:'team',j:'チーム',l:2},{e:'tell',j:'伝える',l:2},{e:'thing',j:'もの・こと',l:2},
+{e:'tired',j:'疲れた',l:2},{e:'town',j:'町',l:2},{e:'try',j:'試みる',l:2},{e:'turn',j:'曲がる・回転する',l:2},
+{e:'type',j:'種類・タイプ',l:2},{e:'wait',j:'待つ',l:2},{e:'want',j:'欲しい',l:2},{e:'warm',j:'暖かい',l:2},
+{e:'watch',j:'見る・腕時計',l:2},{e:'way',j:'方法・道',l:2},{e:'week',j:'週',l:2},{e:'win',j:'勝つ',l:2},
+{e:'wonderful',j:'素晴らしい',l:2},{e:'word',j:'言葉',l:2},{e:'world',j:'世界',l:2},{e:'worry',j:'心配する',l:2},
+// --- Level 3 追加 ---
+{e:'abandon',j:'捨てる',l:3},{e:'absence',j:'欠席・不在',l:3},{e:'abstract',j:'抽象的な',l:3},{e:'accurate',j:'正確な',l:3},
+{e:'achieve',j:'達成する',l:3},{e:'admit',j:'認める',l:3},{e:'advantage',j:'利点',l:3},{e:'advertise',j:'広告する',l:3},
+{e:'afford',j:'余裕がある',l:3},{e:'agency',j:'代理店',l:3},{e:'allow',j:'許可する',l:3},{e:'amount',j:'量',l:3},
+{e:'ancient',j:'古代の',l:3},{e:'announce',j:'発表する',l:3},{e:'apologize',j:'謝罪する',l:3},{e:'apply',j:'応募する・適用する',l:3},
+{e:'approach',j:'近づく・方法',l:3},{e:'approve',j:'承認する',l:3},{e:'argue',j:'議論する',l:3},{e:'arrange',j:'手配する',l:3},
+{e:'associate',j:'関連づける',l:3},{e:'atmosphere',j:'雰囲気・大気',l:3},{e:'attach',j:'取り付ける',l:3},{e:'attend',j:'出席する',l:3},
+{e:'attract',j:'引きつける',l:3},{e:'avoid',j:'避ける',l:3},{e:'award',j:'賞',l:3},{e:'aware',j:'気づいている',l:3},
+{e:'basic',j:'基本的な',l:3},{e:'battle',j:'戦い',l:3},{e:'behave',j:'振る舞う',l:3},{e:'billion',j:'10億',l:3},
+{e:'blame',j:'責める',l:3},{e:'bother',j:'悩ます',l:3},{e:'brave',j:'勇敢な',l:3},{e:'budget',j:'予算',l:3},
+{e:'campaign',j:'キャンペーン',l:3},{e:'cancel',j:'キャンセルする',l:3},{e:'capable',j:'能力がある',l:3},{e:'capital',j:'首都・資本',l:3},
+{e:'career',j:'職業・経歴',l:3},{e:'cause',j:'引き起こす・原因',l:3},{e:'certain',j:'確かな',l:3},{e:'challenge',j:'挑戦する',l:3},
+{e:'charity',j:'慈善',l:3},{e:'citizen',j:'市民',l:3},{e:'claim',j:'主張する',l:3},{e:'climate',j:'気候',l:3},
+{e:'colleague',j:'同僚',l:3},{e:'combine',j:'結合する',l:3},{e:'comment',j:'コメント',l:3},{e:'community',j:'地域社会',l:3},
+{e:'compare',j:'比較する',l:3},{e:'compete',j:'競争する',l:3},{e:'complete',j:'完成させる',l:3},{e:'complex',j:'複雑な',l:3},
+{e:'concern',j:'懸念',l:3},{e:'condition',j:'状態・条件',l:3},{e:'confident',j:'自信がある',l:3},{e:'connect',j:'つなぐ',l:3},
+{e:'contact',j:'連絡する',l:3},{e:'contain',j:'含む',l:3},{e:'control',j:'制御する',l:3},{e:'convenient',j:'便利な',l:3},
+{e:'correct',j:'正しい',l:3},{e:'cost',j:'費用がかかる',l:3},{e:'create',j:'作る',l:3},{e:'crime',j:'犯罪',l:3},
+{e:'culture',j:'文化',l:3},{e:'current',j:'現在の・電流',l:3},{e:'custom',j:'習慣',l:3},{e:'damage',j:'損害',l:3},
+{e:'deal',j:'取り引きする',l:3},{e:'decrease',j:'減少する',l:3},{e:'defend',j:'守る',l:3},{e:'delay',j:'遅らせる',l:3},
+{e:'demand',j:'要求する',l:3},{e:'depend',j:'依存する',l:3},{e:'detail',j:'詳細',l:3},{e:'determine',j:'決定する',l:3},
+{e:'direction',j:'方向',l:3},{e:'disappear',j:'消える',l:3},{e:'disaster',j:'災害',l:3},{e:'discover',j:'発見する',l:3},
+{e:'display',j:'展示する',l:3},{e:'distance',j:'距離',l:3},{e:'divide',j:'分ける',l:3},{e:'donate',j:'寄付する',l:3},
+{e:'doubt',j:'疑う',l:3},{e:'drive',j:'運転する',l:3},{e:'earn',j:'稼ぐ',l:3},{e:'economy',j:'経済',l:3},
+{e:'effort',j:'努力',l:3},{e:'elect',j:'選ぶ（選挙で）',l:3},{e:'emergency',j:'緊急事態',l:3},{e:'encourage',j:'励ます',l:3},
+{e:'energy',j:'エネルギー',l:3},{e:'enter',j:'入る',l:3},{e:'entire',j:'全体の',l:3},{e:'equal',j:'等しい',l:3},
+{e:'escape',j:'逃げる',l:3},{e:'event',j:'行事・イベント',l:3},{e:'exactly',j:'正確に',l:3},{e:'examine',j:'調べる',l:3},
+{e:'excellent',j:'優れた',l:3},{e:'exercise',j:'運動する',l:3},{e:'exist',j:'存在する',l:3},{e:'expect',j:'期待する',l:3},
+{e:'experience',j:'経験する',l:3},{e:'experiment',j:'実験',l:3},{e:'expert',j:'専門家',l:3},{e:'explain',j:'説明する',l:3},
+{e:'express',j:'表現する',l:3},{e:'extra',j:'余分な',l:3},{e:'factor',j:'要因',l:3},{e:'fair',j:'公平な',l:3},
+{e:'familiar',j:'よく知っている',l:3},{e:'field',j:'分野',l:3},{e:'figure',j:'数字・人物',l:3},{e:'finally',j:'ついに',l:3},
+{e:'force',j:'力・強制する',l:3},{e:'form',j:'形・形成する',l:3},{e:'formal',j:'正式な',l:3},{e:'forward',j:'前へ',l:3},
+{e:'frequent',j:'頻繁な',l:3},{e:'function',j:'機能する',l:3},{e:'fund',j:'資金',l:3},{e:'gain',j:'得る',l:3},
+{e:'gather',j:'集まる',l:3},{e:'goal',j:'目標',l:3},{e:'handle',j:'扱う',l:3},{e:'harm',j:'害を与える',l:3},
+{e:'huge',j:'巨大な',l:3},{e:'identify',j:'特定する',l:3},{e:'image',j:'画像・イメージ',l:3},{e:'impact',j:'影響',l:3},
+{e:'increase',j:'増加する',l:3},{e:'independent',j:'独立した',l:3},{e:'industry',j:'産業',l:3},{e:'inform',j:'知らせる',l:3},
+{e:'inspect',j:'検査する',l:3},{e:'institution',j:'機関・施設',l:3},{e:'intend',j:'意図する',l:3},{e:'issue',j:'問題・発行する',l:3},
+{e:'item',j:'項目・品物',l:3},{e:'join',j:'参加する',l:3},{e:'journalism',j:'ジャーナリズム',l:3},{e:'judge',j:'判断する',l:3},
+{e:'major',j:'主要な',l:3},{e:'material',j:'素材',l:3},{e:'measure',j:'測る',l:3},{e:'media',j:'メディア',l:3},
+{e:'mental',j:'精神的な',l:3},{e:'million',j:'100万',l:3},{e:'minor',j:'小さな',l:3},{e:'missing',j:'行方不明の',l:3},
+{e:'modern',j:'現代の',l:3},{e:'moment',j:'瞬間',l:3},{e:'movement',j:'動き',l:3},{e:'natural',j:'自然な',l:3},
+{e:'necessary',j:'必要な',l:3},{e:'negative',j:'否定的な',l:3},{e:'neighbor',j:'隣人',l:3},{e:'network',j:'ネットワーク',l:3},
+{e:'normal',j:'普通の',l:3},{e:'obvious',j:'明らかな',l:3},{e:'official',j:'公式の',l:3},{e:'order',j:'命じる',l:3},
+{e:'organize',j:'整理する',l:3},{e:'outcome',j:'結果',l:3},{e:'overcome',j:'克服する',l:3},{e:'particular',j:'特定の',l:3},
+{e:'perform',j:'実行する',l:3},{e:'permit',j:'許可する',l:3},{e:'physical',j:'身体的な',l:3},{e:'plenty',j:'たくさん',l:3},
+{e:'policy',j:'政策',l:3},{e:'political',j:'政治的な',l:3},{e:'positive',j:'肯定的な',l:3},{e:'possible',j:'可能な',l:3},
+{e:'prepare',j:'準備する',l:3},{e:'present',j:'提示する・現在の',l:3},{e:'preserve',j:'保存する',l:3},{e:'process',j:'過程・処理する',l:3},
+{e:'progress',j:'進歩',l:3},{e:'project',j:'計画・プロジェクト',l:3},{e:'proper',j:'適切な',l:3},{e:'protect',j:'保護する',l:3},
+{e:'prove',j:'証明する',l:3},{e:'public',j:'公共の',l:3},{e:'purpose',j:'目的',l:3},{e:'raise',j:'育てる・上げる',l:3},
+{e:'range',j:'範囲',l:3},{e:'react',j:'反応する',l:3},{e:'reality',j:'現実',l:3},{e:'refer',j:'言及する',l:3},
+{e:'reflect',j:'反映する',l:3},{e:'refuse',j:'断る',l:3},{e:'region',j:'地域',l:3},{e:'relate',j:'関連する',l:3},
+{e:'release',j:'解放する',l:3},{e:'rely',j:'頼る',l:3},{e:'repeat',j:'繰り返す',l:3},{e:'replace',j:'取り替える',l:3},
+{e:'report',j:'報告する',l:3},{e:'respond',j:'反応する',l:3},{e:'result',j:'結果',l:3},{e:'review',j:'見直す',l:3},
+{e:'risk',j:'リスク',l:3},{e:'role',j:'役割',l:3},{e:'rule',j:'規則',l:3},{e:'scale',j:'規模・目盛り',l:3},
+{e:'science',j:'科学',l:3},{e:'search',j:'探す',l:3},{e:'section',j:'部門・区域',l:3},{e:'select',j:'選ぶ',l:3},
+{e:'separate',j:'分ける・別々の',l:3},{e:'serve',j:'奉仕する',l:3},{e:'settle',j:'解決する',l:3},{e:'several',j:'いくつかの',l:3},
+{e:'sign',j:'兆候・署名する',l:3},{e:'similar',j:'似ている',l:3},{e:'situation',j:'状況',l:3},{e:'skill',j:'技術',l:3},
+{e:'solve',j:'解く',l:3},{e:'source',j:'源',l:3},{e:'specific',j:'具体的な',l:3},{e:'spread',j:'広がる',l:3},
+{e:'statement',j:'声明',l:3},{e:'structure',j:'構造',l:3},{e:'subject',j:'主題・科目',l:3},{e:'survey',j:'調査する',l:3},
+{e:'symbol',j:'象徴',l:3},{e:'system',j:'システム',l:3},{e:'technology',j:'技術',l:3},{e:'tend',j:'傾向がある',l:3},
+{e:'term',j:'用語・期間',l:3},{e:'therefore',j:'それゆえ',l:3},{e:'title',j:'題名',l:3},{e:'topic',j:'話題',l:3},
+{e:'total',j:'合計',l:3},{e:'towards',j:'〜に向かって',l:3},{e:'track',j:'追う・線路',l:3},{e:'treat',j:'扱う・治療する',l:3},
+{e:'trend',j:'傾向',l:3},{e:'typical',j:'典型的な',l:3},{e:'unit',j:'単位',l:3},{e:'value',j:'価値',l:3},
+{e:'version',j:'バージョン',l:3},{e:'view',j:'見る・意見',l:3},{e:'wide',j:'広い',l:3},{e:'willing',j:'進んで〜する',l:3},
+// --- Level 4 追加 ---
+{e:'abolish',j:'廃止する',l:4},{e:'ambiguity',j:'曖昧さ',l:4},{e:'analogy',j:'類推',l:4},{e:'anticipate',j:'予期する',l:4},
+{e:'apparatus',j:'装置',l:4},{e:'arbitrary',j:'恣意的な',l:4},{e:'assert',j:'断言する',l:4},{e:'assumption',j:'前提',l:4},
+{e:'authentic',j:'本物の',l:4},{e:'authorize',j:'承認する',l:4},{e:'autonomous',j:'自律的な',l:4},{e:'breakthrough',j:'飛躍的進歩',l:4},
+{e:'bystander',j:'傍観者',l:4},{e:'collaborate',j:'協力する',l:4},{e:'commitment',j:'約束・取り組み',l:4},{e:'commodity',j:'商品',l:4},
+{e:'competent',j:'有能な',l:4},{e:'compelling',j:'説得力のある',l:4},{e:'comprehensive',j:'包括的な',l:4},{e:'conceive',j:'思いつく',l:4},
+{e:'concise',j:'簡潔な',l:4},{e:'consistent',j:'一貫した',l:4},{e:'construct',j:'建設する',l:4},{e:'controversy',j:'論争',l:4},
+{e:'convert',j:'変換する',l:4},{e:'conviction',j:'信念',l:4},{e:'cooperate',j:'協力する',l:4},{e:'correlate',j:'相関する',l:4},
+{e:'counterpart',j:'相当するもの',l:4},{e:'credible',j:'信頼できる',l:4},{e:'criteria',j:'基準（複数）',l:4},{e:'crucial',j:'重大な',l:4},
+{e:'cultivate',j:'栽培する・養う',l:4},{e:'debate',j:'討論する',l:4},{e:'decline',j:'断る・衰退する',l:4},{e:'dedicate',j:'捧げる',l:4},
+{e:'deficit',j:'赤字・欠乏',l:4},{e:'deliberate',j:'意図的な',l:4},{e:'deploy',j:'展開する',l:4},{e:'derive',j:'引き出す',l:4},
+{e:'detect',j:'発見する',l:4},{e:'devote',j:'専念する',l:4},{e:'dimension',j:'次元・寸法',l:4},{e:'diplomatic',j:'外交的な',l:4},
+{e:'discipline',j:'規律',l:4},{e:'dominant',j:'支配的な',l:4},{e:'dynamic',j:'動的な',l:4},{e:'efficient',j:'効率的な',l:4},
+{e:'eliminate',j:'排除する',l:4},{e:'emerge',j:'現れる',l:4},{e:'emphasis',j:'強調',l:4},{e:'enforce',j:'施行する',l:4},
+{e:'enhance',j:'高める',l:4},{e:'enterprise',j:'企業',l:4},{e:'evaluate',j:'評価する',l:4},{e:'evolve',j:'進化する',l:4},
+{e:'exclude',j:'除外する',l:4},{e:'expand',j:'拡大する',l:4},{e:'exploit',j:'利用する・搾取する',l:4},{e:'expose',j:'さらす',l:4},
+{e:'extensive',j:'広範な',l:4},{e:'extract',j:'抽出する',l:4},{e:'fluctuation',j:'変動',l:4},{e:'fundamental',j:'基本的な',l:4},
+{e:'hence',j:'それゆえに',l:4},{e:'hierarchy',j:'階層',l:4},{e:'hypothesis',j:'仮説',l:4},{e:'identical',j:'同一の',l:4},
+{e:'ideology',j:'イデオロギー',l:4},{e:'illustrate',j:'例示する',l:4},{e:'impose',j:'課す',l:4},{e:'incentive',j:'奨励策',l:4},
+{e:'incorporate',j:'取り込む',l:4},{e:'indicate',j:'示す',l:4},{e:'infrastructure',j:'基盤',l:4},{e:'initiative',j:'主導権',l:4},
+{e:'innovation',j:'革新',l:4},{e:'insight',j:'洞察',l:4},{e:'integrate',j:'統合する',l:4},{e:'integrity',j:'誠実さ',l:4},
+{e:'interpret',j:'解釈する',l:4},{e:'intervene',j:'介入する',l:4},{e:'investigate',j:'調査する',l:4},{e:'isolate',j:'孤立させる',l:4},
+{e:'maintain',j:'維持する',l:4},{e:'manipulate',j:'操作する',l:4},{e:'margin',j:'余白・利益率',l:4},{e:'mechanism',j:'仕組み',l:4},
+{e:'mission',j:'使命',l:4},{e:'monitor',j:'監視する',l:4},{e:'objective',j:'目標・客観的な',l:4},{e:'occupy',j:'占める',l:4},
+{e:'operate',j:'運営する',l:4},{e:'option',j:'選択肢',l:4},{e:'outcome',j:'結果',l:4},{e:'overcome',j:'克服する',l:4},
+{e:'overlap',j:'重複する',l:4},{e:'parameter',j:'パラメータ',l:4},{e:'participant',j:'参加者',l:4},{e:'perceive',j:'知覚する',l:4},
+{e:'phenomenon',j:'現象',l:4},{e:'priority',j:'優先事項',l:4},{e:'proceed',j:'進む',l:4},{e:'promote',j:'促進する',l:4},
+{e:'propose',j:'提案する',l:4},{e:'pursue',j:'追求する',l:4},{e:'recover',j:'回復する',l:4},{e:'reform',j:'改革する',l:4},
+{e:'regulate',j:'規制する',l:4},{e:'reinforce',j:'強化する',l:4},{e:'represent',j:'代表する',l:4},{e:'resource',j:'資源',l:4},
+{e:'restrict',j:'制限する',l:4},{e:'retain',j:'保持する',l:4},{e:'reveal',j:'明らかにする',l:4},{e:'sector',j:'部門',l:4},
+{e:'shift',j:'移動する・変化',l:4},{e:'simulate',j:'シミュレートする',l:4},{e:'sophisticated',j:'洗練された',l:4},{e:'stabilize',j:'安定させる',l:4},
+{e:'stance',j:'立場',l:4},{e:'submit',j:'提出する',l:4},{e:'substitute',j:'代わりになるもの',l:4},{e:'sustain',j:'持続する',l:4},
+{e:'synthesize',j:'合成する',l:4},{e:'target',j:'目標にする',l:4},{e:'technical',j:'技術的な',l:4},{e:'theoretical',j:'理論的な',l:4},
+{e:'thereby',j:'それによって',l:4},{e:'transition',j:'移行',l:4},{e:'transmit',j:'伝達する',l:4},{e:'trigger',j:'引き起こす',l:4},
+{e:'utilize',j:'利用する',l:4},{e:'verify',j:'確認する',l:4},{e:'violate',j:'違反する',l:4},{e:'visible',j:'目に見える',l:4},
+// --- Level 5 追加 ---
+{e:'abate',j:'和らぐ・減少する',l:5},{e:'aberration',j:'逸脱・異常',l:5},{e:'abstain',j:'控える・禁欲する',l:5},{e:'accrue',j:'生じる・累積する',l:5},
+{e:'acrimonious',j:'辛辣な・険悪な',l:5},{e:'adhere',j:'固守する・付着する',l:5},{e:'admonish',j:'戒める',l:5},{e:'advent',j:'到来',l:5},
+{e:'adversary',j:'敵対者',l:5},{e:'adversity',j:'逆境',l:5},{e:'affinity',j:'親和性',l:5},{e:'affluent',j:'裕福な',l:5},
+{e:'aggregate',j:'集合させる',l:5},{e:'alleviate',j:'軽減する',l:5},{e:'allure',j:'魅力・誘惑する',l:5},{e:'altruism',j:'利他主義',l:5},
+{e:'ambivalent',j:'相反する感情を持つ',l:5},{e:'ameliorate',j:'改善する',l:5},{e:'anarchy',j:'無政府状態',l:5},{e:'antagonize',j:'敵対させる',l:5},
+{e:'apathy',j:'無関心・無気力',l:5},{e:'appease',j:'なだめる',l:5},{e:'arbitrary',j:'恣意的な',l:5},{e:'arduous',j:'困難な',l:5},
+{e:'articulate',j:'明確に述べる',l:5},{e:'aspire',j:'熱望する',l:5},{e:'astute',j:'機敏な・抜け目のない',l:5},{e:'atrocity',j:'残虐行為',l:5},
+{e:'attenuate',j:'弱める・薄める',l:5},{e:'audacious',j:'大胆な',l:5},{e:'austere',j:'質素な・厳格な',l:5},{e:'avert',j:'防ぐ・そらす',l:5},
+{e:'baffle',j:'当惑させる',l:5},{e:'belittle',j:'軽視する',l:5},{e:'benign',j:'良性の・温和な',l:5},{e:'bolster',j:'強化する',l:5},
+{e:'candid',j:'率直な',l:5},{e:'capitulate',j:'降伏する',l:5},{e:'catalyst',j:'触媒・きっかけ',l:5},{e:'chronic',j:'慢性的な',l:5},
+{e:'circumspect',j:'慎重な',l:5},{e:'clandestine',j:'秘密の',l:5},{e:'coerce',j:'強制する',l:5},{e:'cogent',j:'説得力のある',l:5},
+{e:'collateral',j:'担保・付随的な',l:5},{e:'complacent',j:'自己満足した',l:5},{e:'concede',j:'認める・譲歩する',l:5},{e:'confront',j:'立ち向かう',l:5},
+{e:'convoluted',j:'複雑な・込み入った',l:5},{e:'corrode',j:'腐食する',l:5},{e:'cynical',j:'冷笑的な',l:5},{e:'daunting',j:'おじけさせる',l:5},
+{e:'decimate',j:'大幅に減らす',l:5},{e:'defiance',j:'反抗',l:5},{e:'delude',j:'欺く',l:5},{e:'depict',j:'描写する',l:5},
+{e:'desolate',j:'荒廃した',l:5},{e:'deter',j:'思いとどまらせる',l:5},{e:'devious',j:'ずる賢い',l:5},{e:'discord',j:'不和',l:5},
+{e:'disdain',j:'軽蔑する',l:5},{e:'disentangle',j:'もつれをほどく',l:5},{e:'disparity',j:'格差',l:5},{e:'dissent',j:'異議を唱える',l:5},
+{e:'divert',j:'そらす',l:5},{e:'dubious',j:'疑わしい',l:5},{e:'eccentric',j:'風変わりな',l:5},{e:'elicit',j:'引き出す',l:5},
+{e:'eloquent',j:'雄弁な',l:5},{e:'embody',j:'具現化する',l:5},{e:'enigmatic',j:'謎めいた',l:5},{e:'eradicate',j:'根絶する',l:5},
+{e:'erratic',j:'不安定な',l:5},{e:'evade',j:'回避する',l:5},{e:'exacerbate',j:'悪化させる',l:5},{e:'exemplify',j:'例示する',l:5},
+{e:'explicit',j:'明示的な',l:5},{e:'exploit',j:'搾取する',l:5},{e:'exponent',j:'提唱者',l:5},{e:'extravagant',j:'浪費する・法外な',l:5},
+{e:'flaw',j:'欠陥',l:5},{e:'flourish',j:'繁栄する',l:5},{e:'forbid',j:'禁じる',l:5},{e:'foster',j:'育てる',l:5},
+{e:'fragile',j:'壊れやすい',l:5},{e:'frugal',j:'倹約家の',l:5},{e:'futile',j:'無駄な',l:5},{e:'glaring',j:'明白な・眩しい',l:5},
+{e:'grim',j:'厳しい・陰鬱な',l:5},{e:'harbor',j:'抱く・港',l:5},{e:'harsh',j:'過酷な',l:5},{e:'havoc',j:'大混乱',l:5},
+{e:'hypocrite',j:'偽善者',l:5},{e:'imminent',j:'差し迫った',l:5},{e:'impartial',j:'公平な',l:5},{e:'impede',j:'妨げる',l:5},
+{e:'implicate',j:'関与させる',l:5},{e:'implicit',j:'暗黙の',l:5},{e:'incessant',j:'絶え間ない',l:5},{e:'incite',j:'扇動する',l:5},
+{e:'indulge',j:'耽る・甘やかす',l:5},{e:'inept',j:'不適切な',l:5},{e:'inevitable',j:'避けられない',l:5},{e:'inflate',j:'膨らませる',l:5},
+{e:'inhibit',j:'抑制する',l:5},{e:'innate',j:'生まれつきの',l:5},{e:'innovate',j:'革新する',l:5},{e:'instigate',j:'扇動する',l:5},
+{e:'integrity',j:'誠実さ・完全性',l:5},{e:'intervene',j:'介入する',l:5},{e:'intricate',j:'複雑な',l:5},{e:'irony',j:'皮肉',l:5},
+{e:'jeopardize',j:'危険にさらす',l:5},{e:'magnify',j:'拡大する',l:5},{e:'malicious',j:'悪意のある',l:5},{e:'manipulate',j:'操る',l:5},
+{e:'meticulous',j:'細心の注意を払う',l:5},{e:'misconception',j:'誤解',l:5},{e:'mislead',j:'誤解させる',l:5},{e:'motive',j:'動機',l:5},
+{e:'naive',j:'素朴な・世間知らずの',l:5},{e:'negate',j:'否定する',l:5},{e:'notorious',j:'悪名高い',l:5},{e:'omit',j:'省略する',l:5},
+{e:'opaque',j:'不透明な',l:5},{e:'oppressive',j:'抑圧的な',l:5},{e:'outrage',j:'激怒させる',l:5},{e:'overlook',j:'見落とす',l:5},
+{e:'pacify',j:'なだめる',l:5},{e:'parody',j:'パロディ',l:5},{e:'partisan',j:'党派的な',l:5},{e:'passive',j:'受動的な',l:5},
+{e:'peril',j:'危険',l:5},{e:'pessimistic',j:'悲観的な',l:5},{e:'plausible',j:'もっともらしい',l:5},{e:'plummet',j:'急落する',l:5},
+{e:'pompous',j:'尊大な',l:5},{e:'ponder',j:'熟考する',l:5},{e:'pose',j:'提起する',l:5},{e:'premise',j:'前提',l:5},
+{e:'prevalent',j:'広く行き渡っている',l:5},{e:'prolong',j:'延長する',l:5},{e:'propaganda',j:'プロパガンダ',l:5},{e:'prosecute',j:'起訴する',l:5},
+{e:'provoke',j:'刺激する',l:5},{e:'radical',j:'急進的な',l:5},{e:'rampant',j:'蔓延した',l:5},{e:'rebuke',j:'叱責する',l:5},
+{e:'recede',j:'後退する',l:5},{e:'reckless',j:'無謀な',l:5},{e:'refute',j:'反論する',l:5},{e:'reluctant',j:'気が進まない',l:5},
+{e:'renounce',j:'放棄する',l:5},{e:'repel',j:'撃退する',l:5},{e:'reprehensible',j:'非難に値する',l:5},{e:'resilient',j:'回復力のある',l:5},
+{e:'restrain',j:'抑制する',l:5},{e:'retaliate',j:'報復する',l:5},{e:'revere',j:'崇拝する',l:5},{e:'rhetoric',j:'修辞法',l:5},
+{e:'rigid',j:'堅固な',l:5},{e:'ruthless',j:'無慈悲な',l:5},{e:'sabotage',j:'妨害する',l:5},{e:'sarcastic',j:'皮肉な',l:5},
+{e:'scapegoat',j:'スケープゴート・身代わり',l:5},{e:'seize',j:'つかむ・占拠する',l:5},{e:'shrewd',j:'抜け目のない',l:5},{e:'simultaneously',j:'同時に',l:5},
+{e:'solemn',j:'厳粛な',l:5},{e:'sovereign',j:'主権を持つ',l:5},{e:'speculate',j:'推測する',l:5},{e:'stereotype',j:'固定観念',l:5},
+{e:'stimulate',j:'刺激する',l:5},{e:'stoic',j:'禁欲的な',l:5},{e:'subordinate',j:'部下・下位の',l:5},{e:'subvert',j:'転覆する',l:5},
+{e:'suppress',j:'抑圧する',l:5},{e:'surge',j:'急増する',l:5},{e:'susceptible',j:'影響を受けやすい',l:5},{e:'sustain',j:'維持する',l:5},
+{e:'tactful',j:'如才ない',l:5},{e:'tedious',j:'退屈な',l:5},{e:'tolerate',j:'耐える・容認する',l:5},{e:'toxic',j:'有毒な',l:5},
+{e:'transcend',j:'超える',l:5},{e:'treacherous',j:'裏切りの',l:5},{e:'trivial',j:'些細な',l:5},{e:'tyranny',j:'専制政治',l:5},
+{e:'unanimous',j:'全員一致の',l:5},{e:'underestimate',j:'過小評価する',l:5},{e:'unprecedented',j:'前例のない',l:5},{e:'unwavering',j:'揺るぎない',l:5},
+{e:'uphold',j:'支持する',l:5},{e:'urge',j:'強く促す',l:5},{e:'utmost',j:'最大限の',l:5},{e:'utter',j:'完全な・発する',l:5},
+{e:'vanity',j:'虚栄心',l:5},{e:'venture',j:'冒険する',l:5},{e:'versatile',j:'多才な',l:5},{e:'vindicate',j:'正当化する',l:5},
+{e:'virtuous',j:'高潔な',l:5},{e:'wield',j:'振るう',l:5},{e:'wrath',j:'激怒',l:5},{e:'yield',j:'譲る・産出する',l:5},
+// ===== Level 6 追加 (英検準1級) =====
+{e:'abridge',j:'短縮する・要約する',l:6},{e:'accolade',j:'称賛・表彰',l:6},{e:'acquiesce',j:'黙って従う',l:6},
+{e:'acumen',j:'鋭敏な判断力',l:6},{e:'affable',j:'気さくな',l:6},{e:'aggrandize',j:'誇張する',l:6},
+{e:'alacrity',j:'敏速さ',l:6},{e:'aloof',j:'よそよそしい',l:6},{e:'amalgamate',j:'合併する',l:6},
+{e:'ambivalence',j:'相反する感情の共存',l:6},{e:'amiable',j:'愛想の良い',l:6},{e:'anodyne',j:'当たり障りのない',l:6},
+{e:'antagonism',j:'敵対',l:6},{e:'approbation',j:'承認・賞賛',l:6},{e:'archaic',j:'古風な',l:6},
+{e:'ardor',j:'熱情',l:6},{e:'arid',j:'乾燥した・退屈な',l:6},{e:'ascertain',j:'確認する',l:6},
+{e:'ascetic',j:'禁欲的な',l:6},{e:'assiduous',j:'勤勉な',l:6},{e:'assuage',j:'和らげる',l:6},
+{e:'atrophy',j:'萎縮する',l:6},{e:'auspicious',j:'縁起の良い',l:6},{e:'avarice',j:'強欲',l:6},
+{e:'avid',j:'熱心な・貪欲な',l:6},{e:'banal',j:'陳腐な',l:6},{e:'belie',j:'裏切る・矛盾する',l:6},
+{e:'bemoan',j:'嘆く',l:6},{e:'bereft',j:'〜を奪われた',l:6},{e:'blatant',j:'露骨な',l:6},
+{e:'blithe',j:'のんきな',l:6},{e:'broach',j:'話題を切り出す',l:6},{e:'buffoon',j:'道化師',l:6},
+{e:'burnish',j:'磨く',l:6},{e:'cacophony',j:'不協和音',l:6},{e:'callous',j:'冷淡な',l:6},
+{e:'candor',j:'率直さ',l:6},{e:'caveat',j:'警告・但し書き',l:6},{e:'censure',j:'非難する',l:6},
+{e:'chagrin',j:'くやしさ',l:6},{e:'churlish',j:'無礼な',l:6},{e:'circumscribe',j:'制限する',l:6},
+{e:'clamor',j:'騒ぎ・強く求める',l:6},{e:'clemency',j:'寛大さ',l:6},{e:'coalesce',j:'合体する',l:6},
+{e:'cogitate',j:'熟考する',l:6},{e:'colloquial',j:'口語的な',l:6},{e:'commensurate',j:'釣り合った',l:6},
+{e:'confound',j:'混乱させる',l:6},{e:'congenial',j:'気の合う',l:6},{e:'conjecture',j:'推測する',l:6},
+{e:'contentious',j:'論争的な',l:6},{e:'contrite',j:'深く後悔した',l:6},{e:'copious',j:'豊富な',l:6},
+{e:'corpulent',j:'肥満した',l:6},{e:'counterintuitive',j:'直感に反する',l:6},{e:'covert',j:'秘密の',l:6},
+{e:'craven',j:'臆病な',l:6},{e:'credulous',j:'信じやすい',l:6},{e:'culpable',j:'過失のある',l:6},
+{e:'cursory',j:'大雑把な',l:6},{e:'daunt',j:'おびえさせる',l:6},{e:'debunk',j:'暴く',l:6},
+{e:'decadent',j:'退廃的な',l:6},{e:'deference',j:'敬意・従うこと',l:6},{e:'degenerate',j:'退化する',l:6},
+{e:'demagogue',j:'扇動政治家',l:6},{e:'demeanor',j:'態度・振る舞い',l:6},{e:'denounce',j:'非難する',l:6},
+{e:'deride',j:'あざ笑う',l:6},{e:'despondent',j:'意気消沈した',l:6},{e:'destitute',j:'極貧の',l:6},
+{e:'dexterous',j:'器用な',l:6},{e:'diffident',j:'内気な',l:6},{e:'digress',j:'話題をそらす',l:6},
+{e:'dilettante',j:'素人愛好家',l:6},{e:'din',j:'騒音',l:6},{e:'disconsolate',j:'慰めようのない',l:6},
+{e:'discordant',j:'不調和な',l:6},{e:'discreet',j:'慎重な',l:6},{e:'disdainful',j:'軽蔑的な',l:6},
+{e:'dismal',j:'陰気な',l:6},{e:'disparage',j:'けなす',l:6},{e:'dissemble',j:'隠す・見せかける',l:6},
+{e:'dissipate',j:'散らす・浪費する',l:6},{e:'docile',j:'従順な',l:6},{e:'dogmatic',j:'教条的な',l:6},
+{e:'dupe',j:'だます',l:6},{e:'ebullient',j:'活発な',l:6},{e:'eclectic',j:'折衷的な',l:6},
+{e:'effervescent',j:'泡立つ・活発な',l:6},{e:'effusive',j:'感情を過剰に表す',l:6},{e:'elated',j:'大喜びの',l:6},
+{e:'elusive',j:'捉えにくい',l:6},{e:'embellish',j:'飾る・誇張する',l:6},{e:'eminent',j:'著名な',l:6},
+{e:'engross',j:'没頭させる',l:6},{e:'enrage',j:'激怒させる',l:6},{e:'enumerate',j:'列挙する',l:6},
+{e:'ephemeral',j:'短命な',l:6},{e:'equable',j:'穏やかで均等な',l:6},{e:'equivocal',j:'曖昧な',l:6},
+{e:'erudite',j:'博識な',l:6},{e:'estrange',j:'疎遠にする',l:6},{e:'exalt',j:'称える',l:6},
+{e:'exasperate',j:'激怒させる',l:6},{e:'expedient',j:'便宜的な',l:6},{e:'expunge',j:'抹消する',l:6},
+{e:'exquisite',j:'精巧な・非常に美しい',l:6},{e:'extol',j:'称賛する',l:6},{e:'exuberant',j:'活気あふれる',l:6},
+{e:'fallacious',j:'誤った・詭弁の',l:6},{e:'fawn',j:'へつらう',l:6},{e:'feckless',j:'無能な',l:6},
+{e:'feign',j:'ふりをする',l:6},{e:'felicity',j:'幸福・適切さ',l:6},{e:'fervor',j:'熱意',l:6},
+{e:'fickle',j:'気まぐれな',l:6},{e:'finesse',j:'巧みな技',l:6},{e:'fitful',j:'断続的な',l:6},
+{e:'flagrant',j:'目に余る',l:6},{e:'flaunt',j:'見せびらかす',l:6},{e:'flippant',j:'軽率な',l:6},
+{e:'foment',j:'扇動する',l:6},{e:'forbearance',j:'忍耐・自制',l:6},{e:'forestall',j:'先手を打つ',l:6},
+{e:'forsake',j:'見捨てる',l:6},{e:'fortuitous',j:'偶然の・幸運な',l:6},{e:'fractious',j:'怒りっぽい',l:6},
+{e:'garish',j:'けばけばしい',l:6},{e:'gaunt',j:'やつれた',l:6},{e:'germane',j:'密接に関係した',l:6},
+{e:'glut',j:'過剰供給',l:6},{e:'grandiose',j:'壮大な',l:6},{e:'gratuitous',j:'不必要な',l:6},
+{e:'hackneyed',j:'使い古された',l:6},{e:'haphazard',j:'行き当たりばったりの',l:6},{e:'harangue',j:'長々と説教する',l:6},
+{e:'harrowing',j:'苦悩させる',l:6},{e:'haughty',j:'傲慢な',l:6},{e:'headstrong',j:'強情な',l:6},
+{e:'hedonist',j:'快楽主義者',l:6},{e:'heed',j:'注意を払う',l:6},{e:'heinous',j:'凶悪な',l:6},
+{e:'heretical',j:'異端の',l:6},{e:'histrionic',j:'芝居がかった',l:6},{e:'idiosyncrasy',j:'個人特有の癖',l:6},
+{e:'illicit',j:'不法の',l:6},{e:'immutable',j:'不変の',l:6},{e:'impassive',j:'感情を表さない',l:6},
+{e:'impertinent',j:'生意気な',l:6},{e:'impetuous',j:'衝動的な',l:6},{e:'implacable',j:'なだめられない',l:6},
+{e:'incorrigible',j:'矯正できない',l:6},{e:'indignant',j:'憤慨した',l:6},{e:'indolent',j:'怠惰な',l:6},
+{e:'ineffable',j:'言葉では表せない',l:6},{e:'inert',j:'不活性の',l:6},{e:'infallible',j:'絶対確実な',l:6},
+{e:'inquisitive',j:'好奇心の強い',l:6},{e:'irksome',j:'うんざりさせる',l:6},{e:'irreverent',j:'不敬な',l:6},
+{e:'jocular',j:'冗談好きな',l:6},{e:'jubilant',j:'歓喜に満ちた',l:6},{e:'lackluster',j:'生気のない',l:6},
+{e:'laud',j:'称賛する',l:6},{e:'lavish',j:'惜しみない・豪華な',l:6},{e:'lethargic',j:'無気力な',l:6},
+{e:'listless',j:'無気力な',l:6},{e:'lofty',j:'高尚な',l:6},{e:'ludicrous',j:'ばかばかしい',l:6},
+{e:'magnanimous',j:'寛大な',l:6},{e:'malevolent',j:'悪意のある',l:6},{e:'malleable',j:'柔軟な',l:6},
+{e:'martyr',j:'殉教者',l:6},{e:'melancholy',j:'憂うつ',l:6},{e:'mendacious',j:'うそつきの',l:6},
+{e:'mercurial',j:'変わりやすい',l:6},{e:'meritorious',j:'功績のある',l:6},{e:'mirth',j:'陽気・笑い',l:6},
+{e:'mundane',j:'平凡な・世俗的な',l:6},{e:'narcissistic',j:'自己陶酔的な',l:6},{e:'nonchalant',j:'無頓着な',l:6},
+{e:'obdurate',j:'頑固な',l:6},{e:'oblivious',j:'気づかない',l:6},{e:'obstinate',j:'頑固な',l:6},
+{e:'officious',j:'おせっかいな',l:6},{e:'onerous',j:'重荷となる',l:6},{e:'opulent',j:'豊かな・贅沢な',l:6},
+{e:'ostentatious',j:'見せびらかした',l:6},{e:'overt',j:'公然の',l:6},{e:'pacifist',j:'平和主義者',l:6},
+{e:'palliate',j:'緩和する',l:6},{e:'paltry',j:'ちっぽけな',l:6},{e:'pedantic',j:'学者ぶった',l:6},
+{e:'pejorative',j:'軽蔑的な',l:6},{e:'penchant',j:'傾向・好み',l:6},{e:'perturb',j:'動揺させる',l:6},
+{e:'petulant',j:'怒りっぽい',l:6},{e:'phlegmatic',j:'冷静な',l:6},{e:'pious',j:'信心深い',l:6},
+{e:'pliant',j:'柔軟な',l:6},{e:'poignant',j:'痛切な',l:6},{e:'polarize',j:'二極化する',l:6},
+{e:'ponderous',j:'重苦しい・退屈な',l:6},{e:'portent',j:'前兆',l:6},{e:'precarious',j:'不安定な',l:6},
+{e:'predilection',j:'偏愛',l:6},{e:'preempt',j:'先取りする',l:6},{e:'presumptuous',j:'厚かましい',l:6},
+{e:'pristine',j:'元のままの・汚れのない',l:6},{e:'prodigal',j:'放蕩な',l:6},{e:'prodigious',j:'驚異的な',l:6},
+{e:'prolific',j:'多産な',l:6},{e:'proponent',j:'支持者',l:6},{e:'prosaic',j:'散文的な・平凡な',l:6},
+{e:'provincial',j:'地方的な・偏狭な',l:6},{e:'prudent',j:'思慮深い',l:6},{e:'punctilious',j:'細部にうるさい',l:6},
+{e:'pungent',j:'刺激的な・辛辣な',l:6},{e:'pusillanimous',j:'臆病な',l:6},{e:'quell',j:'鎮圧する',l:6},
+{e:'quintessential',j:'典型的な',l:6},{e:'ramification',j:'結果・影響',l:6},{e:'rancor',j:'深い恨み',l:6},
+{e:'rapacious',j:'強欲な',l:6},{e:'raucous',j:'騒々しい',l:6},{e:'ravage',j:'荒廃させる',l:6},
+{e:'recompense',j:'報酬・補償',l:6},{e:'redress',j:'是正する',l:6},{e:'reprieve',j:'刑の執行猶予',l:6},
+{e:'reproach',j:'非難する',l:6},{e:'repudiate',j:'拒絶する',l:6},{e:'resigned',j:'諦めた',l:6},
+{e:'resilience',j:'回復力',l:6},{e:'retort',j:'言い返す',l:6},{e:'revile',j:'ののしる',l:6},
+{e:'ribald',j:'卑猥な',l:6},{e:'robust',j:'強健な',l:6},{e:'rogue',j:'悪漢',l:6},
+{e:'ruse',j:'策略',l:6},{e:'saccharine',j:'過度に甘い',l:6},{e:'sagacious',j:'賢明な',l:6},
+{e:'sanctimonious',j:'聖人ぶった',l:6},{e:'sardonic',j:'冷笑的な',l:6},{e:'satiate',j:'満足させる',l:6},
+{e:'savvy',j:'知識のある・抜け目のない',l:6},{e:'sedulous',j:'勤勉な',l:6},{e:'serendipity',j:'思いがけない幸運',l:6},
+{e:'servile',j:'卑屈な',l:6},{e:'sinister',j:'不吉な',l:6},{e:'slander',j:'中傷する',l:6},
+{e:'soporific',j:'眠気を催す',l:6},{e:'spurious',j:'偽の',l:6},{e:'squeamish',j:'潔癖な',l:6},
+{e:'stagnate',j:'停滞する',l:6},{e:'steadfast',j:'不動の',l:6},{e:'stentorian',j:'大声の',l:6},
+{e:'stringent',j:'厳格な',l:6},{e:'stupefy',j:'呆然とさせる',l:6},{e:'suave',j:'洗練された',l:6},
+{e:'submissive',j:'従順な',l:6},{e:'subservient',j:'卑屈な',l:6},{e:'subterfuge',j:'言い逃れ',l:6},
+{e:'sullen',j:'ふくれっ面の',l:6},{e:'supercilious',j:'傲慢な',l:6},{e:'superfluous',j:'余分な',l:6},
+{e:'surreptitious',j:'ひそかな',l:6},{e:'tacit',j:'暗黙の',l:6},{e:'tangential',j:'本題からそれた',l:6},
+{e:'temerity',j:'向こう見ず',l:6},{e:'tenacious',j:'粘り強い',l:6},{e:'tepid',j:'生ぬるい',l:6},
+{e:'terse',j:'簡潔な',l:6},{e:'thwart',j:'妨げる',l:6},{e:'timorous',j:'臆病な',l:6},
+{e:'toady',j:'へつらう人',l:6},{e:'torpor',j:'無気力・冬眠',l:6},{e:'tortuous',j:'曲がりくねった',l:6},
+{e:'tractable',j:'御しやすい',l:6},{e:'transgress',j:'違反する',l:6},{e:'turgid',j:'大げさな',l:6},
+{e:'unbridled',j:'抑制されない',l:6},{e:'uncanny',j:'不思議な',l:6},{e:'unequivocal',j:'明確な',l:6},
+{e:'unkempt',j:'だらしない',l:6},{e:'unwieldy',j:'扱いにくい',l:6},{e:'upbraid',j:'叱責する',l:6},
+{e:'usurp',j:'奪う',l:6},{e:'vacillate',j:'ためらう',l:6},{e:'vapid',j:'面白みのない',l:6},
+{e:'venerable',j:'尊敬すべき',l:6},{e:'venomous',j:'毒のある・悪意のある',l:6},{e:'vex',j:'いらだたせる',l:6},
+{e:'vile',j:'卑劣な',l:6},{e:'vindictive',j:'報復心の強い',l:6},{e:'virulent',j:'有毒な',l:6},
+{e:'visceral',j:'本能的な',l:6},{e:'vociferous',j:'声高な',l:6},{e:'voracious',j:'大食の・貪欲な',l:6},
+{e:'wary',j:'用心深い',l:6},{e:'wayward',j:'気まぐれな',l:6},{e:'wistful',j:'物悲しい',l:6},
+// ===== Level 7 追加 (英検1級) =====
+{e:'abjure',j:'誓って放棄する',l:7},{e:'abnegate',j:'放棄する',l:7},{e:'abscond',j:'逃亡する',l:7},
+{e:'abstemious',j:'節制した',l:7},{e:'acerbic',j:'辛辣な',l:7},{e:'actuate',j:'作動させる',l:7},
+{e:'adumbrate',j:'おぼろに示す',l:7},{e:'afflict',j:'苦しめる',l:7},{e:'allay',j:'和らげる',l:7},
+{e:'altercation',j:'口論',l:7},{e:'amalgam',j:'混合物',l:7},{e:'amorphous',j:'形のない',l:7},
+{e:'anachronism',j:'時代錯誤',l:7},{e:'anathema',j:'呪い・忌み嫌われるもの',l:7},{e:'ancillary',j:'補助的な',l:7},
+{e:'anomalous',j:'異常な',l:7},{e:'antediluvian',j:'時代遅れの',l:7},{e:'antipathy',j:'反感',l:7},
+{e:'apotheosis',j:'神格化',l:7},{e:'apprise',j:'知らせる',l:7},{e:'archetype',j:'原型',l:7},
+{e:'arrogate',j:'不当に主張する',l:7},{e:'ascribe',j:'〜のせいにする',l:7},{e:'atavism',j:'先祖返り',l:7},
+{e:'attenuate',j:'弱める',l:7},{e:'audacity',j:'大胆さ',l:7},{e:'augment',j:'増やす',l:7},
+{e:'auspice',j:'後援・前兆',l:7},{e:'aver',j:'断言する',l:7},{e:'bane',j:'災いの元',l:7},
+{e:'baroque',j:'バロック式の・奇異な',l:7},{e:'bastion',j:'砦・堡塁',l:7},{e:'beleaguer',j:'包囲する',l:7},
+{e:'belligerent',j:'好戦的な',l:7},{e:'bemuse',j:'困惑させる',l:7},{e:'benighted',j:'無知な',l:7},
+{e:'bilk',j:'だます',l:7},{e:'blight',j:'荒廃させる',l:7},{e:'boorish',j:'粗野な',l:7},
+{e:'bowdlerize',j:'不適切な部分を削除する',l:7},{e:'calumniate',j:'中傷する',l:7},{e:'cant',j:'偽善的な言葉',l:7},
+{e:'captious',j:'あら探しをする',l:7},{e:'catharsis',j:'浄化',l:7},{e:'cavil',j:'些細な批判をする',l:7},
+{e:'censorious',j:'批判的な',l:7},{e:'charlatan',j:'詐欺師',l:7},{e:'chastise',j:'懲らしめる',l:7},
+{e:'circumlocution',j:'遠回しな言い方',l:7},{e:'circumspection',j:'慎重さ',l:7},{e:'clamorous',j:'騒々しい',l:7},
+{e:'cloistered',j:'世俗を離れた',l:7},{e:'cogent',j:'説得力のある',l:7},{e:'collusion',j:'共謀',l:7},
+{e:'complacency',j:'自己満足',l:7},{e:'conciliatory',j:'宥和的な',l:7},{e:'condescending',j:'見下した',l:7},
+{e:'conflagration',j:'大火災',l:7},{e:'consternation',j:'狼狽',l:7},{e:'contemptuous',j:'軽蔑的な',l:7},
+{e:'conundrum',j:'難問',l:7},{e:'cupidity',j:'強欲',l:7},{e:'dauntless',j:'恐れを知らない',l:7},
+{e:'debacle',j:'大失敗・崩壊',l:7},{e:'declaim',j:'演説する',l:7},{e:'defamation',j:'名誉毀損',l:7},
+{e:'deleterious',j:'有害な',l:7},{e:'demagogy',j:'扇動政治',l:7},{e:'demur',j:'異議を唱える',l:7},
+{e:'denote',j:'示す',l:7},{e:'depravity',j:'道徳的腐敗',l:7},{e:'dereliction',j:'義務の放棄',l:7},
+{e:'desiccate',j:'乾燥させる',l:7},{e:'diatribe',j:'激しい非難',l:7},{e:'didactic',j:'教訓的な',l:7},
+{e:'diffidence',j:'内気',l:7},{e:'dilatory',j:'引き延ばしの',l:7},{e:'discerning',j:'識別力のある',l:7},
+{e:'discomfit',j:'当惑させる',l:7},{e:'discursive',j:'散漫な',l:7},{e:'disheartened',j:'意気消沈した',l:7},
+{e:'disingenuous',j:'不誠実な',l:7},{e:'disparate',j:'本質的に異なる',l:7},{e:'dispassionate',j:'冷静な',l:7},
+{e:'disputatious',j:'議論好きな',l:7},{e:'dissimulate',j:'偽装する',l:7},{e:'dissolution',j:'解散・放蕩',l:7},
+{e:'dissonance',j:'不調和',l:7},{e:'dogmatism',j:'独断主義',l:7},{e:'dolorous',j:'悲しい',l:7},
+{e:'duplicity',j:'二枚舌',l:7},{e:'ebullience',j:'溢れる活力',l:7},{e:'edify',j:'教化する',l:7},
+{e:'effrontery',j:'厚かましさ',l:7},{e:'elucidate',j:'明快に説明する',l:7},{e:'embroil',j:'巻き込む',l:7},
+{e:'ennui',j:'退屈・倦怠感',l:7},{e:'equanimity',j:'平静さ',l:7},{e:'erudition',j:'博識',l:7},
+{e:'excoriate',j:'激しく批判する',l:7},{e:'exhort',j:'強く勧める',l:7},{e:'exigent',j:'緊急の',l:7},
+{e:'exonerate',j:'無罪にする',l:7},{e:'expatiate',j:'詳しく述べる',l:7},{e:'expeditious',j:'迅速な',l:7},
+{e:'expiate',j:'償う',l:7},{e:'expostulate',j:'抗議する',l:7},{e:'extirpate',j:'根絶する',l:7},
+{e:'extricate',j:'救い出す',l:7},{e:'fabrication',j:'でたらめ・捏造',l:7},{e:'facile',j:'安易な',l:7},
+{e:'fatuous',j:'愚かな',l:7},{e:'fawning',j:'へつらう',l:7},{e:'felicitous',j:'適切な',l:7},
+{e:'fervid',j:'熱烈な',l:7},{e:'fester',j:'悪化する',l:7},{e:'flabbergasted',j:'仰天した',l:7},
+{e:'fledgling',j:'未熟な',l:7},{e:'flippancy',j:'軽率さ',l:7},{e:'florid',j:'過度に装飾した',l:7},
+{e:'foible',j:'小さな欠点',l:7},{e:'forbear',j:'自制する',l:7},{e:'forswear',j:'誓って断念する',l:7},
+{e:'frowzy',j:'だらしない',l:7},{e:'gainsay',j:'否定する',l:7},{e:'grandiloquent',j:'大げさな言い方の',l:7},
+{e:'gregarious',j:'社交的な',l:7},{e:'guile',j:'ずるさ',l:7},{e:'harbinger',j:'先触れ',l:7},
+{e:'heresy',j:'異端',l:7},{e:'hyperbole',j:'誇張法',l:7},{e:'iconoclast',j:'偶像破壊者',l:7},
+{e:'imperturbable',j:'冷静沈着な',l:7},{e:'impudent',j:'厚かましい',l:7},{e:'impugn',j:'疑問を呈する',l:7},
+{e:'impunity',j:'罰を免れること',l:7},{e:'inadvertent',j:'不注意な',l:7},{e:'inane',j:'空虚な',l:7},
+{e:'inchoate',j:'発展途上の',l:7},{e:'indolence',j:'怠惰',l:7},{e:'inexorable',j:'容赦ない',l:7},
+{e:'ingenuous',j:'純真な',l:7},{e:'iniquitous',j:'不道徳な',l:7},{e:'innocuous',j:'無害な',l:7},
+{e:'inscrutable',j:'不可解な',l:7},{e:'insolence',j:'傲慢',l:7},{e:'intemperate',j:'不節制な',l:7},
+{e:'intractable',j:'扱いにくい',l:7},{e:'intransigence',j:'妥協しないこと',l:7},{e:'invective',j:'罵倒の言葉',l:7},
+{e:'invidious',j:'恨みを買う',l:7},{e:'irascible',j:'怒りっぽい',l:7},{e:'irresolute',j:'優柔不断な',l:7},
+{e:'lachrymose',j:'涙もろい',l:7},{e:'lassitude',j:'倦怠感',l:7},{e:'lugubrious',j:'陰気な',l:7},
+{e:'machiavellian',j:'抜け目のない',l:7},{e:'magniloquent',j:'大げさな',l:7},{e:'malefactor',j:'犯罪者',l:7},
+{e:'malign',j:'中傷する',l:7},{e:'malingerer',j:'仮病を使う人',l:7},{e:'maudlin',j:'感傷的な',l:7},
+{e:'mawkish',j:'過度に感傷的な',l:7},{e:'mendacity',j:'虚偽',l:7},{e:'mercenary',j:'金目当ての',l:7},
+{e:'misanthrope',j:'人間嫌い',l:7},{e:'morose',j:'むっつりした',l:7},{e:'mutable',j:'変わりやすい',l:7},
+{e:'myopic',j:'近視眼的な',l:7},{e:'nepotism',j:'縁故主義',l:7},{e:'nihilism',j:'虚無主義',l:7},
+{e:'nonchalance',j:'無関心',l:7},{e:'obfuscate',j:'曖昧にする',l:7},{e:'oblique',j:'遠回しな',l:7},
+{e:'oblivion',j:'忘却',l:7},{e:'obtuse',j:'鈍感な',l:7},{e:'odious',j:'憎むべき',l:7},
+{e:'opprobrium',j:'不名誉',l:7},{e:'ostracism',j:'追放',l:7},{e:'overwrought',j:'極度に興奮した',l:7},
+{e:'pallid',j:'青白い',l:7},{e:'pander',j:'欲望に迎合する',l:7},{e:'parsimony',j:'けち',l:7},
+{e:'peccadillo',j:'些細な非行',l:7},{e:'pedantry',j:'学者ぶること',l:7},{e:'perfidy',j:'裏切り',l:7},
+{e:'pernicious',j:'有害な',l:7},{e:'pertinacious',j:'頑固な',l:7},{e:'petulance',j:'怒りっぽさ',l:7},
+{e:'philistine',j:'俗物',l:7},{e:'picayune',j:'つまらない',l:7},{e:'platitude',j:'陳腐な言葉',l:7},
+{e:'polemic',j:'論争',l:7},{e:'precipitate',j:'性急な',l:7},{e:'precocious',j:'早熟な',l:7},
+{e:'prevarication',j:'言い逃れ',l:7},{e:'priggish',j:'堅苦しい',l:7},{e:'prolix',j:'冗長な',l:7},
+{e:'propitiate',j:'なだめる',l:7},{e:'proscribe',j:'禁止する',l:7},{e:'provocateur',j:'扇動者',l:7},
+{e:'prudish',j:'堅苦しい',l:7},{e:'pugnacity',j:'好戦性',l:7},{e:'rancorous',j:'根に持つ',l:7},
+{e:'recidivism',j:'再犯',l:7},{e:'reclusive',j:'隠遁した',l:7},{e:'redoubtable',j:'恐るべき',l:7},
+{e:'refulgent',j:'輝く',l:7},{e:'reprobate',j:'堕落した人',l:7},{e:'rescind',j:'取り消す',l:7},
+{e:'resentful',j:'憤慨した',l:7},{e:'resolute',j:'断固とした',l:7},{e:'ribald',j:'下品な',l:7},
+{e:'scathing',j:'痛烈な',l:7},{e:'scorn',j:'軽蔑する',l:7},{e:'slanderous',j:'中傷的な',l:7},
+{e:'specious',j:'もっともらしいが誤りの',l:7},{e:'splenetic',j:'短気な',l:7},{e:'squander',j:'浪費する',l:7},
+{e:'squalid',j:'不潔な',l:7},{e:'staid',j:'落ち着いた',l:7},{e:'stolid',j:'無感動な',l:7},
+{e:'strident',j:'耳障りな',l:7},{e:'subversive',j:'体制転覆的な',l:7},{e:'succumb',j:'負ける',l:7},
+{e:'sully',j:'汚す',l:7},{e:'supine',j:'怠惰な',l:7},{e:'surly',j:'不機嫌な',l:7},
+{e:'sycophancy',j:'おべっか',l:7},{e:'tirade',j:'長々とした非難',l:7},{e:'torpid',j:'鈍い',l:7},
+{e:'treachery',j:'裏切り',l:7},{e:'trepidation',j:'おびえ',l:7},{e:'turbulent',j:'乱気流の',l:7},
+{e:'unctuous',j:'過度に愛想の良い',l:7},{e:'unscrupulous',j:'無節操な',l:7},{e:'vacuous',j:'空虚な',l:7},
+{e:'venal',j:'買収できる',l:7},{e:'verbose',j:'冗長な',l:7},{e:'vexation',j:'苛立ち',l:7},
+{e:'vicious',j:'悪意のある',l:7},{e:'vindictiveness',j:'報復心',l:7},{e:'vituperate',j:'罵倒する',l:7},
+{e:'wanton',j:'恣意的な',l:7},{e:'wily',j:'ずる賢い',l:7},{e:'xenophobia',j:'外国人嫌い',l:7},
+{e:'zealotry',j:'狂信',l:7},{e:'zenith',j:'頂点',l:7},
+];
+
+// ============================================================
+// 英語力診断ロジック
+// ============================================================
+const EQ_LEVEL_INFO = [
+    {label:'英検5級',    toeic:'TOEIC 〜300',  color:'#f87171', pct:4},
+    {label:'英検4級',    toeic:'TOEIC 〜350',  color:'#fb923c', pct:14},
+    {label:'英検3級',    toeic:'TOEIC 〜450',  color:'#fbbf24', pct:24},
+    {label:'英検準2級',  toeic:'TOEIC 〜550',  color:'#a3e635', pct:34},
+    {label:'英検2級',    toeic:'TOEIC 〜700',  color:'#34d399', pct:44},
+    {label:'英検準1級',  toeic:'TOEIC 〜860',  color:'#38bdf8', pct:54},
+    {label:'英検1級',    toeic:'TOEIC 900+',   color:'#818cf8', pct:64},
+    {label:'超級 ★1',   toeic:'英検1級超・学術レベル', color:'#c084fc', pct:74},
+    {label:'超級 ★2',   toeic:'専門家・研究者レベル', color:'#e879f9', pct:84},
+    {label:'超級 ★3',   toeic:'語彙の達人',         color:'#f43f5e', pct:96},
+];
+const EQ_BADGE = ['📗','📘','📙','🥉','🥈','🥇','🏆','💎','👑','🌟'];
+
+let eqDir        = 'enToJa';   // enToJa | jaToEn
+let eqStartLevel = 4;          // 開始レベル 1〜6
+let eqChoiceCount = 6;         // 選択肢の数 4〜8
+let eqAbility    = 4.0;        // 1〜7の浮動小数
+let eqAnswered   = 0;
+let eqCorrect    = 0;
+let eqHistory    = [];         // {word, correct, level}
+let eqUsed       = new Set();
+let eqCurrent    = null;       // 現在の問題
+
+const EQ_K_EARLY = 0.7;  // 序盤（〜10問）の変動係数
+const EQ_K_MID   = 0.5;  // 中盤（11〜20問）
+const EQ_K_LATE  = 0.35; // 終盤（21問〜）
+
+function eqGetK() {
+    if (eqAnswered < 10) return EQ_K_EARLY;
+    if (eqAnswered < 20) return EQ_K_MID;
+    return EQ_K_LATE;
+}
+
+document.querySelectorAll('[data-edir]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-edir]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        eqDir = btn.dataset.edir;
+    });
+});
+
+document.querySelectorAll('[data-elv]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-elv]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        eqStartLevel = parseInt(btn.dataset.elv);
+    });
+});
+
+document.querySelectorAll('[data-echoices]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-echoices]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); eqChoiceCount=parseInt(btn.dataset.echoices);
+    });
+});
+
+document.getElementById('eq-start-btn').addEventListener('click', eqStart);
+document.getElementById('eq-next-btn').addEventListener('click', eqNext);
+document.getElementById('eq-finish-btn').addEventListener('click', eqShowResult);
+document.getElementById('eq-retry-btn').addEventListener('click', ()=>{
+    document.getElementById('eq-result').classList.add('hidden');
+    eqStart();
+});
+
+function eqStart() {
+    eqAbility = eqStartLevel; eqAnswered = 0; eqCorrect = 0;
+    eqHistory = []; eqUsed = new Set(); eqCurrent = null;
+    document.getElementById('eq-setup').classList.add('hidden');
+    document.getElementById('eq-result').classList.add('hidden');
+    document.getElementById('eq-main').classList.remove('hidden');
+    eqUpdateLevelBar();
+    eqNextQuestion();
+}
+
+function eqPickWord() {
+    // 能力値付近の単語を優先してピック（ガウス的サンプリング）
+    const pool = EQ_WORDS.filter(w => !eqUsed.has(w.e));
+    if (pool.length === 0) { eqUsed.clear(); return eqPickWord(); }
+    // 能力値との距離でスコアリング
+    const scored = pool.map(w => {
+        const dist = Math.abs(w.l - eqAbility);
+        const score = Math.exp(-dist * dist * 0.8) + Math.random() * 0.15;
+        return {w, score};
+    });
+    scored.sort((a,b) => b.score - a.score);
+    return scored[0].w;
+}
+
+function eqMakeChoices(correct) {
+    const sameLevel = shuffle(
+        EQ_WORDS.filter(w => w.e !== correct.e && w.l === correct.l)
+    );
+    const need = eqChoiceCount - 1;
+    const wrong = [...sameLevel.slice(0, need)];
+    if(wrong.length < need){
+        const neighbors = shuffle(
+            EQ_WORDS.filter(w=>w.e!==correct.e&&!wrong.some(x=>x.e===w.e)&&Math.abs(w.l-correct.l)===1)
+        );
+        while(wrong.length < need && neighbors.length > 0) wrong.push(neighbors.shift());
+    }
+    return shuffle([correct, ...wrong]);
+}
+
+function eqNextQuestion() {
+    document.getElementById('eq-feedback-bar').classList.add('hidden');
+    document.getElementById('eq-choices').innerHTML = '';
+
+    eqCurrent = eqPickWord();
+    eqUsed.add(eqCurrent.e);
+
+    document.getElementById('eq-qnum').textContent = `第${eqAnswered+1}問`;
+    document.getElementById('eq-correct-count').textContent = `${eqCorrect}正解`;
+    document.getElementById('eq-total-count').textContent   = `${eqAnswered}問`;
+
+    const choices = eqMakeChoices(eqCurrent);
+
+    if (eqDir === 'enToJa') {
+        document.getElementById('eq-q-label').textContent = '英語';
+        document.getElementById('eq-q-word').textContent  = eqCurrent.e;
+        document.getElementById('eq-q-hint').textContent  = '';
+        choices.forEach(w => {
+            const btn = document.createElement('button');
+            btn.className = 'eq-choice-btn';
+            btn.textContent = w.j;
+            btn.addEventListener('click', () => eqAnswer(w, eqCurrent));
+            document.getElementById('eq-choices').appendChild(btn);
+        });
+    } else {
+        document.getElementById('eq-q-label').textContent = '日本語';
+        document.getElementById('eq-q-word').textContent  = eqCurrent.j;
+        document.getElementById('eq-q-hint').textContent  = '';
+        choices.forEach(w => {
+            const btn = document.createElement('button');
+            btn.className = 'eq-choice-btn';
+            btn.textContent = w.e;
+            btn.addEventListener('click', () => eqAnswer(w, eqCurrent));
+            document.getElementById('eq-choices').appendChild(btn);
+        });
+    }
+}
+
+function eqAnswer(chosen, correct) {
+    const isCorrect = chosen.e === correct.e;
+    eqAnswered++;
+    if (isCorrect) eqCorrect++;
+    eqHistory.push({word: correct, correct: isCorrect, level: correct.l});
+
+    // 能力値更新 (IRT簡易版・序盤は変動大)
+    const expected = 1 / (1 + Math.exp(-(eqAbility - correct.l)));
+    // 正解より不正解の方が変動が大きい（正解:0.8倍、不正解:1.3倍）
+    const kBase    = eqGetK();
+    const kFactor  = isCorrect ? 0.8 : 1.3;
+    const update   = kBase * kFactor * ((isCorrect ? 1 : 0) - expected);
+    eqAbility = Math.max(1, Math.min(7, eqAbility + update));
+
+    // 選択肢の色を変える
+    document.querySelectorAll('.eq-choice-btn').forEach(btn => {
+        const label = eqDir === 'enToJa' ? btn.textContent : btn.textContent;
+        const isThisCorrect = eqDir === 'enToJa'
+            ? btn.textContent === correct.j
+            : btn.textContent === correct.e;
+        if (isThisCorrect) btn.classList.add('correct');
+        else if (btn === event.target && !isCorrect) btn.classList.add('wrong');
+        btn.disabled = true;
+    });
+
+    // フィードバック
+    const fb = document.getElementById('eq-feedback-bar');
+    fb.classList.remove('hidden');
+    const fbMsg = document.getElementById('eq-feedback-msg');
+    fbMsg.className = `p-4 rounded-2xl text-center mb-3 ${isCorrect ? 'bg-green-50' : 'bg-red-50'}`;
+    document.getElementById('eq-fb-icon').textContent = isCorrect ? '✅' : '❌';
+    document.getElementById('eq-fb-text').textContent = isCorrect ? '正解！' : '不正解…';
+    document.getElementById('eq-fb-ans').textContent  = `${correct.e} ＝ ${correct.j}`;
+
+    document.getElementById('eq-correct-count').textContent = `${eqCorrect}正解`;
+    document.getElementById('eq-total-count').textContent   = `${eqAnswered}問`;
+
+    eqUpdateLevelBar();
+}
+
+function eqNext() {
+    eqNextQuestion();
+}
+
+function eqUpdateLevelBar() {
+    const pct = ((eqAbility - 1) / 6) * 90 + 5; // 5%〜95%
+    document.getElementById('eq-level-bar').style.width = pct + '%';
+    const idx = Math.round(eqAbility) - 1;
+    const info = EQ_LEVEL_INFO[Math.max(0, Math.min(6, idx))];
+    document.getElementById('eq-current-level-label').textContent = `推定レベル: ${info.label}`;
+}
+
+function eqShowResult() {
+    document.getElementById('eq-main').classList.add('hidden');
+    document.getElementById('eq-result').classList.remove('hidden');
+    dbSaveEq(eqAbility, eqCorrect, eqAnswered);
+
+    const idx  = Math.max(0, Math.min(6, Math.round(eqAbility) - 1));
+    const info = EQ_LEVEL_INFO[idx];
+
+    document.getElementById('eq-result-eiken').textContent = info.label;
+    document.getElementById('eq-result-toeic').textContent = info.toeic;
+    document.getElementById('eq-result-badge').textContent = EQ_BADGE[idx];
+
+    const pct = ((eqAbility - 1) / 6) * 90 + 5;
+    document.getElementById('eq-result-bar').style.width = pct + '%';
+
+    document.getElementById('eq-res-total').textContent   = eqAnswered;
+    document.getElementById('eq-res-correct').textContent = eqCorrect;
+    const accuracy = eqAnswered > 0 ? Math.round(eqCorrect/eqAnswered*100) : 0;
+    document.getElementById('eq-res-pct').textContent     = accuracy + '%';
+
+    // レベル別正解率
+    const breakdown = {};
+    eqHistory.forEach(h => {
+        if (!breakdown[h.level]) breakdown[h.level] = {total:0,correct:0};
+        breakdown[h.level].total++;
+        if (h.correct) breakdown[h.level].correct++;
+    });
+    const bEl = document.getElementById('eq-level-breakdown');
+    bEl.innerHTML = '';
+    for (let lv = 1; lv <= 7; lv++) {
+        if (!breakdown[lv]) continue;
+        const info2 = EQ_LEVEL_INFO[lv-1];
+        const acc   = Math.round(breakdown[lv].correct / breakdown[lv].total * 100);
+        bEl.innerHTML += `
+        <div>
+            <div class="flex justify-between text-xs font-bold mb-1">
+                <span class="text-slate-600">${info2.label}</span>
+                <span class="text-slate-400">${breakdown[lv].correct}/${breakdown[lv].total}問 (${acc}%)</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2">
+                <div class="h-2 rounded-full transition-all" style="width:${acc}%;background:${info2.color}"></div>
+            </div>
+        </div>`;
+    }
+}
+
+// ============================================================
+// 元素データ
+// ============================================================
+const ELEMENTS = [
+    {n:1,name:'水素',symbol:'H',period:1,group:1},{n:2,name:'ヘリウム',symbol:'He',period:1,group:18},
+    {n:3,name:'リチウム',symbol:'Li',period:2,group:1},{n:4,name:'ベリリウム',symbol:'Be',period:2,group:2},
+    {n:5,name:'ホウ素',symbol:'B',period:2,group:13},{n:6,name:'炭素',symbol:'C',period:2,group:14},
+    {n:7,name:'窒素',symbol:'N',period:2,group:15},{n:8,name:'酸素',symbol:'O',period:2,group:16},
+    {n:9,name:'フッ素',symbol:'F',period:2,group:17},{n:10,name:'ネオン',symbol:'Ne',period:2,group:18},
+    {n:11,name:'ナトリウム',symbol:'Na',period:3,group:1},{n:12,name:'マグネシウム',symbol:'Mg',period:3,group:2},
+    {n:13,name:'アルミニウム',symbol:'Al',period:3,group:13},{n:14,name:'ケイ素',symbol:'Si',period:3,group:14},
+    {n:15,name:'リン',symbol:'P',period:3,group:15},{n:16,name:'硫黄',symbol:'S',period:3,group:16},
+    {n:17,name:'塩素',symbol:'Cl',period:3,group:17},{n:18,name:'アルゴン',symbol:'Ar',period:3,group:18},
+    {n:19,name:'カリウム',symbol:'K',period:4,group:1},{n:20,name:'カルシウム',symbol:'Ca',period:4,group:2},
+    {n:21,name:'スカンジウム',symbol:'Sc',period:4,group:3},{n:22,name:'チタン',symbol:'Ti',period:4,group:4},
+    {n:23,name:'バナジウム',symbol:'V',period:4,group:5},{n:24,name:'クロム',symbol:'Cr',period:4,group:6},
+    {n:25,name:'マンガン',symbol:'Mn',period:4,group:7},{n:26,name:'鉄',symbol:'Fe',period:4,group:8},
+    {n:27,name:'コバルト',symbol:'Co',period:4,group:9},{n:28,name:'ニッケル',symbol:'Ni',period:4,group:10},
+    {n:29,name:'銅',symbol:'Cu',period:4,group:11},{n:30,name:'亜鉛',symbol:'Zn',period:4,group:12},
+    {n:31,name:'ガリウム',symbol:'Ga',period:4,group:13},{n:32,name:'ゲルマニウム',symbol:'Ge',period:4,group:14},
+    {n:33,name:'ヒ素',symbol:'As',period:4,group:15},{n:34,name:'セレン',symbol:'Se',period:4,group:16},
+    {n:35,name:'臭素',symbol:'Br',period:4,group:17},{n:36,name:'クリプトン',symbol:'Kr',period:4,group:18},
+    {n:37,name:'ルビジウム',symbol:'Rb',period:5,group:1},{n:38,name:'ストロンチウム',symbol:'Sr',period:5,group:2},
+    {n:39,name:'イットリウム',symbol:'Y',period:5,group:3},{n:40,name:'ジルコニウム',symbol:'Zr',period:5,group:4},
+    {n:41,name:'ニオブ',symbol:'Nb',period:5,group:5},{n:42,name:'モリブデン',symbol:'Mo',period:5,group:6},
+    {n:43,name:'テクネチウム',symbol:'Tc',period:5,group:7},{n:44,name:'ルテニウム',symbol:'Ru',period:5,group:8},
+    {n:45,name:'ロジウム',symbol:'Rh',period:5,group:9},{n:46,name:'パラジウム',symbol:'Pd',period:5,group:10},
+    {n:47,name:'銀',symbol:'Ag',period:5,group:11},{n:48,name:'カドミウム',symbol:'Cd',period:5,group:12},
+    {n:49,name:'インジウム',symbol:'In',period:5,group:13},{n:50,name:'スズ',symbol:'Sn',period:5,group:14},
+    {n:51,name:'アンチモン',symbol:'Sb',period:5,group:15},{n:52,name:'テルル',symbol:'Te',period:5,group:16},
+    {n:53,name:'ヨウ素',symbol:'I',period:5,group:17},{n:54,name:'キセノン',symbol:'Xe',period:5,group:18},
+    {n:55,name:'セシウム',symbol:'Cs',period:6,group:1},{n:56,name:'バリウム',symbol:'Ba',period:6,group:2},
+    {n:57,name:'ランタン',symbol:'La',period:6,group:'ランタノイド'},{n:58,name:'セリウム',symbol:'Ce',period:6,group:'ランタノイド'},
+    {n:59,name:'プラセオジム',symbol:'Pr',period:6,group:'ランタノイド'},{n:60,name:'ネオジム',symbol:'Nd',period:6,group:'ランタノイド'},
+    {n:61,name:'プロメチウム',symbol:'Pm',period:6,group:'ランタノイド'},{n:62,name:'サマリウム',symbol:'Sm',period:6,group:'ランタノイド'},
+    {n:63,name:'ユウロピウム',symbol:'Eu',period:6,group:'ランタノイド'},{n:64,name:'ガドリニウム',symbol:'Gd',period:6,group:'ランタノイド'},
+    {n:65,name:'テルビウム',symbol:'Tb',period:6,group:'ランタノイド'},{n:66,name:'ジスプロシウム',symbol:'Dy',period:6,group:'ランタノイド'},
+    {n:67,name:'ホルミウム',symbol:'Ho',period:6,group:'ランタノイド'},{n:68,name:'エルビウム',symbol:'Er',period:6,group:'ランタノイド'},
+    {n:69,name:'ツリウム',symbol:'Tm',period:6,group:'ランタノイド'},{n:70,name:'イッテルビウム',symbol:'Yb',period:6,group:'ランタノイド'},
+    {n:71,name:'ルテチウム',symbol:'Lu',period:6,group:'ランタノイド'},{n:72,name:'ハフニウム',symbol:'Hf',period:6,group:4},
+    {n:73,name:'タンタル',symbol:'Ta',period:6,group:5},{n:74,name:'タングステン',symbol:'W',period:6,group:6},
+    {n:75,name:'レニウム',symbol:'Re',period:6,group:7},{n:76,name:'オスミウム',symbol:'Os',period:6,group:8},
+    {n:77,name:'イリジウム',symbol:'Ir',period:6,group:9},{n:78,name:'白金',symbol:'Pt',period:6,group:10},
+    {n:79,name:'金',symbol:'Au',period:6,group:11},{n:80,name:'水銀',symbol:'Hg',period:6,group:12},
+    {n:81,name:'タリウム',symbol:'Tl',period:6,group:13},{n:82,name:'鉛',symbol:'Pb',period:6,group:14},
+    {n:83,name:'ビスマス',symbol:'Bi',period:6,group:15},{n:84,name:'ポロニウム',symbol:'Po',period:6,group:16},
+    {n:85,name:'アスタチン',symbol:'At',period:6,group:17},{n:86,name:'ラドン',symbol:'Rn',period:6,group:18},
+    {n:87,name:'フランシウム',symbol:'Fr',period:7,group:1},{n:88,name:'ラジウム',symbol:'Ra',period:7,group:2},
+    {n:89,name:'アクチニウム',symbol:'Ac',period:7,group:'アクチノイド'},{n:90,name:'トリウム',symbol:'Th',period:7,group:'アクチノイド'},
+    {n:91,name:'プロトアクチニウム',symbol:'Pa',period:7,group:'アクチノイド'},{n:92,name:'ウラン',symbol:'U',period:7,group:'アクチノイド'},
+    {n:93,name:'ネプツニウム',symbol:'Np',period:7,group:'アクチノイド'},{n:94,name:'プルトニウム',symbol:'Pu',period:7,group:'アクチノイド'},
+    {n:95,name:'アメリシウム',symbol:'Am',period:7,group:'アクチノイド'},{n:96,name:'キュリウム',symbol:'Cm',period:7,group:'アクチノイド'},
+    {n:97,name:'バークリウム',symbol:'Bk',period:7,group:'アクチノイド'},{n:98,name:'カリホルニウム',symbol:'Cf',period:7,group:'アクチノイド'},
+    {n:99,name:'アインスタイニウム',symbol:'Es',period:7,group:'アクチノイド'},{n:100,name:'フェルミウム',symbol:'Fm',period:7,group:'アクチノイド'},
+    {n:101,name:'メンデレビウム',symbol:'Md',period:7,group:'アクチノイド'},{n:102,name:'ノーベリウム',symbol:'No',period:7,group:'アクチノイド'},
+    {n:103,name:'ローレンシウム',symbol:'Lr',period:7,group:'アクチノイド'},{n:104,name:'ラザホージウム',symbol:'Rf',period:7,group:4},
+    {n:105,name:'ドブニウム',symbol:'Db',period:7,group:5},{n:106,name:'シーボーギウム',symbol:'Sg',period:7,group:6},
+    {n:107,name:'ボーリウム',symbol:'Bh',period:7,group:7},{n:108,name:'ハッシウム',symbol:'Hs',period:7,group:8},
+    {n:109,name:'マイトネリウム',symbol:'Mt',period:7,group:9},{n:110,name:'ダームスタチウム',symbol:'Ds',period:7,group:10},
+    {n:111,name:'レントゲニウム',symbol:'Rg',period:7,group:11},{n:112,name:'コペルニシウム',symbol:'Cn',period:7,group:12},
+    {n:113,name:'ニホニウム',symbol:'Nh',period:7,group:13},{n:114,name:'フレロビウム',symbol:'Fl',period:7,group:14},
+    {n:115,name:'モスコビウム',symbol:'Mc',period:7,group:15},{n:116,name:'リバモリウム',symbol:'Lv',period:7,group:16},
+    {n:117,name:'テネシン',symbol:'Ts',period:7,group:17},{n:118,name:'オガネソン',symbol:'Og',period:7,group:18},
+];
+function groupLabel(g){return typeof g==='number'?`第${g}族`:g;}
+
+// ============================================================
+// 元素クイズロジック
+// ============================================================
+
+// 元素カテゴリ分類
+const ELEM_CAT = {
+    alkali:     [3,11,19,37,55,87],
+    alkaline:   [4,12,20,38,56,88],
+    transition: [21,22,23,24,25,26,27,28,29,30,39,40,41,42,43,44,45,46,47,48,
+                 71,72,73,74,75,76,77,78,79,80,103,104,105,106,107,108,109,110,111,112],
+    post:       [13,31,32,49,50,81,82,83,84,113,114,115,116],
+    metalloid:  [5,14,32,33,51,52,85],
+    nonmetal:   [1,6,7,8,15,16,34],
+    halogen:    [9,17,35,53,85,117],
+    noble:      [2,10,18,36,54,86,118],
+    lanthanide: [57,58,59,60,61,62,63,64,65,66,67,68,69,70,71],
+    actinide:   [89,90,91,92,93,94,95,96,97,98,99,100,101,102,103],
+};
+
+const RANGES = {'1-20':[1,20],'21-40':[21,40],'41-60':[41,60],'61-80':[61,80],'81-100':[81,100],'101-118':[101,118]};
+
+// 選択状態
+let quizSelMode   = 'range';       // 'range' | 'group' | 'individual'
+let selectedRanges = new Set(['1-20']);
+let selectedGroups = new Set();    // 'period:1', 'cat:alkali', 'gnum:1' など
+let selectedIndividuals = new Set([...ELEMENTS.filter(e=>e.n<=20).map(e=>e.n)]);
+
+let quizQType='nameToSymbol', quizAType='text';
+let quizPool=[],quizQueue=[],currentIdx=0,correctCount=0,wrongList=[],qAnswered=false;
+const QUIZ_COUNT=10;
+
+// --- 選択された元素一覧を返す ---
+function getQuizPool() {
+    if (quizSelMode === 'range') {
+        return ELEMENTS.filter(el => {
+            for (const r of selectedRanges) {
+                const [mn,mx] = RANGES[r];
+                if (el.n >= mn && el.n <= mx) return true;
+            }
+            return false;
+        });
+    }
+    if (quizSelMode === 'group') {
+        if (selectedGroups.size === 0) return [];
+        return ELEMENTS.filter(el => {
+            for (const key of selectedGroups) {
+                const [type, val] = key.split(':');
+                if (type === 'period' && el.period === parseInt(val)) return true;
+                if (type === 'cat'    && ELEM_CAT[val]?.includes(el.n)) return true;
+                if (type === 'gnum'   && el.group  === parseInt(val))   return true;
+            }
+            return false;
+        });
+    }
+    if (quizSelMode === 'individual') {
+        return ELEMENTS.filter(el => selectedIndividuals.has(el.n));
+    }
+    return [];
+}
+
+function updateSelectedCount() {
+    const cnt = getQuizPool().length;
+    document.getElementById('quiz-selected-count').textContent = `${cnt}個`;
+}
+
+// --- タブ切り替え ---
+document.querySelectorAll('.quiz-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        quizSelMode = tab;
+        document.querySelectorAll('.quiz-tab-btn').forEach(b => {
+            b.classList.remove('text-indigo-600','border-indigo-600');
+            b.classList.add('text-slate-400','border-transparent');
+        });
+        btn.classList.add('text-indigo-600','border-indigo-600');
+        btn.classList.remove('text-slate-400','border-transparent');
+        document.getElementById('qtab-range').classList.toggle('hidden', tab !== 'range');
+        document.getElementById('qtab-group').classList.toggle('hidden', tab !== 'group');
+        document.getElementById('qtab-individual').classList.toggle('hidden', tab !== 'individual');
+        updateSelectedCount();
+    });
+});
+
+// --- 番号範囲ボタン ---
+document.querySelectorAll('.qrange-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const r = btn.dataset.range;
+        if (selectedRanges.has(r)) {
+            if (selectedRanges.size === 1) return;
+            selectedRanges.delete(r); btn.classList.remove('active');
+        } else {
+            selectedRanges.add(r); btn.classList.add('active');
+        }
+        updateSelectedCount();
+    });
+});
+
+// --- 族・周期ボタン ---
+document.querySelectorAll('.qgroup-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const key = `${btn.dataset.gtype}:${btn.dataset.gval}`;
+        if (selectedGroups.has(key)) {
+            selectedGroups.delete(key); btn.classList.remove('active');
+        } else {
+            selectedGroups.add(key); btn.classList.add('active');
+        }
+        updateSelectedCount();
+    });
+});
+
+// --- 個別選択グリッド生成 ---
+(function buildIndividualGrid() {
+    const grid = document.getElementById('individual-grid');
+    ELEMENTS.forEach(el => {
+        const btn = document.createElement('button');
+        btn.dataset.n = el.n;
+        btn.title = `${el.n} ${el.name}`;
+        const isSelected = selectedIndividuals.has(el.n);
+        btn.className = `ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all ${
+            isSelected ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white text-slate-600 border-slate-200'
+        }`;
+        btn.innerHTML = `<span class="block text-[8px] font-bold opacity-60">${el.n}</span>${el.symbol}`;
+        btn.addEventListener('click', () => {
+            if (selectedIndividuals.has(el.n)) {
+                if (selectedIndividuals.size === 1) return;
+                selectedIndividuals.delete(el.n);
+                btn.className = 'ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all bg-white text-slate-600 border-slate-200';
+            } else {
+                selectedIndividuals.add(el.n);
+                btn.className = 'ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all bg-indigo-500 text-white border-indigo-500';
+            }
+            updateSelectedCount();
+        });
+        grid.appendChild(btn);
+    });
+})();
+
+document.getElementById('ind-select-all').addEventListener('click', () => {
+    ELEMENTS.forEach(el => selectedIndividuals.add(el.n));
+    document.querySelectorAll('.ind-el-btn').forEach(b => {
+        b.className = 'ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all bg-indigo-500 text-white border-indigo-500';
+    });
+    updateSelectedCount();
+});
+document.getElementById('ind-clear-all').addEventListener('click', () => {
+    selectedIndividuals.clear();
+    selectedIndividuals.add(ELEMENTS[0].n); // 最低1つ残す
+    document.querySelectorAll('.ind-el-btn').forEach(b => {
+        const n = parseInt(b.dataset.n);
+        b.className = `ind-el-btn rounded-lg py-1 text-[11px] font-black border-2 transition-all ${
+            selectedIndividuals.has(n) ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white text-slate-600 border-slate-200'
+        }`;
+    });
+    updateSelectedCount();
+});
+
+// --- 問題タイプ・解答形式 ---
+document.querySelectorAll('[data-qtype]').forEach(btn=>{
+    btn.addEventListener('click',()=>{document.querySelectorAll('[data-qtype]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');quizQType=btn.dataset.qtype;});
+});
+document.querySelectorAll('[data-atype]').forEach(btn=>{
+    btn.addEventListener('click',()=>{document.querySelectorAll('[data-atype]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');quizAType=btn.dataset.atype;});
+});
+
+document.getElementById('quiz-start-btn').addEventListener('click',()=>{
+    quizPool = getQuizPool();
+    if(quizPool.length === 0) { alert('元素が選択されていません'); return; }
+    quizQueue=shuffle([...quizPool]).slice(0,Math.min(QUIZ_COUNT, quizPool.length));
+    currentIdx=0;correctCount=0;wrongList=[];
+    document.getElementById('quiz-setup').classList.add('hidden');
+    document.getElementById('quiz-result').classList.add('hidden');
+    document.getElementById('quiz-main').classList.remove('hidden');
+    document.getElementById('quiz-progress-bar').style.width='0%';
+    showQuestion();
+});
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function getChoiceLabel(el){return quizQType==='nameToSymbol'?el.symbol:el.name;}
+function makeChoices(correct){
+    const pool=ELEMENTS.filter(e=>e.n!==correct.n);
+    const wrongs=shuffle(pool).slice(0,7);
+    return shuffle([correct,...wrongs]);
+}
+
+function showQuestion(){
+    qAnswered=false;
+    const el=quizQueue[currentIdx];
+    const total=quizQueue.length;
+    document.getElementById('quiz-progress').textContent=`${currentIdx+1} / ${total}`;
+    document.getElementById('quiz-score').textContent=`${correctCount}正解`;
+    document.getElementById('quiz-progress-bar').style.width=`${(currentIdx/total)*100}%`;
+    document.getElementById('quiz-card').classList.remove('correct-flash');
+    document.getElementById('quiz-feedback').classList.add('hidden');
+    if(quizQType==='nameToSymbol'){document.getElementById('quiz-question-label').textContent='元素名';document.getElementById('quiz-question').textContent=el.name;document.getElementById('quiz-sub').textContent=`原子番号: ${el.n}`;}
+    else if(quizQType==='symbolToName'){document.getElementById('quiz-question-label').textContent='元素記号';document.getElementById('quiz-question').textContent=el.symbol;document.getElementById('quiz-sub').textContent=`原子番号: ${el.n}`;}
+    else{document.getElementById('quiz-question-label').textContent='周期・族';document.getElementById('quiz-question').textContent=`第${el.period}周期`;document.getElementById('quiz-sub').textContent=groupLabel(el.group);}
+    if(quizAType==='text'){
+        document.getElementById('quiz-input-area').classList.remove('hidden');
+        document.getElementById('quiz-choice-area').classList.add('hidden');
+        const inp=document.getElementById('quiz-input');inp.value='';
+        inp.placeholder=quizQType==='nameToSymbol'?'記号を入力':'元素名を入力';inp.focus();
+    } else {
+        document.getElementById('quiz-input-area').classList.add('hidden');
+        const ca=document.getElementById('quiz-choice-area');ca.classList.remove('hidden');ca.innerHTML='';
+        makeChoices(el).forEach(choice=>{
+            const btn=document.createElement('button');btn.textContent=getChoiceLabel(choice);
+            btn.className='choice-btn border-2 border-slate-200 bg-white rounded-2xl py-3 px-2 text-sm font-bold text-slate-700 active:scale-95';
+            btn.addEventListener('click',()=>{
+                if(qAnswered)return;qAnswered=true;
+                const isOk=choice.n===el.n;
+                document.querySelectorAll('.choice-btn').forEach(b=>{
+                    if(b.textContent===getChoiceLabel(el))b.classList.add('correct-choice');
+                    else if(b===btn&&!isOk)b.classList.add('wrong-choice');
+                    b.disabled=true;
+                });
+                showQFeedback(isOk,el);
+            });
+            ca.appendChild(btn);
+        });
+    }
+}
+
+function checkQAnswer(){
+    if(qAnswered)return;qAnswered=true;
+    const el=quizQueue[currentIdx];
+    const input=document.getElementById('quiz-input').value.trim();
+    const correct=quizQType==='nameToSymbol'?el.symbol:el.name;
+    const isOk=quizQType==='nameToSymbol'?input.toLowerCase()===correct.toLowerCase():input===correct;
+    if(!isOk){document.getElementById('quiz-input').classList.add('shake');setTimeout(()=>document.getElementById('quiz-input').classList.remove('shake'),400);}
+    showQFeedback(isOk,el);
+}
+
+function showQFeedback(isOk,el){
+    if(isOk)correctCount++;else wrongList.push(el);
+    document.getElementById('quiz-score').textContent=`${correctCount}正解`;
+    if(isOk)document.getElementById('quiz-card').classList.add('correct-flash');
+    const fb=document.getElementById('quiz-feedback');
+    fb.classList.remove('hidden','bg-green-50','bg-red-50');fb.classList.add(isOk?'bg-green-50':'bg-red-50');
+    document.getElementById('feedback-icon').textContent=isOk?'✅':'❌';
+    document.getElementById('feedback-text').textContent=isOk?'正解！':'不正解…';
+    document.getElementById('feedback-answer').textContent=`${el.name}　${el.symbol}　第${el.period}周期　${groupLabel(el.group)}`;
+}
+
+document.getElementById('quiz-answer-btn').addEventListener('click',checkQAnswer);
+document.getElementById('quiz-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkQAnswer();});
+document.getElementById('quiz-next-btn').addEventListener('click',()=>{currentIdx++;if(currentIdx>=quizQueue.length)showQResult();else showQuestion();});
+
+function showQResult(){
+    const total=quizQueue.length;
+    document.getElementById('quiz-main').classList.add('hidden');document.getElementById('quiz-result').classList.remove('hidden');
+    document.getElementById('quiz-progress-bar').style.width='100%';
+    if(wrongList.length>0) dbSaveQuizWrong(wrongList);
+    const pct=Math.round((correctCount/total)*100);
+    document.getElementById('result-score').textContent=`${correctCount} / ${total}`;
+    document.getElementById('result-detail').textContent=`正解率 ${pct}%`;
+    document.getElementById('result-emoji').textContent=pct===100?'🏆':pct>=80?'🎉':pct>=60?'👍':'😅';
+    const wc=document.getElementById('wrong-list-container');
+    if(wrongList.length>0){wc.classList.remove('hidden');document.getElementById('wrong-list').innerHTML=wrongList.map(el=>`<li class="flex justify-between items-center py-2 border-b border-slate-50 last:border-0"><div><span class="text-sm font-bold text-slate-700">${el.name}</span><span class="text-xs text-slate-400 ml-2">第${el.period}周期 ${groupLabel(el.group)}</span></div><span class="text-sm font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg">${el.symbol}</span></li>`).join('');}
+    else wc.classList.add('hidden');
+}
+
+document.getElementById('quiz-retry-btn').addEventListener('click',()=>{
+    quizQueue=shuffle([...quizPool]).slice(0,QUIZ_COUNT);currentIdx=0;correctCount=0;wrongList=[];
+    document.getElementById('quiz-result').classList.add('hidden');document.getElementById('quiz-main').classList.remove('hidden');
+    document.getElementById('quiz-progress-bar').style.width='0%';showQuestion();
+});
+
+function resetQuizToSetup(){
+    document.getElementById('quiz-setup').classList.remove('hidden');
+    document.getElementById('quiz-main').classList.add('hidden');
+    document.getElementById('quiz-result').classList.add('hidden');
+    updateSelectedCount();
+}
+
+// ============================================================
+// 日本語力診断
+// ============================================================
+const JQ_WORDS = [
+// --- Level 1 (小学低学年) ---
+{w:'山',r:'やま',j:'地面が高く盛り上がっている場所',l:1},{w:'川',r:'かわ',j:'山から海へ水が流れる細長い水の流れ',l:1},
+{w:'空',r:'そら',j:'頭上に広がる大きな空間',l:1},{w:'花',r:'はな',j:'植物の美しく色づいた部分',l:1},
+{w:'魚',r:'さかな',j:'水の中に住む生き物',l:1},{w:'犬',r:'いぬ',j:'人に飼われる代表的な動物',l:1},
+{w:'猫',r:'ねこ',j:'ニャーと鳴くかわいい動物',l:1},{w:'木',r:'き',j:'幹・枝・葉を持つ大きな植物',l:1},
+{w:'石',r:'いし',j:'地面にある硬い鉱物の固まり',l:1},{w:'雨',r:'あめ',j:'空から水滴が落ちてくる現象',l:1},
+{w:'風',r:'かぜ',j:'空気が動いて感じられる自然現象',l:1},{w:'雪',r:'ゆき',j:'冬に空から白く降るもの',l:1},
+{w:'月',r:'つき',j:'夜空に浮かぶ地球の衛星',l:1},{w:'星',r:'ほし',j:'夜空にきらきら光る天体',l:1},
+{w:'海',r:'うみ',j:'広大な塩水が広がる場所',l:1},{w:'森',r:'もり',j:'木がたくさん生えている場所',l:1},
+{w:'火',r:'ひ',j:'燃えて熱と光を出すもの',l:1},{w:'水',r:'みず',j:'飲んだり洗ったりする液体',l:1},
+{w:'土',r:'つち',j:'地面を作っている柔らかい物質',l:1},{w:'鳥',r:'とり',j:'羽があって空を飛ぶ動物',l:1},
+{w:'手',r:'て',j:'腕の先にある五本の指を持つ部分',l:1},{w:'足',r:'あし',j:'立ったり歩いたりするための体の部分',l:1},
+{w:'目',r:'め',j:'ものを見るための感覚器官',l:1},{w:'耳',r:'みみ',j:'音を聞くための感覚器官',l:1},
+{w:'口',r:'くち',j:'食べたり話したりする体の部分',l:1},{w:'顔',r:'かお',j:'目・鼻・口がある頭の前面',l:1},
+{w:'親',r:'おや',j:'子どもを産み育てる人',l:1},{w:'友',r:'とも',j:'仲良くする相手',l:1},
+{w:'家',r:'いえ',j:'人が住む建物',l:1},{w:'道',r:'みち',j:'人や車が通る場所',l:1},
+// --- Level 2 (小学高学年) ---
+{w:'勇気',r:'ゆうき',j:'恐れずに立ち向かう気持ち',l:2},{w:'努力',r:'どりょく',j:'目標に向かって頑張ること',l:2},
+{w:'友情',r:'ゆうじょう',j:'友達との深い絆や感情',l:2},{w:'感謝',r:'かんしゃ',j:'ありがたいと思う気持ち',l:2},
+{w:'希望',r:'きぼう',j:'よいことを願い望む気持ち',l:2},{w:'想像',r:'そうぞう',j:'頭の中でものごとを思い描くこと',l:2},
+{w:'自然',r:'しぜん',j:'人の手が加わっていない山・川・海などの世界',l:2},{w:'季節',r:'きせつ',j:'春・夏・秋・冬の四つの時期',l:2},
+{w:'植物',r:'しょくぶつ',j:'根・茎・葉を持ち光合成する生き物',l:2},{w:'動物',r:'どうぶつ',j:'自ら動くことができる生き物',l:2},
+{w:'科学',r:'かがく',j:'自然の仕組みを調べる学問',l:2},{w:'歴史',r:'れきし',j:'過去に起きたできごとの記録',l:2},
+{w:'文化',r:'ぶんか',j:'人々が作り上げてきた生活の様式',l:2},{w:'社会',r:'しゃかい',j:'人々が集まって生活する集団',l:2},
+{w:'記念',r:'きねん',j:'大切な出来事を忘れないようにすること',l:2},{w:'経験',r:'けいけん',j:'実際にやってみて得た知識や感覚',l:2},
+{w:'発見',r:'はっけん',j:'新しいことや隠れていたことを見つけること',l:2},{w:'成長',r:'せいちょう',j:'体や心が大きく育つこと',l:2},
+{w:'変化',r:'へんか',j:'ものごとの様子が変わること',l:2},{w:'協力',r:'きょうりょく',j:'力を合わせて何かをすること',l:2},
+{w:'平和',r:'へいわ',j:'争いがなく穏やかな状態',l:2},{w:'命',r:'いのち',j:'生き物が生きている力',l:2},
+{w:'夢',r:'ゆめ',j:'将来こうなりたいという願い',l:2},{w:'挑戦',r:'ちょうせん',j:'難しいことに積極的に取り組むこと',l:2},
+{w:'責任',r:'せきにん',j:'自分の行為の結果を引き受けること',l:2},{w:'関係',r:'かんけい',j:'二つ以上のものごとのつながり',l:2},
+{w:'目的',r:'もくてき',j:'何かをする際のねらいや目標',l:2},{w:'方法',r:'ほうほう',j:'ものごとを行うやり方',l:2},
+{w:'比較',r:'ひかく',j:'二つ以上のものを見比べること',l:2},{w:'原因',r:'げんいん',j:'ある結果を生み出したもとになること',l:2},
+// --- Level 3 (中学生) ---
+{w:'矛盾',r:'むじゅん',j:'二つの事柄が食い違って両立しないこと',l:3},{w:'皮肉',r:'ひにく',j:'遠回しに相手を非難する言い方',l:3},
+{w:'曖昧',r:'あいまい',j:'はっきりしない・どちらともとれる様子',l:3},{w:'根拠',r:'こんきょ',j:'判断や主張のもとになる理由や証拠',l:3},
+{w:'抽象',r:'ちゅうしょう',j:'具体性を取り除いて本質だけを取り出すこと',l:3},{w:'具体',r:'くたい',j:'実際の形や内容がはっきりしていること',l:3},
+{w:'論理',r:'ろんり',j:'筋道を立てて考えること',l:3},{w:'客観',r:'きゃっかん',j:'自分の感情を入れずに物事を見ること',l:3},
+{w:'主観',r:'しゅかん',j:'自分の感情や考えをもとに物事を見ること',l:3},{w:'批判',r:'ひはん',j:'良い点・悪い点を評価して論じること',l:3},
+{w:'反論',r:'はんろん',j:'相手の意見に対して反対意見を述べること',l:3},{w:'概念',r:'がいねん',j:'ものごとの共通の特徴をまとめた考え',l:3},
+{w:'現象',r:'げんしょう',j:'目に見える形で現れた出来事',l:3},{w:'影響',r:'えいきょう',j:'あるものが他のものに作用を及ぼすこと',l:3},
+{w:'解釈',r:'かいしゃく',j:'言葉や出来事の意味を説明すること',l:3},{w:'仮説',r:'かせつ',j:'まだ証明されていない説明の案',l:3},
+{w:'証明',r:'しょうめい',j:'正しいことを根拠を挙げて示すこと',l:3},{w:'矛先',r:'ほこさき',j:'非難や攻撃が向かう方向',l:3},
+{w:'本質',r:'ほんしつ',j:'ものごとの最も根本的な性質',l:3},{w:'手段',r:'しゅだん',j:'目的を達成するために使う方法',l:3},
+{w:'傾向',r:'けいこう',j:'ある方向に進もうとする性質',l:3},{w:'対策',r:'たいさく',j:'問題に対して取る措置',l:3},
+{w:'結論',r:'けつろん',j:'議論や考察の最後にたどり着いた答え',l:3},{w:'過程',r:'かてい',j:'目標に至るまでの手順や経緯',l:3},
+{w:'条件',r:'じょうけん',j:'何かが成立するために必要な事柄',l:3},{w:'矛盾点',r:'むじゅんてん',j:'食い違っている部分',l:3},
+{w:'前提',r:'ぜんてい',j:'議論の出発点として認める事柄',l:3},{w:'背景',r:'はいけい',j:'物事が起きるもとになった状況',l:3},
+{w:'発展',r:'はってん',j:'物事がより大きく・高度になること',l:3},{w:'限界',r:'げんかい',j:'それ以上は無理な境界線',l:3},
+// --- Level 4 (高校生) ---
+{w:'逡巡',r:'しゅんじゅん',j:'ためらってなかなか決断できないこと',l:4},{w:'忖度',r:'そんたく',j:'相手の気持ちや意向を推し量ること',l:4},
+{w:'恣意',r:'しい',j:'自分勝手な考えで行動すること',l:4},{w:'漸進',r:'ぜんしん',j:'少しずつ進んでいくこと',l:4},
+{w:'帰納',r:'きのう',j:'個々の事実から一般的な法則を導き出すこと',l:4},{w:'演繹',r:'えんえき',j:'一般的な法則から個々の事実を導き出すこと',l:4},
+{w:'弁証',r:'べんしょう',j:'道理を立てて正しいことを証明すること',l:4},{w:'止揚',r:'しよう',j:'矛盾する二つを高次元で統合すること',l:4},
+{w:'実存',r:'じつぞん',j:'現に存在していること・主体的な存在のあり方',l:4},{w:'相対',r:'そうたい',j:'他との関係で決まる性質',l:4},
+{w:'絶対',r:'ぜったい',j:'何ものにも依存しない・無条件な様子',l:4},{w:'弁証法',r:'べんしょうほう',j:'矛盾を通じて発展する思考法',l:4},
+{w:'普遍',r:'ふへん',j:'すべてのものに共通して当てはまること',l:4},{w:'特殊',r:'とくしゅ',j:'普通とは異なる特別な性質',l:4},
+{w:'形而上',r:'けいじじょう',j:'感覚では捉えられない精神的・観念的なもの',l:4},{w:'還元',r:'かんげん',j:'複雑なものを単純な要素に分解すること',l:4},
+{w:'超越',r:'ちょうえつ',j:'普通の範囲や限界を超えること',l:4},{w:'内在',r:'ないざい',j:'あるものの中に存在すること',l:4},
+{w:'弁別',r:'べんべつ',j:'物事を区別して判断すること',l:4},{w:'類推',r:'るいすい',j:'似たものから推し量ること',l:4},
+{w:'俯瞰',r:'ふかん',j:'高い所から全体を見渡すこと',l:4},{w:'捨象',r:'しゃしょう',j:'不要な要素を取り除いて考えること',l:4},
+{w:'措定',r:'そてい',j:'確定したものとして立てること',l:4},{w:'布置',r:'ふち',j:'ものを適切な場所に配置すること',l:4},
+{w:'収斂',r:'しゅうれん',j:'一点に向かって集まること',l:4},{w:'乖離',r:'かいり',j:'本来一緒であるべきものが離れること',l:4},
+{w:'齟齬',r:'そご',j:'食い違いが生じること',l:4},{w:'恣意的',r:'しいてき',j:'規則によらず自分勝手に決める様子',l:4},
+{w:'蓋然',r:'がいぜん',j:'確実ではないがおそらくそうであること',l:4},{w:'必然',r:'ひつぜん',j:'必ずそうなるしかないこと',l:4},
+// --- Level 5 (大学・教養) ---
+{w:'アポリア',r:'あぽりあ',j:'解決不可能な難問・行き詰まり',l:5},{w:'パラドックス',r:'ぱらどっくす',j:'一見正しそうだが矛盾を含む論理',l:5},
+{w:'ディスクール',r:'でぃすくーる',j:'言説・談話（フランス語由来）',l:5},{w:'エピステーメー',r:'えぴすてーめー',j:'ある時代の知の枠組み',l:5},
+{w:'エートス',r:'えーとす',j:'共同体の倫理的性格・習慣',l:5},{w:'パトス',r:'ぱとす',j:'感情・受苦・情念',l:5},
+{w:'ロゴス',r:'ろごす',j:'理性・言葉・論理',l:5},{w:'ミメーシス',r:'みめーしす',j:'模倣・再現（アリストテレス美学）',l:5},
+{w:'カタルシス',r:'かたるしす',j:'感情の浄化・解放',l:5},{w:'テロス',r:'てろす',j:'目的・終極因',l:5},
+{w:'アルケー',r:'あるけー',j:'万物の根源',l:5},{w:'コスモス',r:'こすもす',j:'秩序ある世界・宇宙',l:5},
+{w:'カオス',r:'かおす',j:'混沌・無秩序な状態',l:5},{w:'ノモス',r:'のもす',j:'慣習・法・社会的規範',l:5},
+{w:'アナロジー',r:'あなろじー',j:'類推・似た構造から推論すること',l:5},{w:'ダイアレクティク',r:'だいあれくてぃく',j:'弁証法・対話による真理探求',l:5},
+{w:'フェノメノン',r:'ふぇのめのん',j:'現象・経験に現れるもの',l:5},{w:'ノウメノン',r:'のうめのん',j:'物自体・理性だけで捉えられるもの',l:5},
+{w:'アプリオリ',r:'あぷりおり',j:'経験に先立つ・先天的な',l:5},{w:'アポステリオリ',r:'あぽすてりおり',j:'経験によって得られる・後天的な',l:5},
+{w:'コギト',r:'こぎと',j:'我思う故に我あり（デカルト）',l:5},{w:'モナド',r:'もなど',j:'ライプニッツの単子論における基本単位',l:5},
+{w:'アンチノミー',r:'あんちのみー',j:'同じ前提から互いに矛盾する結論が出ること',l:5},{w:'ジンテーゼ',r:'じんてーぜ',j:'テーゼとアンチテーゼの止揚・総合',l:5},
+{w:'ザッヘ',r:'ざっへ',j:'事象そのもの・フッサール現象学の用語',l:5},{w:'レーベンスヴェルト',r:'れーべんすう゛ぇると',j:'生活世界',l:5},
+{w:'インテルスブイェクティビテート',r:'いんてるすぶいぇくてぃびてーと',j:'間主観性',l:5},{w:'フロネーシス',r:'ふろねーしす',j:'実践的知恵（アリストテレス）',l:5},
+{w:'デイモン',r:'でいもん',j:'ソクラテスの内なる声・守護霊',l:5},{w:'アガトン',r:'あがとん',j:'善・最高の善（プラトン哲学）',l:5},
+// --- Level 6 (漢検2級) ---
+{w:'蒙昧',r:'もうまい',j:'知識が乏しく道理をわきまえないこと',l:6},{w:'跛行',r:'はこう',j:'バランスが悪く偏った進み方',l:6},
+{w:'喧噪',r:'けんそう',j:'非常に騒がしい様子',l:6},{w:'嬉嬉',r:'きき',j:'非常に喜んでいる様子',l:6},
+{w:'怯懦',r:'きょうだ',j:'臆病で意気地がないこと',l:6},{w:'恬淡',r:'てんたん',j:'物事に執着せず平然としている様子',l:6},
+{w:'勁草',r:'けいそう',j:'強い草・困難に打ち勝つ強い人',l:6},{w:'嘲弄',r:'ちょうろう',j:'馬鹿にして弄ぶこと',l:6},
+{w:'焦眉',r:'しょうび',j:'眉毛が焦げるほど迫った緊急事態',l:6},{w:'濫用',r:'らんよう',j:'むやみやたらに使うこと',l:6},
+{w:'膺懲',r:'ようちょう',j:'懲らしめること',l:6},{w:'驕傲',r:'きょうごう',j:'おごり高ぶって傲慢な様子',l:6},
+{w:'鬱屈',r:'うっくつ',j:'気持ちが晴れず塞ぎ込んでいること',l:6},{w:'矜持',r:'きょうじ',j:'自分の能力に誇りを持つこと',l:6},
+{w:'蹉跌',r:'さてつ',j:'失敗してつまずくこと',l:6},{w:'顰蹙',r:'ひんしゅく',j:'眉をひそめて嫌がること',l:6},
+{w:'逼塞',r:'ひっそく',j:'追い詰められて身動きができないこと',l:6},{w:'杞憂',r:'きゆう',j:'無用な心配',l:6},
+{w:'瓦解',r:'がかい',j:'一部の崩壊が全体の崩壊を招くこと',l:6},{w:'齷齪',r:'あくせく',j:'細かいことにこせこせと心を砕くこと',l:6},
+{w:'倦怠',r:'けんたい',j:'飽き飽きして嫌になること',l:6},{w:'憂悶',r:'ゆうもん',j:'悩み苦しむこと',l:6},
+{w:'嗚咽',r:'おえつ',j:'声を詰まらせて泣くこと',l:6},{w:'憔悴',r:'しょうすい',j:'心配や病気で痩せ細ること',l:6},
+{w:'惻隠',r:'そくいん',j:'他人の苦しみを見て哀れに思う気持ち',l:6},{w:'慚愧',r:'ざんき',j:'自分の行いを深く恥じること',l:6},
+{w:'忸怩',r:'じくじ',j:'恥ずかしくてたまらない様子',l:6},{w:'懶惰',r:'らんだ',j:'怠け者で怠惰なこと',l:6},
+{w:'颯爽',r:'さっそう',j:'姿が快活で気持ちのよい様子',l:6},{w:'朦朧',r:'もうろう',j:'ぼんやりとして意識が薄れている様子',l:6},
+// --- Level 7 (漢検準1級) ---
+{w:'闃寂',r:'げきせき',j:'ひっそりと静まり返っていること',l:7},{w:'嗜虐',r:'しぎゃく',j:'残虐行為を好む傾向',l:7},
+{w:'韜晦',r:'とうかい',j:'才能や本心を隠して目立たないようにすること',l:7},{w:'逍遥',r:'しょうよう',j:'気ままにぶらぶら歩くこと',l:7},
+{w:'氾濫',r:'はんらん',j:'川が溢れること・物事が広がりすぎること',l:7},{w:'蜿蜒',r:'えんえん',j:'蛇のように曲がりくねって続く様子',l:7},
+{w:'幽邃',r:'ゆうすい',j:'奥深くひっそりとした様子',l:7},{w:'玲瓏',r:'れいろう',j:'玉のように澄み輝く様子',l:7},
+{w:'綺羅',r:'きら',j:'美しい衣装・はなやかな様子',l:7},{w:'懊悩',r:'おうのう',j:'悩みで悶え苦しむこと',l:7},
+{w:'嗄声',r:'しゃがれごえ',j:'しゃがれた声',l:7},{w:'狷介',r:'けんかい',j:'頑固で協調性がなく意地張りなこと',l:7},
+{w:'佶屈',r:'きっくつ',j:'文章が難解でわかりにくいこと',l:7},{w:'奢靡',r:'しゃび',j:'贅沢でぜいたくな様子',l:7},
+{w:'迂遠',r:'うえん',j:'回り道が多く要領を得ないこと',l:7},{w:'峻厳',r:'しゅんげん',j:'険しく厳しい様子',l:7},
+{w:'冀求',r:'ききゅう',j:'強く望み求めること',l:7},{w:'澹然',r:'たんぜん',j:'あっさりとして淡白な様子',l:7},
+{w:'恣縦',r:'しじゅう',j:'気ままで勝手な様子',l:7},{w:'婉曲',r:'えんきょく',j:'直接言わず遠回しに表現すること',l:7},
+{w:'磊落',r:'らいらく',j:'心が広く細かいことにこだわらない様子',l:7},{w:'闊達',r:'かったつ',j:'度量が大きく物事に拘らない様子',l:7},
+{w:'迢遠',r:'ちょうえん',j:'遠くはるかな様子',l:7},{w:'窈窕',r:'ようちょう',j:'奥深くひっそりと美しい様子',l:7},
+{w:'瑰麗',r:'かいれい',j:'きわめて美しく華麗な様子',l:7},{w:'冥冥',r:'めいめい',j:'薄暗くひっそりとした様子',l:7},
+{w:'蹂躙',r:'じゅうりん',j:'踏みにじること・権利などを無視して侵すこと',l:7},{w:'憫然',r:'びんぜん',j:'気の毒に思われる様子',l:7},
+{w:'邂逅',r:'かいこう',j:'思いがけなく出会うこと',l:7},{w:'刹那',r:'せつな',j:'きわめて短い瞬間',l:7},
+// --- Level 8 (漢検1級) ---
+{w:'蟬聯',r:'せんれん',j:'連続していること・代が続くこと',l:8},{w:'掎角',r:'きかく',j:'互いに助け合って敵を挟み撃ちにする形勢',l:8},
+{w:'箝口',r:'かんこう',j:'口を閉じさせること・口止め',l:8},{w:'黜陟',r:'ちゅっちょく',j:'悪者を退け善者を進めること',l:8},
+{w:'饗応',r:'きょうおう',j:'もてなし酒食を振る舞うこと',l:8},{w:'攙扶',r:'さんぷ',j:'手を取って助けること',l:8},
+{w:'鑽仰',r:'さんごう',j:'師を敬い慕うこと',l:8},{w:'鞫問',r:'きくもん',j:'罪人を取り調べ問いただすこと',l:8},
+{w:'宸翰',r:'しんかん',j:'天皇直筆の文書',l:8},{w:'懸瓠',r:'けんこ',j:'ひょうたんをつるした形（細長い地形）',l:8},
+{w:'龕灯',r:'がんどう',j:'手持ちのちょうちん・がんどう返し（歌舞伎）',l:8},{w:'猗頓',r:'いとん',j:'大富豪の名前から転じた意味',l:8},
+{w:'翕然',r:'きゅうぜん',j:'みんなが一致する様子',l:8},{w:'齷齪',r:'あくせく',j:'細かいことで心を悩ませる様子',l:8},
+{w:'讒言',r:'ざんげん',j:'事実を偽って人を陥れる言葉',l:8},{w:'鯨飲',r:'げいいん',j:'鯨のように大量に飲むこと',l:8},
+{w:'嗾ける',r:'そそのかす',j:'そばから人をけしかけること',l:8},{w:'悃款',r:'こんかん',j:'誠実で親切なこと',l:8},
+{w:'撥剌',r:'はつらつ',j:'元気がよく生き生きしている様子',l:8},{w:'蟠踞',r:'ばんきょ',j:'勢力を張って居座ること',l:8},
+{w:'橈む',r:'たわむ',j:'重みや力で曲がること',l:8},{w:'鏤刻',r:'るこく',j:'金属や石に彫り刻むこと',l:8},
+{w:'驥足',r:'きそく',j:'すぐれた才能・俊足の馬',l:8},{w:'鞏固',r:'きょうこ',j:'しっかりと堅固なこと',l:8},
+{w:'乖戻',r:'かいれい',j:'道に外れて反逆すること',l:8},{w:'愾然',r:'がいぜん',j:'憤り嘆く様子',l:8},
+{w:'憮然',r:'ぶぜん',j:'失望・驚きでぼんやりしている様子',l:8},{w:'喟然',r:'きぜん',j:'深くため息をつく様子',l:8},
+{w:'懌ぶ',r:'よろこぶ',j:'喜ぶこと（懌の字を使う古い表現）',l:8},{w:'竦む',r:'すくむ',j:'恐れや寒さで体が縮こまること',l:8},
+// --- Level 9 (漢検1級超・超難読) ---
+{w:'齷齪恟々',r:'あくせくきょうきょう',j:'こせこせと怯えながら動く様子',l:9},{w:'椿事',r:'ちんじ',j:'思いがけない大きな出来事',l:9},
+{w:'憖',r:'なまじ',j:'中途半端に・むしろしない方がよかった',l:9},{w:'蹣跚',r:'まんさん',j:'よろよろと歩く様子',l:9},
+{w:'蓊鬱',r:'おううつ',j:'草木が生い茂っている様子',l:9},{w:'颯靡',r:'さっぴ',j:'風でなびく様子・素早く動く様子',l:9},
+{w:'忿懥',r:'ふんち',j:'激しく怒ること（大学の四病の一つ）',l:9},{w:'黌舎',r:'こうしゃ',j:'学校・孔子を祭る建物',l:9},
+{w:'馴鹿',r:'となかい',j:'北極圏に棲む大型の鹿',l:9},{w:'蟋蟀',r:'こおろぎ',j:'秋に鳴く昆虫',l:9},
+{w:'蜉蝣',r:'かげろう',j:'一日しか生きない虫・はかないもの',l:9},{w:'鸚鵡',r:'おうむ',j:'言葉を繰り返す鳥',l:9},
+{w:'鼯鼠',r:'むささび',j:'森の木から木へ滑空する動物',l:9},{w:'玳瑁',r:'たいまい',j:'熱帯産の海亀・甲羅が工芸品に使われる',l:9},
+{w:'蒟蒻',r:'こんにゃく',j:'根茎から作る食品',l:9},{w:'饂飩',r:'うどん',j:'小麦粉の太い麺料理',l:9},
+{w:'蠑螺',r:'さざえ',j:'海にいる巻き貝',l:9},{w:'鮪',r:'まぐろ',j:'大型の回遊魚・寿司ネタの王様',l:9},
+{w:'鱶',r:'ふか',j:'サメの別称',l:9},{w:'鱏',r:'えい',j:'平たい体を持つ魚',l:9},
+{w:'蠑螈',r:'いもり',j:'水辺に住む両生類',l:9},{w:'鼈',r:'すっぽん',j:'甲羅を持つ水棲の爬虫類',l:9},
+{w:'鷭',r:'ばん',j:'水辺に住む黒い鳥',l:9},{w:'鸛',r:'こうのとり',j:'幸運をもたらすとされる大型の白い鳥',l:9},
+{w:'翡翠',r:'かわせみ',j:'青緑色に輝く川の鳥',l:9},{w:'梟',r:'ふくろう',j:'夜に活動する猛禽類・知恵の象徴',l:9},
+{w:'雫',r:'しずく',j:'したたり落ちる小さな水の粒',l:9},{w:'凩',r:'こがらし',j:'晩秋から初冬に吹く冷たい風',l:9},
+{w:'木枯',r:'こがらし',j:'秋の終わりに吹く乾いた冷風',l:9},{w:'五月雨',r:'さみだれ',j:'梅雨の時期の長雨',l:9},
+// --- Level 10 (超難読・古語・特殊) ---
+{w:'剥啄',r:'はくたく',j:'戸を軽く叩く音',l:10},{w:'牛耳る',r:'ぎゅうじる',j:'団体や組織を思うままに支配すること',l:10},
+{w:'蝸牛',r:'かたつむり',j:'殻を背負った軟体動物',l:10},{w:'鬼車',r:'きしゃ',j:'九頭の怪鳥・猛禽の一種',l:10},
+{w:'罔両',r:'もうりょう',j:'川や山の精霊・幽霊',l:10},{w:'魍魎',r:'もうりょう',j:'山川の妖怪・亡霊',l:10},
+{w:'贔屓',r:'ひいき',j:'特定の人を特別に大切にすること',l:10},{w:'攫む',r:'つかむ',j:'手でしっかり握ること',l:10},
+{w:'嬲る',r:'なぶる',j:'弱い者をいじめること・もてあそぶこと',l:10},{w:'嫐る',r:'なぶる',j:'女性がからかい責めること',l:10},
+{w:'糞',r:'くそ',j:'排泄物・価値のないもの（罵倒語）',l:10},{w:'屁',r:'へ',j:'腸から出るガス（俗語）',l:10},
+{w:'燕雀',r:'えんじゃく',j:'ツバメとスズメ・小人物の比喩',l:10},{w:'鴻鵠',r:'こうこく',j:'大きな鳥・大人物の比喩',l:10},
+{w:'驥尾',r:'きび',j:'名馬の尾・優れた人の後に従うこと',l:10},{w:'麒麟',r:'きりん',j:'中国の瑞獣・優れた人材の比喩',l:10},
+{w:'鳳凰',r:'ほうおう',j:'中国の伝説の霊鳥・天子の象徴',l:10},{w:'玄武',r:'げんぶ',j:'四神の一つ・北方を守る亀と蛇',l:10},
+{w:'朱雀',r:'すざく',j:'四神の一つ・南方を守る赤い鳥',l:10},{w:'白虎',r:'びゃっこ',j:'四神の一つ・西方を守る白い虎',l:10},
+{w:'青龍',r:'せいりゅう',j:'四神の一つ・東方を守る青い龍',l:10},{w:'不知火',r:'しらぬい',j:'九州西方の海に現れる怪火',l:10},
+{w:'幽玄',r:'ゆうげん',j:'奥深く計り知れない趣・能楽の美的理念',l:10},{w:'侘寂',r:'わびさび',j:'不完全・無常の中に美を見出す日本の美意識',l:10},
+{w:'物哀',r:'もののあわれ',j:'自然や人生の無常に触れて感じる深い感慨',l:10},{w:'意気地',r:'いくじ',j:'自分の意志を通そうとする気力・気概',l:10},
+{w:'曖昧模糊',r:'あいまいもこ',j:'はっきりしない様子・ぼんやりしていること',l:10},{w:'玉石混交',r:'ぎょくせきこんこう',j:'優れたものとそうでないものが混じり合うこと',l:10},
+{w:'隴を得て蜀を望む',r:'ろうをえてしょくをのぞむ',j:'一つ手に入れるとさらに多くを欲しがること',l:10},
+{w:'朝三暮四',r:'ちょうさんぼし',j:'目先の違いに惑わされること',l:10},
+// ===== ことわざ =====
+// Level 1
+{w:'七転び八起き',r:'ななころびやおき',j:'何度失敗しても諦めずに立ち上がること',l:1},
+{w:'石の上にも三年',r:'いしのうえにもさんねん',j:'辛くても辛抱して続ければ成功する',l:1},
+{w:'棚からぼたもち',r:'たなからぼたもち',j:'何もしないで思いがけない幸運が来ること',l:1},
+{w:'猿も木から落ちる',r:'さるもきからおちる',j:'どんな名人でも失敗することがある',l:1},
+{w:'花より団子',r:'はなよりだんご',j:'風雅より実利を好むこと',l:1},
+{w:'鬼に金棒',r:'おににかなぼう',j:'強い者がさらに強力な力を得ること',l:1},
+{w:'塵も積もれば山となる',r:'ちりもつもればやまとなる',j:'わずかなものでも積み重なれば大きくなる',l:1},
+{w:'習うより慣れろ',r:'ならうよりなれろ',j:'教わるより実際に経験する方が身につく',l:1},
+// Level 2
+{w:'能ある鷹は爪を隠す',r:'のうあるたかはつめをかくす',j:'本当に実力がある人は自分を誇示しない',l:2},
+{w:'急がば回れ',r:'いそがばまわれ',j:'急ぐ時こそ安全な方法をとるべきだ',l:2},
+{w:'目から鱗が落ちる',r:'めからうろこがおちる',j:'何かをきっかけに突然真実が分かること',l:2},
+{w:'猫に小判',r:'ねこにこばん',j:'価値のわからない人に貴重なものを与えても無駄',l:2},
+{w:'馬の耳に念仏',r:'うまのみみにねんぶつ',j:'何を言っても効果がないこと',l:2},
+{w:'井の中の蛙大海を知らず',r:'いのなかのかわずたいかいをしらず',j:'視野が狭く世間知らずなこと',l:2},
+{w:'三人寄れば文殊の知恵',r:'さんにんよればもんじゅのちえ',j:'凡人でも三人集まれば良い知恵が出る',l:2},
+{w:'覆水盆に返らず',r:'ふくすいぼんにかえらず',j:'一度してしまったことは取り返せない',l:2},
+{w:'七難隠す',r:'しちなんかくす',j:'笑顔は多くの欠点を隠してくれる（笑う門には福来る の類）',l:2},
+{w:'出る杭は打たれる',r:'でるくいはうたれる',j:'目立つ人は人から非難されやすい',l:2},
+// Level 3
+{w:'虎穴に入らずんば虎子を得ず',r:'こけつにいらずんばこじをえず',j:'危険を冒さなければ大きな成果は得られない',l:3},
+{w:'禍福は糾える縄の如し',r:'かふくはあざなえるなわのごとし',j:'幸福と不幸は交互にやってくる',l:3},
+{w:'朱に交われば赤くなる',r:'しゅにまじわればあかくなる',j:'人は環境や付き合う人によって変わる',l:3},
+{w:'他山の石',r:'たざんのいし',j:'他人の失敗も自分の戒めにする',l:3},
+{w:'羊頭狗肉',r:'ようとうくにく',j:'見せかけと実態が大きく異なること',l:3},
+{w:'漁夫の利',r:'ぎょふのり',j:'二者が争う間に第三者が利益を得ること',l:3},
+{w:'蛇足',r:'だそく',j:'余計なもの・無用な付け足し',l:3},
+{w:'五十歩百歩',r:'ごじっぽひゃっぽ',j:'少しの差はあっても本質的に変わらないこと',l:3},
+{w:'杞憂',r:'きゆう',j:'取り越し苦労・無用な心配',l:3},
+{w:'矛盾',r:'むじゅん',j:'どちらも本当とは言えない前後の食い違い',l:3},
+// Level 4
+{w:'邯鄲の夢',r:'かんたんのゆめ',j:'人生の栄枯盛衰のはかなさ',l:4},
+{w:'蛍雪の功',r:'けいせつのこう',j:'苦労して勉強すること・苦学',l:4},
+{w:'臥薪嘗胆',r:'がしんしょうたん',j:'目標のために長い間苦労に耐えること',l:4},
+{w:'塞翁が馬',r:'さいおうがうま',j:'人生の吉凶は予測できない',l:4},
+{w:'呉越同舟',r:'ごえつどうしゅう',j:'仲の悪い者同士が同じ場所に居合わせること',l:4},
+{w:'断腸の思い',r:'だんちょうのおもい',j:'腸が断ち切れるほどの深い悲しみ',l:4},
+{w:'一期一会',r:'いちごいちえ',j:'一生に一度の出会いを大切にすること',l:4},
+{w:'温故知新',r:'おんこちしん',j:'古いことを学び新しい知識を得ること',l:4},
+// Level 5
+{w:'佳人薄命',r:'かじんはくめい',j:'美人は短命であることが多い',l:5},
+{w:'雲散霧消',r:'うんさんむしょう',j:'あとかたもなく消えてしまうこと',l:5},
+{w:'行雲流水',r:'こううんりゅうすい',j:'物事に執着せず自然に従って生きること',l:5},
+{w:'鶏口牛後',r:'けいこうぎゅうご',j:'大きな組織の末端より小さな組織のトップの方がよい',l:5},
+{w:'白眉',r:'はくび',j:'多くの中で最もすぐれた人・もの',l:5},
+{w:'破顔一笑',r:'はがんいっしょう',j:'にっこりと笑うこと',l:5},
+{w:'捲土重来',r:'けんどちょうらい',j:'一度敗れた者が再び勢いを盛り返すこと',l:5},
+{w:'虎視眈々',r:'こしたんたん',j:'鋭い目で機会をうかがっている様子',l:5},
+// Level 6
+{w:'万緑叢中紅一点',r:'ばんりょくそうちゅうこういってん',j:'多くの中に際立った一つがあること',l:6},
+{w:'天衣無縫',r:'てんいむほう',j:'自然で飾り気がなく完全であること',l:6},
+{w:'魑魅魍魎',r:'ちみもうりょう',j:'さまざまな化け物・悪人たちの比喩',l:6},
+{w:'附和雷同',r:'ふわらいどう',j:'自分の意見を持たず他人に同調すること',l:6},
+{w:'玉石混淆',r:'ぎょくせきこんこう',j:'優れたものと劣ったものが入り混じっていること',l:6},
+{w:'一葉落ちて天下の秋を知る',r:'いちようおちててんかのあきをしる',j:'小さな変化から大きな変化を予知する',l:6},
+// ===== 慣用句 =====
+// Level 1-2
+{w:'手を焼く',r:'てをやく',j:'扱いに困ること',l:1},
+{w:'足を引っ張る',r:'あしをひっぱる',j:'人の邪魔をすること',l:1},
+{w:'鼻が高い',r:'はながたかい',j:'得意になってい誇らしい様子',l:1},
+{w:'耳が痛い',r:'みみがいたい',j:'自分の弱点をつかれて辛いこと',l:1},
+{w:'目をつむる',r:'めをつむる',j:'見て見ぬふりをすること',l:1},
+{w:'口が軽い',r:'くちがかるい',j:'秘密を守れずすぐ話してしまう様子',l:2},
+{w:'頭が下がる',r:'あたまがさがる',j:'深く敬服すること',l:2},
+{w:'肩を持つ',r:'かたをもつ',j:'一方の味方をすること',l:2},
+{w:'腰が引ける',r:'こしがひける',j:'恐れや遠慮で積極的になれない様子',l:2},
+{w:'胸を張る',r:'むねをはる',j:'誇らしく堂々と構えること',l:2},
+{w:'骨を折る',r:'ほねをおる',j:'苦労して力を尽くすこと',l:2},
+{w:'水を差す',r:'みずをさす',j:'うまくいっているものに邪魔をすること',l:2},
+{w:'油を売る',r:'あぶらをうる',j:'仕事をさぼって無駄話をすること',l:2},
+{w:'歯が立たない',r:'はがたたない',j:'力が及ばず勝負にならないこと',l:2},
+// Level 3
+{w:'腹を割る',r:'はらをわる',j:'本音をさらけ出して話すこと',l:3},
+{w:'気が置けない',r:'きがおけない',j:'気兼ねなく付き合える（良い意味）',l:3},
+{w:'一肌脱ぐ',r:'ひとはだぬぐ',j:'人のために積極的に力を貸すこと',l:3},
+{w:'暗礁に乗り上げる',r:'あんしょうにのりあげる',j:'物事が障害に当たって行き詰まること',l:3},
+{w:'二の足を踏む',r:'にのあしをふむ',j:'決断できずためらうこと',l:3},
+{w:'さじを投げる',r:'さじをなげる',j:'どうにもならないと諦めること',l:3},
+{w:'身を粉にする',r:'みをこにする',j:'懸命に働くこと',l:3},
+{w:'焼け石に水',r:'やけいしにみず',j:'わずかな努力では効果がないこと',l:3},
+{w:'藪から棒',r:'やぶからぼう',j:'突然で唐突なこと',l:3},
+{w:'雲をつかむ',r:'くもをつかむ',j:'手がかりがなくはっきりしないこと',l:3},
+// Level 4
+{w:'杓子定規',r:'しゃくしじょうぎ',j:'規則を融通なく当てはめること',l:4},
+{w:'八方美人',r:'はっぽうびじん',j:'誰にでも良い顔をする人',l:4},
+{w:'岡目八目',r:'おかめはちもく',j:'傍観者の方が物事の判断が正確なこと',l:4},
+{w:'虻蜂取らず',r:'あぶはちとらず',j:'欲張って両方とも得られないこと',l:4},
+{w:'総花的',r:'そうはなてき',j:'全員に利益を分散させてどれも中途半端なこと',l:4},
+{w:'蟻の一穴',r:'ありのいっけつ',j:'小さなことが大きな事故の原因になること',l:4},
+{w:'濡れ手で粟',r:'ぬれてであわ',j:'何もせずに利益を得ること',l:4},
+// Level 5-6
+{w:'天衣無縫',r:'てんいむほう',j:'飾り気なく自然でのびのびしている様子',l:5},
+{w:'針小棒大',r:'しんしょうぼうだい',j:'小さいことを大げさに言うこと',l:5},
+{w:'木で鼻をくくる',r:'きではなをくくる',j:'冷淡で無愛想な対応をすること',l:5},
+{w:'情けは人のためならず',r:'なさけはひとのためならず',j:'人に親切にすると巡り巡って自分に返ってくる',l:5},
+{w:'蓼食う虫も好き好き',r:'たでくうむしもすきずき',j:'人の好みはそれぞれ異なる',l:6},
+{w:'遠慮に逃げる',r:'えんりょにげる',j:'本当の理由を隠して遠慮を口実にすること',l:6},
+// ===== 和語（やまとことば）=====
+// Level 1-2
+{w:'たそがれ',r:'たそがれ',j:'夕暮れ時・「誰そ彼」から来た言葉',l:2},
+{w:'こもれび',r:'こもれび',j:'木の葉の間から差し込む日光',l:1},
+{w:'なごり',r:'なごり',j:'去り際に感じる惜しい気持ち・余韻',l:2},
+{w:'さざなみ',r:'さざなみ',j:'水面に立つ細かい波',l:1},
+{w:'ほたる',r:'ほたる',j:'夏の夜に光る昆虫',l:1},
+{w:'しぐれ',r:'しぐれ',j:'晩秋から初冬にかけて降る通り雨',l:2},
+{w:'かすみ',r:'かすみ',j:'春に遠くをぼんやり霞ませる大気現象',l:1},
+{w:'そぞろ',r:'そぞろ',j:'なんとなく落ち着かない様子・そわそわ',l:2},
+{w:'うつろ',r:'うつろ',j:'空虚でぼんやりした様子',l:2},
+{w:'まどろむ',r:'まどろむ',j:'うとうとと眠ること',l:2},
+// Level 3-4
+{w:'ゆかり',r:'ゆかり',j:'縁・つながり・縁故',l:3},
+{w:'しじま',r:'しじま',j:'静寂・しんとした静けさ',l:3},
+{w:'おもかげ',r:'おもかげ',j:'心に浮かぶ人の顔・面影',l:3},
+{w:'いにしえ',r:'いにしえ',j:'遠い昔・古代',l:3},
+{w:'たゆたう',r:'たゆたう',j:'ゆらゆらと揺れ漂う・迷う',l:3},
+{w:'まほろば',r:'まほろば',j:'素晴らしい場所・理想郷',l:3},
+{w:'ほとり',r:'ほとり',j:'近く・そば・水辺など',l:3},
+{w:'あわい',r:'あわい',j:'間・境界・隙間（「間」の和語）',l:4},
+{w:'かたわら',r:'かたわら',j:'傍ら・そばに・傍ら（ながら）',l:3},
+{w:'もののあはれ',r:'もののあはれ',j:'無常や自然に感じる深い感慨（王朝文学の美意識）',l:4},
+{w:'をかし',r:'をかし',j:'趣がある・おもしろい（枕草子の美意識）',l:4},
+{w:'あはれ',r:'あはれ',j:'しみじみとした感動・趣・哀れ',l:4},
+{w:'なまめかし',r:'なまめかし',j:'優雅で上品な様子・色っぽい（古語）',l:4},
+{w:'けはひ',r:'けはい',j:'雰囲気・気配（「気配」の古語）',l:4},
+{w:'をりをり',r:'をりをり',j:'時々・折々（「折」の和語表現）',l:3},
+// Level 5-6
+{w:'たをやめ',r:'たをやめ',j:'しなやかで優美な女性・女性的な歌の様式',l:5},
+{w:'ますらをぶり',r:'ますらをぶり',j:'男性的で力強い歌の様式',l:5},
+{w:'みやび',r:'みやび',j:'宮廷風の上品で優雅な様式美',l:5},
+{w:'はかなし',r:'はかなし',j:'頼りなくむなしい・はかない（古語）',l:5},
+{w:'あだなり',r:'あだなり',j:'はかなく実体のない様子・浮気な様子（古語）',l:5},
+{w:'つれなし',r:'つれなし',j:'素知らぬ顔・冷淡な様子（古語）',l:5},
+{w:'さうざうし',r:'さうざうし',j:'物足りなく寂しい様子（古語）',l:5},
+{w:'こころにくし',r:'こころにくし',j:'奥ゆかしく魅力的だ（古語・良い意味）',l:5},
+{w:'やをら',r:'やをら',j:'そっと静かにゆっくりと（古語）',l:5},
+{w:'つきづきし',r:'つきづきし',j:'似合っている・ふさわしい（古語）',l:5},
+{w:'いとほし',r:'いとほし',j:'かわいそうだ・いとしい（古語）',l:5},
+{w:'ゆゆし',r:'ゆゆし',j:'不吉だ・はなはだしい（古語）',l:5},
+// Level 7-8
+{w:'たゆみなく',r:'たゆみなく',j:'絶え間なく・たゆまず続ける様子',l:7},
+{w:'さびしろ',r:'さびしろ',j:'余白・余裕・間（日本美術の概念）',l:7},
+{w:'ま',r:'ま',j:'空間・時間の間・余白（日本的美意識）',l:7},
+{w:'むすび',r:'むすび',j:'結び・霊的な力・縁をつなぐこと',l:7},
+{w:'けがれ',r:'けがれ',j:'穢れ・神道における不浄の状態',l:7},
+{w:'はらへ',r:'はらえ',j:'祓え・穢れを払う神道の儀式',l:7},
+{w:'たまふり',r:'たまふり',j:'魂振り・魂の力を高める儀式',l:7},
+{w:'かむながら',r:'かむながら',j:'神のままに・神の心のままに（神道語）',l:8},
+{w:'ちはやぶる',r:'ちはやぶる',j:'神・かみ（枕詞）',l:8},
+{w:'あをによし',r:'あをによし',j:'奈良（枕詞）',l:8},
+{w:'たらちねの',r:'たらちねの',j:'母・親（枕詞）',l:8},
+{w:'ぬばたまの',r:'ぬばたまの',j:'黒・夜・髪（枕詞）',l:8},
+{w:'あしびきの',r:'あしびきの',j:'山（枕詞）',l:8},
+{w:'ひさかたの',r:'ひさかたの',j:'天・光・月（枕詞）',l:8},
+// Level 9-10
+{w:'よばひ',r:'よばい',j:'古代の求婚の習俗・夜這い',l:9},
+{w:'もののけ',r:'もののけ',j:'人に取り憑いて病気などを引き起こす霊',l:9},
+{w:'たまきはる',r:'たまきはる',j:'命・うち（枕詞）',l:9},
+{w:'うちつけ',r:'うちつけ',j:'唐突な・分別のない様子（古語）',l:9},
+{w:'こちたし',r:'こちたし',j:'大げさだ・立派すぎる（古語）',l:9},
+{w:'さすがに',r:'さすがに',j:'そうはいってもやはり（古語では現代と異なる用法）',l:9},
+{w:'なかなか',r:'なかなか',j:'かえって・むしろ（古語での用法）',l:9},
+{w:'いみじ',r:'いみじ',j:'非常に・はなはだしい（良くも悪くも）（古語）',l:9},
+{w:'あさまし',r:'あさまし',j:'驚きあきれる・嘆かわしい（古語）',l:9},
+{w:'めでたし',r:'めでたし',j:'すばらしい・立派だ（古語）',l:9},
+{w:'をこなり',r:'をこなり',j:'馬鹿げている・みっともない（古語）',l:10},
+{w:'あなかしこ',r:'あなかしこ',j:'恐れ多いことです・手紙の末尾語（古語）',l:10},
+{w:'はた',r:'はた',j:'あるいは・それとも・また（古語の接続詞）',l:10},
+{w:'つとめて',r:'つとめて',j:'早朝・翌朝（古語）',l:10},
+{w:'くだかけ',r:'くだかけ',j:'鶏の古名（和語）',l:10},
+{w:'とつくに',r:'とつくに',j:'遠い異国・外国（古語）',l:10},
+{w:'わたつみ',r:'わたつみ',j:'海の神・海（「海の霊」の意）',l:10},
+{w:'たかまがはら',r:'たかまがはら',j:'高天原・神々の住む天上の世界',l:10},
+{w:'くにつかみ',r:'くにつかみ',j:'国津神・地上に住む神々',l:10},
+{w:'あまつかみ',r:'あまつかみ',j:'天津神・天にいる神々',l:10},
+];
+
+const JQ_LEVEL_INFO = [
+    {label:'小学低学年',  sub:'日常基礎語レベル',       color:'#f87171', pct:5},
+    {label:'小学高学年',  sub:'教科書基本語レベル',      color:'#fb923c', pct:15},
+    {label:'中学生',      sub:'標準教育語彙レベル',      color:'#fbbf24', pct:25},
+    {label:'高校生',      sub:'論述・思考語彙レベル',    color:'#a3e635', pct:35},
+    {label:'大学・教養',  sub:'哲学・人文教養レベル',    color:'#34d399', pct:45},
+    {label:'漢検2級',    sub:'常用漢字マスターレベル',   color:'#38bdf8', pct:55},
+    {label:'漢検準1級',  sub:'難読語・古典語レベル',     color:'#818cf8', pct:65},
+    {label:'漢検1級',    sub:'最難関漢字レベル',         color:'#c084fc', pct:75},
+    {label:'超難読 ★1', sub:'難読固有名詞・古語レベル', color:'#e879f9', pct:85},
+    {label:'超難読 ★2', sub:'語彙の達人・碩学レベル',   color:'#f43f5e', pct:96},
+];
+const JQ_BADGE = ['📗','📘','📙','🥉','🥈','🥇','🏆','💎','👑','🌟'];
+
+let jqDir        = 'wordToMeaning';
+let jqStartLevel = 4;
+let jqChoiceCount = 6;
+let jqAbility    = 4.0;
+let jqAnswered   = 0;
+let jqCorrect    = 0;
+let jqHistory    = [];
+let jqUsed       = new Set();
+let jqCurrent    = null;
+
+const JQ_K_EARLY = 0.7;
+const JQ_K_MID   = 0.5;
+const JQ_K_LATE  = 0.35;
+function jqGetK(){ if(jqAnswered<10)return JQ_K_EARLY; if(jqAnswered<20)return JQ_K_MID; return JQ_K_LATE; }
+
+document.querySelectorAll('[data-jdir]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-jdir]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); jqDir=btn.dataset.jdir;
+    });
+});
+document.querySelectorAll('[data-jlv]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-jlv]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); jqStartLevel=parseInt(btn.dataset.jlv);
+    });
+});
+
+document.querySelectorAll('[data-jchoices]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-jchoices]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); jqChoiceCount=parseInt(btn.dataset.jchoices);
+    });
+});
+
+document.getElementById('jq-start-btn').addEventListener('click', jqStart);
+document.getElementById('jq-next-btn').addEventListener('click', jqNextQuestion);
+document.getElementById('jq-finish-btn').addEventListener('click', jqShowResult);
+document.getElementById('jq-retry-btn').addEventListener('click',()=>{
+    document.getElementById('jq-result').classList.add('hidden'); jqStart();
+});
+
+function jqStart(){
+    jqAbility=jqStartLevel; jqAnswered=0; jqCorrect=0;
+    jqHistory=[]; jqUsed=new Set(); jqCurrent=null;
+    document.getElementById('jq-setup').classList.add('hidden');
+    document.getElementById('jq-result').classList.add('hidden');
+    document.getElementById('jq-main').classList.remove('hidden');
+    jqUpdateLevelBar();
+    jqNextQuestion();
+}
+
+function jqPickWord(){
+    const pool=JQ_WORDS.filter(w=>!jqUsed.has(w.w+w.r));
+    if(pool.length===0){jqUsed.clear();return jqPickWord();}
+    const scored=pool.map(w=>{
+        const dist=Math.abs(w.l-jqAbility);
+        const score=Math.exp(-dist*dist*0.8)+Math.random()*0.15;
+        return{w,score};
+    });
+    scored.sort((a,b)=>b.score-a.score);
+    return scored[0].w;
+}
+
+function jqMakeChoices(correct){
+    const sameLevel=shuffle(JQ_WORDS.filter(w=>w.w!==correct.w&&w.l===correct.l));
+    const need=jqChoiceCount-1;
+    const wrong=[...sameLevel.slice(0,need)];
+    if(wrong.length<need){
+        const neighbors=shuffle(JQ_WORDS.filter(w=>w.w!==correct.w&&!wrong.some(x=>x.w===w.w)&&Math.abs(w.l-correct.l)===1));
+        while(wrong.length<need&&neighbors.length>0)wrong.push(neighbors.shift());
+    }
+    return shuffle([correct,...wrong]);
+}
+
+function jqNextQuestion(){
+    document.getElementById('jq-feedback-bar').classList.add('hidden');
+    document.getElementById('jq-choices').innerHTML='';
+    jqCurrent=jqPickWord();
+    jqUsed.add(jqCurrent.w+jqCurrent.r);
+
+    document.getElementById('jq-qnum').textContent=`第${jqAnswered+1}問`;
+    document.getElementById('jq-correct-count').textContent=`${jqCorrect}正解`;
+    document.getElementById('jq-total-count').textContent=`${jqAnswered}問`;
+
+    const choices=jqMakeChoices(jqCurrent);
+
+    if(jqDir==='wordToMeaning'){
+        document.getElementById('jq-q-label').textContent='言葉';
+        document.getElementById('jq-q-word').textContent=jqCurrent.w;
+        document.getElementById('jq-q-hint').textContent='';
+        choices.forEach(w=>{
+            const btn=document.createElement('button');
+            btn.className='eq-choice-btn';
+            btn.textContent=w.j;
+            btn.addEventListener('click',()=>jqAnswer(w,jqCurrent));
+            document.getElementById('jq-choices').appendChild(btn);
+        });
+    } else {
+        document.getElementById('jq-q-label').textContent='意味';
+        document.getElementById('jq-q-word').textContent=jqCurrent.j;
+        document.getElementById('jq-q-hint').textContent='';
+        choices.forEach(w=>{
+            const btn=document.createElement('button');
+            btn.className='eq-choice-btn';
+            btn.innerHTML=`${w.w}<span class="text-slate-400 text-xs font-normal ml-1">（${w.r}）</span>`;
+            btn.addEventListener('click',()=>jqAnswer(w,jqCurrent));
+            document.getElementById('jq-choices').appendChild(btn);
+        });
+    }
+}
+
+function jqAnswer(chosen,correct){
+    const isCorrect=chosen.w===correct.w&&chosen.r===correct.r;
+    jqAnswered++; if(isCorrect)jqCorrect++;
+    jqHistory.push({word:correct,correct:isCorrect,level:correct.l});
+
+    const expected=1/(1+Math.exp(-(jqAbility-correct.l)));
+    const kBase2   = jqGetK();
+    const kFactor2 = isCorrect ? 0.8 : 1.3;
+    const update=kBase2*kFactor2*((isCorrect?1:0)-expected);
+    jqAbility=Math.max(1,Math.min(10,jqAbility+update));
+
+    document.querySelectorAll('#jq-choices .eq-choice-btn').forEach(btn=>{
+        const isThisCorrect=jqDir==='wordToMeaning'
+            ?btn.textContent===correct.j
+            :btn.textContent.includes(correct.w);
+        if(isThisCorrect)btn.classList.add('correct');
+        else if(btn===event.target&&!isCorrect)btn.classList.add('wrong');
+        btn.disabled=true;
+    });
+
+    const fb=document.getElementById('jq-feedback-bar');
+    fb.classList.remove('hidden');
+    const fbMsg=document.getElementById('jq-feedback-msg');
+    fbMsg.className=`p-4 rounded-2xl text-center mb-3 ${isCorrect?'bg-green-50':'bg-red-50'}`;
+    document.getElementById('jq-fb-icon').textContent=isCorrect?'✅':'❌';
+    document.getElementById('jq-fb-text').textContent=isCorrect?'正解！':'不正解…';
+    document.getElementById('jq-fb-ans').textContent=`${correct.w}（${correct.r}）＝ ${correct.j}`;
+
+    document.getElementById('jq-correct-count').textContent=`${jqCorrect}正解`;
+    document.getElementById('jq-total-count').textContent=`${jqAnswered}問`;
+    jqUpdateLevelBar();
+}
+
+function jqUpdateLevelBar(){
+    const pct=((jqAbility-1)/9)*90+5;
+    document.getElementById('jq-level-bar').style.width=pct+'%';
+    const idx=Math.max(0,Math.min(9,Math.round(jqAbility)-1));
+    document.getElementById('jq-current-level-label').textContent=`推定レベル: ${JQ_LEVEL_INFO[idx].label}`;
+}
+
+function jqShowResult(){
+    document.getElementById('jq-main').classList.add('hidden');
+    document.getElementById('jq-result').classList.remove('hidden');
+    dbSaveJq(jqAbility, jqCorrect, jqAnswered);
+    const idx=Math.max(0,Math.min(9,Math.round(jqAbility)-1));
+    const info=JQ_LEVEL_INFO[idx];
+    document.getElementById('jq-result-level').textContent=info.label;
+    document.getElementById('jq-result-sub').textContent=info.sub;
+    document.getElementById('jq-result-badge').textContent=JQ_BADGE[idx];
+    const pct=((jqAbility-1)/9)*90+5;
+    document.getElementById('jq-result-bar').style.width=pct+'%';
+    document.getElementById('jq-res-total').textContent=jqAnswered;
+    document.getElementById('jq-res-correct').textContent=jqCorrect;
+    const acc=jqAnswered>0?Math.round(jqCorrect/jqAnswered*100):0;
+    document.getElementById('jq-res-pct').textContent=acc+'%';
+
+    const breakdown={};
+    jqHistory.forEach(h=>{
+        if(!breakdown[h.level])breakdown[h.level]={total:0,correct:0};
+        breakdown[h.level].total++;
+        if(h.correct)breakdown[h.level].correct++;
+    });
+    const bEl=document.getElementById('jq-level-breakdown');
+    bEl.innerHTML='';
+    for(let lv=1;lv<=10;lv++){
+        if(!breakdown[lv])continue;
+        const info2=JQ_LEVEL_INFO[lv-1];
+        const a=Math.round(breakdown[lv].correct/breakdown[lv].total*100);
+        bEl.innerHTML+=`<div><div class="flex justify-between text-xs font-bold mb-1"><span class="text-slate-600">${info2.label}</span><span class="text-slate-400">${breakdown[lv].correct}/${breakdown[lv].total}問 (${a}%)</span></div><div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 rounded-full transition-all" style="width:${a}%;background:${info2.color}"></div></div></div>`;
+    }
+}
+
+// ============================================================
+// 暗算タイムアタック
+// ============================================================
+let mathDiff      = 'normal';
+let mathTimeLimit = 60;
+let mathTimeLeft  = 60;
+let mathTimerId   = null;
+let mathScore     = 0;
+let mathCorrect   = 0;
+let mathWrong     = 0;
+let mathCombo     = 0;
+let mathMaxCombo  = 0;
+let mathInputStr  = '';
+let mathAnswer    = 0;
+let mathQuestion  = '';
+let mathRunning   = false;
+
+const MATH_RANKS = [
+    {min:0,   label:'🐣 はじめて',   color:'text-slate-400'},
+    {min:5,   label:'🌱 見習い',     color:'text-green-500'},
+    {min:10,  label:'📘 初級',       color:'text-blue-500'},
+    {min:20,  label:'⭐ 中級',       color:'text-yellow-500'},
+    {min:35,  label:'🔥 上級',       color:'text-orange-500'},
+    {min:50,  label:'💎 エキスパート',color:'text-indigo-500'},
+    {min:70,  label:'👑 マスター',   color:'text-purple-500'},
+    {min:100, label:'🌟 伝説',       color:'text-rose-500'},
+];
+
+document.querySelectorAll('[data-diff]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-diff]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); mathDiff=btn.dataset.diff;
+    });
+});
+document.querySelectorAll('[data-time]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-time]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active'); mathTimeLimit=parseInt(btn.dataset.time);
+    });
+});
+
+document.querySelectorAll('.math-key').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        if(!mathRunning) return;
+        const val=btn.dataset.val;
+        if(val==='-'){
+            if(mathInputStr.startsWith('-')) mathInputStr=mathInputStr.slice(1);
+            else mathInputStr='-'+mathInputStr;
+        } else {
+            if(mathInputStr.length>=6) return;
+            mathInputStr+=val;
+        }
+        updateMathInput();
+    });
+});
+
+document.getElementById('math-delete-btn').addEventListener('click',()=>{
+    if(!mathRunning) return;
+    mathInputStr=mathInputStr.slice(0,-1);
+    updateMathInput();
+});
+
+document.getElementById('math-submit-btn').addEventListener('click', submitMathAnswer);
+document.getElementById('math-start-btn').addEventListener('click', startMath);
+document.getElementById('math-retry-btn').addEventListener('click', ()=>{
+    document.getElementById('math-result').classList.add('hidden');
+    startMath();
+});
+
+function updateMathInput(){
+    const el=document.getElementById('math-input-val');
+    el.textContent=mathInputStr===''||mathInputStr==='-'?'?':mathInputStr;
+}
+
+function generateQuestion(){
+    const r   = (min,max) => Math.floor(Math.random()*(max-min+1))+min;
+    const pick = arr => arr[r(0,arr.length-1)];
+
+    // GCD（最大公約数）
+    const gcd = (a,b) => b===0 ? a : gcd(b, a%b);
+    // LCM（最小公倍数）
+    const lcm = (a,b) => a/gcd(a,b)*b;
+
+    let ans, display;
+
+    if(mathDiff==='easy'){
+        const op = pick(['+','-']);
+        let a = r(1,9), b = r(1,9);
+        if(op==='-' && a<b) [a,b]=[b,a];
+        ans = op==='+' ? a+b : a-b;
+        display = `${a} ${op} ${b}`;
+
+    } else if(mathDiff==='normal'){
+        const type = r(0,3);
+        if(type===0){ const a=r(11,99),b=r(11,99); ans=a+b; display=`${a} + ${b}`; }
+        else if(type===1){ let a=r(21,99),b=r(10,a-1); ans=a-b; display=`${a} − ${b}`; }
+        else if(type===2){ const a=r(2,15),b=r(2,15); ans=a*b; display=`${a} × ${b}`; }
+        else { const b=r(2,9),ans2=r(2,15); ans=ans2; display=`${ans2*b} ÷ ${b}`; }
+
+    } else if(mathDiff==='hard'){
+        const type = r(0,5);
+        if(type===0){ const a=r(11,99),b=r(11,99),c=r(2,9); ans=a+b+c; display=`${a} + ${b} + ${c}`; }
+        else if(type===1){ const a=r(11,99),b=r(2,12); ans=a*b; display=`${a} × ${b}`; }
+        else if(type===2){ const a=r(101,999),b=r(11,99); ans=a+b; display=`${a} + ${b}`; }
+        else if(type===3){ const a=r(101,999),b=r(11,99); ans=a-b; display=`${a} − ${b}`; }
+        else if(type===4){ const a=r(2,12); ans=a*a; display=`${a}²`; }
+        else { const a=r(11,50),b=r(2,9),c=r(2,20); ans=a*b+c; display=`${a}×${b}+${c}`; }
+
+    } else if(mathDiff==='extreme'){
+        const type = r(0,5);
+        if(type===0){
+            // 同分母の分数（分母2〜12のランダム）
+            const d=r(2,12), n1=r(1,d-1), n2=r(1,d-1);
+            ans=n1+n2; display=`${n1}/${d} + ${n2}/${d} = ?/${d}`;
+        } else if(type===1){
+            const a=r(11,30); ans=a*a; display=`${a}²`;
+        } else if(type===2){
+            const a=r(2,12),b=r(2,12),c=r(2,15); ans=a*b+c; display=`${a}×${b}+${c}`;
+        } else if(type===3){
+            const a=r(2,12),b=r(2,12),c=r(2,15); ans=a*b-c; display=`${a}×${b}−${c}`;
+        } else if(type===4){
+            const a=r(101,999),b=r(11,99),c=r(2,9); ans=a+b+c; display=`${a}+${b}+${c}`;
+        } else {
+            // (a+b)×c
+            const a=r(2,15),b=r(2,15),c=r(2,9); ans=(a+b)*c; display=`(${a}+${b})×${c}`;
+        }
+
+    } else { // legend（伝説）
+        const type = r(0,6);
+        if(type===0){
+            // 異分母の分数加算（分母3〜7のランダム2つ）
+            const d1=r(2,7), d2=r(2,7);
+            const n1=r(1,d1-1), n2=r(1,d2-1);
+            const L=lcm(d1,d2);
+            ans = (n1*(L/d1)) + (n2*(L/d2));
+            display = `${n1}/${d1} + ${n2}/${d2} = ?/${L}`;
+        } else if(type===1){
+            // 異分母の分数減算
+            const d1=r(3,8), d2=r(2,d1-1);
+            const n1=r(2,d1-1), n2=r(1,d2-1);
+            const L=lcm(d1,d2);
+            ans = (n1*(L/d1)) - (n2*(L/d2));
+            display = `${n1}/${d1} − ${n2}/${d2} = ?/${L}`;
+        } else if(type===2){
+            // 負の数を含む計算
+            const a=r(1,20), b=r(a+1,a+15);
+            ans = a-b; // 必ず負
+            display = `${a} − ${b}`;
+        } else if(type===3){
+            // 負の数×正の数
+            const a=r(2,12), b=r(2,12);
+            ans = -(a*b);
+            display = `−${a} × ${b}`;
+        } else if(type===4){
+            // 3項の複合（括弧あり・負あり）
+            const a=r(2,10),b=r(2,10),c=r(2,10),d=r(2,5);
+            ans=(a-b)*c+d; display=`(${a}−${b})×${c}+${d}`;
+        } else if(type===5){
+            // 分数×整数
+            const n=r(1,5), d=r(n+1,9), m=r(2,9);
+            ans=n*m; display=`${n}/${d}×${d*m} =？`;
+        } else {
+            // 連続した計算 a² − b×c
+            const a=r(5,15), b=r(2,9), c=r(2,9);
+            ans=a*a - b*c; display=`${a}² − ${b}×${c}`;
+        }
+    }
+
+    mathAnswer=ans;
+    mathQuestion=display;
+    document.getElementById('math-question').textContent=display;
+    mathInputStr='';
+    updateMathInput();
+}
+
+function submitMathAnswer(){
+    if(!mathRunning) return;
+    const input=parseInt(mathInputStr);
+    if(isNaN(input)) return;
+
+    const isCorrect=input===mathAnswer;
+    const fb=document.getElementById('math-feedback-text');
+
+    if(isCorrect){
+        mathCorrect++;
+        mathCombo++;
+        if(mathCombo>mathMaxCombo) mathMaxCombo=mathCombo;
+
+        // スコア計算
+        const diffBonus={easy:1,normal:2,hard:4,extreme:7,legend:12}[mathDiff];
+        const comboBonus=mathCombo>=3?Math.floor(mathCombo/3):0;
+        const gained=diffBonus+comboBonus;
+        mathScore+=gained;
+
+        // 時間ボーナス
+        // 難易度別の基本ボーナス秒数
+        const baseBonus={easy:0.2, normal:0.3, hard:0.4, extreme:0.5, legend:0.5}[mathDiff]||0.3;
+        const comboTimeBonus=(mathCombo>=5?0.3:0)+(mathCombo>=10?0.5:0);
+        const timeBonus=baseBonus+comboTimeBonus;
+        mathTimeLeft=Math.min(mathTimeLeft+timeBonus, mathTimeLimit*1.5);
+
+        fb.textContent=comboBonus>0?`✅ +${gained}点 コンボ+${comboBonus}！`:`✅ +${gained}点`;
+        fb.className='text-sm font-bold text-green-500 h-5';
+
+        // コンボ表示
+        if(mathCombo>=3){
+            document.getElementById('math-combo-display').classList.remove('hidden');
+            document.getElementById('math-combo-num').textContent=mathCombo;
+        }
+    } else {
+        mathWrong++;
+        mathCombo=0;
+        document.getElementById('math-combo-display').classList.add('hidden');
+        fb.textContent=`❌ 正解: ${mathAnswer}`;
+        fb.className='text-sm font-bold text-red-400 h-5';
+    }
+
+    // コンボバー (3連続で1ゲージ)
+    const barPct=Math.min((mathCombo%3)/3*100,100);
+    document.getElementById('math-combo-bar').style.width=barPct+'%';
+
+    document.getElementById('math-score').textContent=mathScore;
+    document.getElementById('math-correct-count').textContent=mathCorrect;
+
+    setTimeout(()=>{
+        fb.textContent='';
+        generateQuestion();
+    }, 400);
+}
+
+function startMath(){
+    mathScore=0; mathCorrect=0; mathWrong=0;
+    mathCombo=0; mathMaxCombo=0; mathInputStr='';
+    mathTimeLeft=mathTimeLimit; mathRunning=true;
+
+    document.getElementById('math-setup').classList.add('hidden');
+    document.getElementById('math-result').classList.add('hidden');
+    document.getElementById('math-main').classList.remove('hidden');
+    document.getElementById('math-combo-display').classList.add('hidden');
+    document.getElementById('math-combo-bar').style.width='0%';
+    document.getElementById('math-score').textContent='0';
+    document.getElementById('math-correct-count').textContent='0';
+    document.getElementById('math-feedback-text').textContent='';
+
+    generateQuestion();
+
+    if(mathTimerId) clearInterval(mathTimerId);
+    const circumference=175.9;
+    mathTimerId=setInterval(()=>{
+        mathTimeLeft-=0.1;
+        const display=Math.ceil(mathTimeLeft);
+        document.getElementById('math-time-display').textContent=display;
+
+        // タイマーリング
+        const pct=Math.max(0,mathTimeLeft/mathTimeLimit);
+        const offset=circumference*(1-Math.min(pct,1));
+        document.getElementById('math-timer-circle').style.strokeDashoffset=offset;
+
+        // 残り少ないと赤く
+        if(mathTimeLeft<=10){
+            document.getElementById('math-timer-circle').style.stroke='#ef4444';
+            document.getElementById('math-time-display').className='absolute inset-0 flex items-center justify-center text-lg font-black text-red-500';
+        }
+
+        if(mathTimeLeft<=0){
+            clearInterval(mathTimerId);
+            mathTimerId=null;
+            mathRunning=false;
+            showMathResult();
+        }
+    },100);
+}
+
+function showMathResult(){
+    document.getElementById('math-main').classList.add('hidden');
+    document.getElementById('math-result').classList.remove('hidden');
+    dbSaveMath(mathScore, mathCorrect, mathWrong, mathDiff, mathTimeLimit);
+
+    document.getElementById('math-result-score').textContent=mathScore;
+    document.getElementById('math-res-correct').textContent=mathCorrect;
+    document.getElementById('math-res-wrong').textContent=mathWrong;
+    document.getElementById('math-res-maxcombo').textContent=mathMaxCombo;
+
+    // ランク
+    let rank=MATH_RANKS[0];
+    for(const r of MATH_RANKS){ if(mathScore>=r.min) rank=r; }
+    document.getElementById('math-result-rank').textContent=rank.label;
+    document.getElementById('math-result-badge').textContent=
+        mathScore>=100?'🌟':mathScore>=70?'👑':mathScore>=50?'💎':mathScore>=35?'🔥':mathScore>=20?'⭐':'🎯';
+
+    // ハイスコア保存
+    const key=`mathHigh_${mathDiff}_${mathTimeLimit}`;
+    const prev=parseInt(localStorage.getItem(key))||0;
+    if(mathScore>prev){
+        localStorage.setItem(key,mathScore);
+        document.getElementById('math-highscore-msg').classList.remove('hidden');
+    } else {
+        document.getElementById('math-highscore-msg').classList.add('hidden');
+    }
+    renderMathHighscores();
+}
+
+function renderMathHighscores(){
+    const el=document.getElementById('math-highscores');
+    const diffs=['easy','normal','hard','extreme','legend'];
+    const diffLabels={easy:'かんたん',normal:'ふつう',hard:'むずかしい',extreme:'鬼',legend:'伝説'};
+    const times=[30,60,120];
+    let html='';
+    diffs.forEach(d=>{
+        times.forEach(t=>{
+            const v=parseInt(localStorage.getItem(`mathHigh_${d}_${t}`))||0;
+            if(v>0) html+=`<div class="flex justify-between text-xs font-bold"><span class="text-slate-500">${diffLabels[d]} ${t}秒</span><span class="text-amber-600">${v}点</span></div>`;
+        });
+    });
+    el.innerHTML=html||'<p class="text-xs text-slate-400">まだ記録がありません</p>';
+}
+
+// ============================================================
+// 語数表示
+// ============================================================
+function renderEqWordStats(){
+    const statsEl = document.getElementById('eq-word-stats');
+    const totalEl = document.getElementById('eq-word-total');
+    if(!statsEl || !EQ_WORDS) return;
+
+    const labels = {
+        1:'英検5級', 2:'英検4級', 3:'英検3級', 4:'英検準2級',
+        5:'英検2級', 6:'英検準1級', 7:'英検1級',
+        8:'超級★1', 9:'超級★2', 10:'超級★3'
+    };
+    const colors = {
+        1:'#f87171',2:'#fb923c',3:'#fbbf24',4:'#a3e635',
+        5:'#34d399',6:'#38bdf8',7:'#818cf8',
+        8:'#c084fc',9:'#e879f9',10:'#f43f5e'
+    };
+
+    // レベルごとにカウント
+    const counts = {};
+    EQ_WORDS.forEach(w => { counts[w.l] = (counts[w.l]||0)+1; });
+    const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+    statsEl.innerHTML = Object.entries(counts)
+        .sort((a,b)=>parseInt(a[0])-parseInt(b[0]))
+        .map(([lv,cnt])=>`
+            <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${colors[lv]||'#94a3b8'}"></div>
+                <span class="text-slate-500 font-bold truncate">${labels[lv]||'Lv'+lv}</span>
+                <span class="ml-auto font-black text-slate-600">${cnt}語</span>
+            </div>`)
+        .join('');
+    totalEl.textContent = total.toLocaleString();
+}
+
+function renderJqWordStats(){
+    const statsEl = document.getElementById('jq-word-stats');
+    const totalEl = document.getElementById('jq-word-total');
+    if(!statsEl || !JQ_WORDS) return;
+
+    const labels = {
+        1:'小学低学年', 2:'小学高学年', 3:'中学生', 4:'高校生', 5:'大学・教養',
+        6:'漢検2級', 7:'漢検準1級', 8:'漢検1級', 9:'超難読★1', 10:'超難読★2'
+    };
+    const colors = {
+        1:'#f87171',2:'#fb923c',3:'#fbbf24',4:'#a3e635',5:'#34d399',
+        6:'#38bdf8',7:'#818cf8',8:'#c084fc',9:'#e879f9',10:'#f43f5e'
+    };
+
+    const counts = {};
+    JQ_WORDS.forEach(w => { counts[w.l] = (counts[w.l]||0)+1; });
+    const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+    statsEl.innerHTML = Object.entries(counts)
+        .sort((a,b)=>parseInt(a[0])-parseInt(b[0]))
+        .map(([lv,cnt])=>`
+            <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${colors[lv]||'#94a3b8'}"></div>
+                <span class="text-slate-500 font-bold truncate">${labels[lv]||'Lv'+lv}</span>
+                <span class="ml-auto font-black text-slate-600">${cnt}語</span>
+            </div>`)
+        .join('');
+    totalEl.textContent = total.toLocaleString();
+}
+
+// ============================================================
+// ダークモード
+// ============================================================
+function applyDarkMode(isDark) {
+    if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('dark-mode-toggle').style.background = '#4f46e5';
+        document.getElementById('dark-mode-knob').style.transform = 'translateX(28px)';
+    } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('dark-mode-toggle').style.background = '#e2e8f0';
+        document.getElementById('dark-mode-knob').style.transform = 'translateX(0)';
+    }
+}
+function toggleDarkMode() {
+    const isDark = !document.documentElement.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark ? '1' : '0');
+    applyDarkMode(isDark);
+}
+// 初期化（保存済み設定 or システム設定を使用）
+(function initDarkMode() {
+    const saved = localStorage.getItem('darkMode');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyDarkMode(saved !== null ? saved === '1' : prefersDark);
+})();
+
+// ============================================================
+// ダッシュボード
+// ============================================================
+
+// --- データ保存ユーティリティ ---
+function dbSave(key, entry, max=30){
+    const arr = JSON.parse(localStorage.getItem(key)||'[]');
+    arr.push(entry);
+    if(arr.length > max) arr.splice(0, arr.length - max);
+    localStorage.setItem(key, JSON.stringify(arr));
+}
+function dbLoad(key){ return JSON.parse(localStorage.getItem(key)||'[]'); }
+
+function dbSaveEq(ability, correct, total){
+    const pct = total>0 ? Math.round(correct/total*100) : 0;
+    const label = EQ_LEVEL_INFO[Math.max(0,Math.min(9,Math.round(ability)-1))].label;
+    dbSave('db_eq', {ts:Date.now(), ability:Math.round(ability*10)/10, label, correct, total, pct});
+}
+function dbSaveJq(ability, correct, total){
+    const pct = total>0 ? Math.round(correct/total*100) : 0;
+    const label = JQ_LEVEL_INFO[Math.max(0,Math.min(9,Math.round(ability)-1))].label;
+    dbSave('db_jq', {ts:Date.now(), ability:Math.round(ability*10)/10, label, correct, total, pct});
+}
+function dbSaveMath(score, correct, wrong, diff, timeSec){
+    const total = correct+wrong;
+    const pct = total>0 ? Math.round(correct/total*100) : 0;
+    dbSave('db_math', {ts:Date.now(), score, correct, wrong, diff, timeSec, pct});
+}
+function dbSaveQuizWrong(wrongElements){
+    // 苦手元素の記録（wrong元素名ごとにカウント）
+    const map = JSON.parse(localStorage.getItem('db_quiz_weak')||'{}');
+    wrongElements.forEach(el=>{
+        map[el.name] = (map[el.name]||0)+1;
+    });
+    localStorage.setItem('db_quiz_weak', JSON.stringify(map));
+}
+function dbSaveWeekTime(minutes){
+    const today = new Date().toISOString().slice(0,10);
+    const map = JSON.parse(localStorage.getItem('db_week_time')||'{}');
+    map[today] = (map[today]||0) + minutes;
+    // 8日以上前のデータを削除
+    Object.keys(map).forEach(d=>{
+        if((Date.now()-new Date(d).getTime()) > 8*86400000) delete map[d];
+    });
+    localStorage.setItem('db_week_time', JSON.stringify(map));
+}
+
+// --- SVGチャート描画 ---
+function drawLineChart(containerId, data, color, minY, maxY, labelFn){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+    const W=el.clientWidth||300, H=120;
+    if(data.length===0){ el.innerHTML=''; return; }
+    const padL=8, padR=8, padT=10, padB=20;
+    const w=W-padL-padR, h=H-padT-padB;
+    const n=data.length;
+    const xStep = n>1 ? w/(n-1) : 0;
+    const yRange = maxY-minY || 1;
+    const px = (i)=> padL + (n>1 ? i*xStep : w/2);
+    const py = (v)=> padT + h - ((v-minY)/yRange)*h;
+
+    let path=`M ${px(0)} ${py(data[0].val)}`;
+    for(let i=1;i<n;i++) path+=` L ${px(i)} ${py(data[i].val)}`;
+
+    let areaPath=`M ${px(0)} ${padT+h} L ${px(0)} ${py(data[0].val)}`;
+    for(let i=1;i<n;i++) areaPath+=` L ${px(i)} ${py(data[i].val)}`;
+    areaPath+=` L ${px(n-1)} ${padT+h} Z`;
+
+    // グリッドライン（3本）
+    let grids='';
+    for(let g=0;g<=2;g++){
+        const yv=minY+(yRange/2)*g;
+        const yp=py(yv);
+        grids+=`<line x1="${padL}" y1="${yp}" x2="${W-padR}" y2="${yp}" stroke="#f1f5f9" stroke-width="1"/>`;
+        grids+=`<text x="${padL}" y="${yp-2}" font-size="8" fill="#cbd5e1" font-family="sans-serif">${labelFn(yv)}</text>`;
+    }
+
+    // 点とラベル
+    let dots='';
+    data.forEach((d,i)=>{
+        dots+=`<circle cx="${px(i)}" cy="${py(d.val)}" r="3" fill="${color}" stroke="white" stroke-width="1.5"/>`;
+        if(i===n-1 || i===0){
+            dots+=`<text x="${px(i)}" y="${py(d.val)-6}" text-anchor="middle" font-size="9" fill="${color}" font-weight="bold" font-family="sans-serif">${labelFn(d.val)}</text>`;
+        }
+    });
+
+    el.innerHTML=`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+        ${grids}
+        <path d="${areaPath}" fill="${color}" opacity="0.08"/>
+        <path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        ${dots}
+    </svg>`;
+}
+
+function drawBarChart(containerId, data, color, labelFn){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+    const W=el.clientWidth||300, H=120;
+    if(data.length===0){ el.innerHTML=''; return; }
+    const padL=8, padR=8, padT=16, padB=20;
+    const w=W-padL-padR, h=H-padT-padB;
+    const n=data.length;
+    const maxVal=Math.max(...data.map(d=>d.val),1);
+    const barW=Math.max(4, w/n*0.6);
+    const step=w/n;
+
+    let bars='', labels='';
+    data.forEach((d,i)=>{
+        const bh=Math.max(2,(d.val/maxVal)*h);
+        const x=padL+step*i+(step-barW)/2;
+        const y=padT+h-bh;
+        bars+=`<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="3" fill="${color}" opacity="0.85"/>`;
+        bars+=`<text x="${x+barW/2}" y="${y-3}" text-anchor="middle" font-size="9" fill="${color}" font-weight="bold" font-family="sans-serif">${labelFn(d.val)}</text>`;
+        if(d.label) labels+=`<text x="${x+barW/2}" y="${H-3}" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="sans-serif">${d.label}</text>`;
+    });
+
+    el.innerHTML=`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+        <line x1="${padL}" y1="${padT+h}" x2="${W-padR}" y2="${padT+h}" stroke="#f1f5f9" stroke-width="1"/>
+        ${bars}${labels}
+    </svg>`;
+}
+
+// --- ダッシュボード描画 ---
+function renderDashboard(){
+    // サマリー
+    const h=Math.floor(totalStudyMinutes/60), m=totalStudyMinutes%60;
+    document.getElementById('db-total-time').textContent=`${h}時間${String(m).padStart(2,'0')}分`;
+
+    const eqR=dbLoad('db_eq'), jqR=dbLoad('db_jq'), mathR=dbLoad('db_math');
+    const total=(eqR.length+jqR.length+mathR.length);
+    document.getElementById('db-total-sessions').textContent=`${total}回`;
+
+    // 英語ベストレベル
+    if(eqR.length>0){
+        const best=eqR.reduce((a,b)=>a.ability>b.ability?a:b);
+        document.getElementById('db-eq-best').textContent=best.label;
+    } else document.getElementById('db-eq-best').textContent='未診断';
+
+    // 日本語ベストレベル
+    if(jqR.length>0){
+        const best=jqR.reduce((a,b)=>a.ability>b.ability?a:b);
+        document.getElementById('db-jq-best').textContent=best.label;
+    } else document.getElementById('db-jq-best').textContent='未診断';
+
+    // 英語レベル推移グラフ
+    const eqLast=eqR.slice(-10);
+    if(eqLast.length>0){
+        document.getElementById('db-eq-empty').classList.add('hidden');
+        drawLineChart('db-eq-chart', eqLast.map(r=>({val:r.ability})), '#f43f5e', 1, 10,
+            v=>{ const i=Math.max(0,Math.min(9,Math.round(v)-1)); return EQ_LEVEL_INFO[i]?.label.replace('英検','').replace('超級 ','★')||v; });
+    } else {
+        document.getElementById('db-eq-empty').classList.remove('hidden');
+        document.getElementById('db-eq-chart').innerHTML='';
+    }
+
+    // 日本語レベル推移グラフ
+    const jqLast=jqR.slice(-10);
+    if(jqLast.length>0){
+        document.getElementById('db-jq-empty').classList.add('hidden');
+        drawLineChart('db-jq-chart', jqLast.map(r=>({val:r.ability})), '#8b5cf6', 1, 10,
+            v=>{ const i=Math.max(0,Math.min(9,Math.round(v)-1)); return JQ_LEVEL_INFO[i]?.label.replace('漢検','漢').replace('超難読 ','★')||v; });
+    } else {
+        document.getElementById('db-jq-empty').classList.remove('hidden');
+        document.getElementById('db-jq-chart').innerHTML='';
+    }
+
+    // 暗算スコア推移
+    const mathLast=mathR.slice(-10);
+    if(mathLast.length>0){
+        document.getElementById('db-math-empty').classList.add('hidden');
+        drawBarChart('db-math-chart', mathLast.map(r=>({val:r.score, label:''})), '#f59e0b', v=>v);
+    } else {
+        document.getElementById('db-math-empty').classList.remove('hidden');
+        document.getElementById('db-math-chart').innerHTML='';
+    }
+
+    // 暗算 難易度別正答率
+    const diffLabels={easy:'かんたん',normal:'ふつう',hard:'むずかしい',extreme:'鬼',legend:'伝説'};
+    const diffColors={easy:'#34d399',normal:'#38bdf8',hard:'#f59e0b',extreme:'#f43f5e',legend:'#7c3aed'};
+    const diffMap={};
+    mathR.forEach(r=>{
+        if(!diffMap[r.diff]) diffMap[r.diff]={correct:0,total:0};
+        diffMap[r.diff].correct+=r.correct;
+        diffMap[r.diff].total+=r.correct+r.wrong;
+    });
+    const dbMathDiff=document.getElementById('db-math-diff');
+    const dbMathDiffEmpty=document.getElementById('db-math-diff-empty');
+    if(Object.keys(diffMap).length>0){
+        dbMathDiffEmpty.classList.add('hidden');
+        dbMathDiff.innerHTML=Object.entries(diffMap).map(([d,v])=>{
+            const pct=v.total>0?Math.round(v.correct/v.total*100):0;
+            return `<div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                    <span class="text-slate-600">${diffLabels[d]||d}</span>
+                    <span class="text-slate-400">${v.correct}/${v.total}問 (${pct}%)</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2">
+                    <div class="h-2 rounded-full" style="width:${pct}%;background:${diffColors[d]||'#94a3b8'}"></div>
+                </div>
+            </div>`;
+        }).join('');
+    } else {
+        dbMathDiffEmpty.classList.remove('hidden');
+        dbMathDiff.innerHTML='';
+    }
+
+    // 元素クイズ 苦手TOP5
+    const weakMap=JSON.parse(localStorage.getItem('db_quiz_weak')||'{}');
+    const weakArr=Object.entries(weakMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const dbQuizWeak=document.getElementById('db-quiz-weak');
+    const dbQuizWeakEmpty=document.getElementById('db-quiz-weak-empty');
+    if(weakArr.length>0){
+        dbQuizWeakEmpty.classList.add('hidden');
+        const maxCount=weakArr[0][1];
+        dbQuizWeak.innerHTML=weakArr.map(([name,cnt],i)=>{
+            const el=ELEMENTS.find(e=>e.name===name);
+            const pct=Math.round(cnt/maxCount*100);
+            return `<div class="flex items-center gap-3">
+                <span class="text-[10px] font-black text-slate-400 w-4">${i+1}</span>
+                <span class="text-sm font-black text-slate-700 w-20">${name}</span>
+                <span class="text-xs text-indigo-500 font-bold w-8">${el?.symbol||''}</span>
+                <div class="flex-1 bg-slate-100 rounded-full h-2">
+                    <div class="h-2 rounded-full bg-rose-400" style="width:${pct}%"></div>
+                </div>
+                <span class="text-xs font-bold text-slate-400">${cnt}回</span>
+            </div>`;
+        }).join('');
+    } else {
+        dbQuizWeakEmpty.classList.remove('hidden');
+        dbQuizWeak.innerHTML='';
+    }
+
+    // 週間学習時間
+    const weekMap=JSON.parse(localStorage.getItem('db_week_time')||'{}');
+    const days=['日','月','火','水','木','金','土'];
+    const weekData=[];
+    for(let i=6;i>=0;i--){
+        const d=new Date(Date.now()-i*86400000);
+        const key=d.toISOString().slice(0,10);
+        weekData.push({val:weekMap[key]||0, label:days[d.getDay()]});
+    }
+    drawBarChart('db-week-chart', weekData, '#6366f1', v=>v>0?v+'分':'');
+
+    // 今日の学習時間を記録（ページ開くたびに更新）
+    const todayKey=new Date().toISOString().slice(0,10);
+    const wm=JSON.parse(localStorage.getItem('db_week_time')||'{}');
+    if(!wm[todayKey]) { wm[todayKey]=0; localStorage.setItem('db_week_time',JSON.stringify(wm)); }
+}
+
+document.getElementById('db-clear-btn').addEventListener('click',()=>{
+    if(!confirm('学習履歴をすべてリセットしますか？\n（累計勉強時間・設定は消えません）')) return;
+    ['db_eq','db_jq','db_math','db_quiz_weak','db_week_time'].forEach(k=>localStorage.removeItem(k));
+    renderDashboard();
+});
+
+// ============================================================
+// 学習カレンダー
+// ============================================================
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth(); // 0-based
+let calSelectedColor = '#14b8a6';
+let calSelectedDay = null;
+
+const TODAY_STR = new Date().toISOString().slice(0,10);
+
+// --- データ ---
+function calLoadExams(){ return JSON.parse(localStorage.getItem('cal_exams')||'[]'); }
+function calSaveExams(exams){ localStorage.setItem('cal_exams', JSON.stringify(exams)); }
+function calLoadStudy(){ return JSON.parse(localStorage.getItem('db_week_time')||'{}'); }
+
+// 月の全勉強時間マップ（db_week_time は直近8日分しかないので cal_study_all で補完）
+function calLoadStudyAll(){ return JSON.parse(localStorage.getItem('cal_study_all')||'{}'); }
+function calSaveStudyAll(map){ localStorage.setItem('cal_study_all', JSON.stringify(map)); }
+
+// タイマーの勉強完了時にカレンダー用ストレージにも保存する関数（既存saveLogから呼ばれる）
+function calRecordStudy(minutes){
+    const map = calLoadStudyAll();
+    map[TODAY_STR] = (map[TODAY_STR]||0) + minutes;
+    calSaveStudyAll(map);
+}
+
+// --- カレンダー描画 ---
+function renderCalendar(){
+    const exams   = calLoadExams();
+    const studyMap = calLoadStudyAll();
+
+    // 今月の日数・開始曜日
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const lastDate  = new Date(calYear, calMonth+1, 0).getDate();
+
+    document.getElementById('cal-month-title').textContent =
+        `${calYear}年 ${calMonth+1}月`;
+
+    const grid = document.getElementById('cal-grid');
+    grid.innerHTML = '';
+
+    // テストを日付keyでマップ化
+    const examMap = {};
+    exams.forEach(ex => {
+        if(!examMap[ex.date]) examMap[ex.date] = [];
+        examMap[ex.date].push(ex);
+    });
+
+    // 空白セル
+    for(let i=0; i<firstDay; i++){
+        grid.insertAdjacentHTML('beforeend','<div></div>');
+    }
+
+    for(let d=1; d<=lastDate; d++){
+        const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isToday = dateStr === TODAY_STR;
+        const minutes = studyMap[dateStr]||0;
+        const dayExams= examMap[dateStr]||[];
+        const dow     = new Date(calYear,calMonth,d).getDay();
+        const isSun   = dow===0, isSat = dow===6;
+
+        // 勉強量に応じた色の濃さ
+        let bgStyle = '';
+        if(minutes > 0){
+            const intensity = Math.min(minutes/120, 1); // 120分で最大
+            const opacity   = 0.2 + intensity*0.75;
+            bgStyle = `background:rgba(20,184,166,${opacity.toFixed(2)})`;
+        }
+
+        // テストドット
+        let examDots = '';
+        if(dayExams.length > 0){
+            examDots = `<div class="flex justify-center gap-0.5 mt-0.5">${
+                dayExams.slice(0,3).map(ex=>`<div class="w-1.5 h-1.5 rounded-full" style="background:${ex.color}"></div>`).join('')
+            }</div>`;
+        }
+
+        const dateLabel = `<span class="text-[11px] font-black ${
+            isToday ? 'text-indigo-600' :
+            isSun   ? 'text-red-400' :
+            isSat   ? 'text-blue-400' : 'text-slate-600'
+        }">${d}</span>`;
+
+        const todayRing = isToday ? 'ring-2 ring-indigo-300' : '';
+
+        grid.insertAdjacentHTML('beforeend', `
+            <div class="cal-day flex flex-col items-center justify-start py-1 rounded-xl cursor-pointer active:scale-95 transition-all ${todayRing}"
+                style="${bgStyle}" data-date="${dateStr}">
+                ${dateLabel}
+                ${examDots}
+            </div>
+        `);
+    }
+
+    // クリックイベント
+    document.querySelectorAll('.cal-day').forEach(el => {
+        el.addEventListener('click', ()=> showDayDetail(el.dataset.date));
+    });
+
+    renderCountdown();
+    renderExamList();
+}
+
+// --- 日詳細 ---
+function showDayDetail(dateStr){
+    calSelectedDay = dateStr;
+    const exams    = calLoadExams().filter(ex=>ex.date===dateStr);
+    const studyMap = calLoadStudyAll();
+    const minutes  = studyMap[dateStr]||0;
+
+    const d = new Date(dateStr+'T00:00:00');
+    const label = `${d.getMonth()+1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`;
+
+    document.getElementById('cal-detail-date').textContent = label;
+
+    let html = '';
+    if(minutes > 0){
+        const h = Math.floor(minutes/60), m = minutes%60;
+        html += `<div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-teal-100 rounded-xl flex items-center justify-center">📚</div>
+            <div>
+                <p class="text-[10px] text-slate-400 font-bold">勉強時間</p>
+                <p class="text-sm font-black text-teal-600">${h>0?h+'時間':''}${m}分</p>
+            </div>
+        </div>`;
+    } else {
+        html += `<p class="text-xs text-slate-300 mb-3">この日の学習記録はありません</p>`;
+    }
+
+    if(exams.length > 0){
+        exams.forEach(ex=>{
+            html += `<div class="flex items-center gap-2 mb-2">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:${ex.color}22">
+                    <span style="color:${ex.color}" class="text-base">★</span>
+                </div>
+                <div class="flex-1">
+                    <p class="text-xs font-black text-slate-700">${ex.name}</p>
+                    <p class="text-[10px] text-slate-400">試験日</p>
+                </div>
+                <button class="text-[10px] text-red-300 hover:text-red-500 font-bold" onclick="calDeleteExam('${ex.id}')">削除</button>
+            </div>`;
+        });
+    }
+
+    document.getElementById('cal-detail-content').innerHTML = html;
+    document.getElementById('cal-day-detail').classList.remove('hidden');
+}
+
+// --- カウントダウン ---
+function renderCountdown(){
+    const exams = calLoadExams();
+    const now   = new Date(TODAY_STR+'T00:00:00');
+    const area  = document.getElementById('cal-countdown-area');
+
+    // 今日以降のテストを日付順に最大3件
+    const upcoming = exams
+        .map(ex => {
+            const d    = new Date(ex.date+'T00:00:00');
+            const diff = Math.round((d-now)/(86400000));
+            return {...ex, diff};
+        })
+        .filter(ex => ex.diff >= 0)
+        .sort((a,b) => a.diff-b.diff)
+        .slice(0,3);
+
+    if(upcoming.length === 0){
+        area.innerHTML = `<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 text-center">
+            <p class="text-xs text-slate-300 font-bold">テストが登録されていません</p>
+        </div>`;
+        return;
+    }
+
+    area.innerHTML = upcoming.map(ex=>{
+        const dayLabel = ex.diff===0 ? '🎯 今日！' : ex.diff===1 ? '⏰ 明日！' : `📅 あと ${ex.diff}日`;
+        const urgency  = ex.diff<=3 ? 'border-rose-200 bg-rose-50' :
+                         ex.diff<=7 ? 'border-amber-200 bg-amber-50' : 'border-slate-100 bg-white';
+        const textColor= ex.diff<=3 ? 'text-rose-600' :
+                         ex.diff<=7 ? 'text-amber-600' : 'text-teal-600';
+        return `<div class="rounded-2xl border ${urgency} shadow-sm p-4 flex items-center gap-4">
+            <div class="w-1 self-stretch rounded-full" style="background:${ex.color}"></div>
+            <div class="flex-1">
+                <p class="text-xs font-bold text-slate-400">${ex.date.replace(/-/g,'/')}</p>
+                <p class="text-base font-black text-slate-700">${ex.name}</p>
+            </div>
+            <p class="text-xl font-black ${textColor} whitespace-nowrap">${dayLabel}</p>
+        </div>`;
+    }).join('');
+}
+
+// --- テスト一覧 ---
+function renderExamList(){
+    const exams = calLoadExams().sort((a,b)=>a.date.localeCompare(b.date));
+    const list  = document.getElementById('cal-exam-list');
+    const empty = document.getElementById('cal-exam-empty');
+    if(exams.length===0){
+        list.innerHTML=''; empty.classList.remove('hidden'); return;
+    }
+    empty.classList.add('hidden');
+    const now = new Date(TODAY_STR+'T00:00:00');
+    list.innerHTML = exams.map(ex=>{
+        const d    = new Date(ex.date+'T00:00:00');
+        const diff = Math.round((d-now)/86400000);
+        const label= diff<0 ? '終了' : diff===0 ? '今日' : `${diff}日後`;
+        const past = diff<0 ? 'opacity-50' : '';
+        return `<div class="flex items-center gap-3 ${past}">
+            <div class="w-3 h-3 rounded-full flex-shrink-0" style="background:${ex.color}"></div>
+            <div class="flex-1">
+                <p class="text-sm font-black text-slate-700">${ex.name}</p>
+                <p class="text-[10px] text-slate-400">${ex.date.replace(/-/g,'/')}</p>
+            </div>
+            <span class="text-xs font-bold text-slate-400">${label}</span>
+            <button class="text-[10px] text-red-300 hover:text-red-500 font-bold px-1" onclick="calDeleteExam('${ex.id}')">✕</button>
+        </div>`;
+    }).join('');
+}
+
+// --- テスト削除 ---
+function calDeleteExam(id){
+    if(!confirm('このテストを削除しますか？')) return;
+    const exams = calLoadExams().filter(ex=>ex.id!==id);
+    calSaveExams(exams);
+    renderCalendar();
+    document.getElementById('cal-day-detail').classList.add('hidden');
+}
+
+// --- イベント登録 ---
+document.getElementById('cal-prev-month').addEventListener('click',()=>{
+    calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar();
+});
+document.getElementById('cal-next-month').addEventListener('click',()=>{
+    calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar();
+});
+
+document.getElementById('cal-add-exam-btn').addEventListener('click',()=>{
+    document.getElementById('cal-exam-form').classList.remove('hidden');
+    document.getElementById('cal-exam-date').value = TODAY_STR;
+    document.getElementById('cal-exam-name').value = '';
+});
+document.getElementById('cal-exam-cancel').addEventListener('click',()=>{
+    document.getElementById('cal-exam-form').classList.add('hidden');
+});
+
+document.querySelectorAll('.cal-color-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('.cal-color-btn').forEach(b=>{
+            b.classList.remove('ring-2','ring-offset-2'); b.style.outline='';
+        });
+        btn.classList.add('ring-2','ring-offset-2');
+        btn.style.outlineColor = btn.dataset.color;
+        calSelectedColor = btn.dataset.color;
+    });
+});
+
+document.getElementById('cal-exam-save').addEventListener('click',()=>{
+    const name = document.getElementById('cal-exam-name').value.trim();
+    const date = document.getElementById('cal-exam-date').value;
+    if(!name){ alert('テスト名を入力してください'); return; }
+    if(!date){ alert('試験日を選択してください'); return; }
+
+    const exams = calLoadExams();
+    exams.push({ id: Date.now().toString(), name, date, color: calSelectedColor });
+    calSaveExams(exams);
+    document.getElementById('cal-exam-form').classList.add('hidden');
+
+    // 試験月に移動
+    const d = new Date(date+'T00:00:00');
+    calYear  = d.getFullYear();
+    calMonth = d.getMonth();
+    renderCalendar();
+});
+
+// ダークモード対応追加
+function calApplyDark(){
+    const isDark = document.documentElement.classList.contains('dark');
+    document.querySelectorAll('.cal-day').forEach(el=>{
+        // 背景が設定されていないセルだけ対象
+    });
+}
+
+// ============================================================
+// タイマー
+// ============================================================
+let workMinutes=parseInt(localStorage.getItem('workMinutes'))||25;
+let breakMinutes=parseInt(localStorage.getItem('breakMinutes'))||5;
+let longBreakMinutes=parseInt(localStorage.getItem('longBreakMinutes'))||15;
+let setsBeforeLongBreak=parseInt(localStorage.getItem('setsBeforeLongBreak'))||4;
+let completedSets=parseInt(localStorage.getItem('completedSets'))||0;
+let totalStudyMinutes=parseInt(localStorage.getItem('totalStudyMinutes'))||0;
+let volume=parseInt(localStorage.getItem('volume'))||80;
+let isWorking=localStorage.getItem('isWorking')!=='false';
+let isLongBreak=localStorage.getItem('isLongBreak')==='true';
+const wasRunning=localStorage.getItem('timerRunning')==='true';
+const savedStartTime=parseInt(localStorage.getItem('timerStartTime'))||null;
+const savedStartTimeLeft=parseInt(localStorage.getItem('timerStartTimeLeft'))||null;
+let timeLeft;
+if(wasRunning&&savedStartTime&&savedStartTimeLeft!=null){const el=Math.floor((Date.now()-savedStartTime)/1000);timeLeft=Math.max(0,savedStartTimeLeft-el);}
+else{timeLeft=parseInt(localStorage.getItem('timeLeft'));if(isNaN(timeLeft)||timeLeft==null)timeLeft=workMinutes*60;}
+let timerId=null,startTime=null,startTimeLeft=0;
+const timerDisplay=document.getElementById('timer-display');
+const statusDisplay=document.getElementById('status');
+const startBtn=document.getElementById('start-btn');
+const resetBtn=document.getElementById('reset-btn');
+const setCountDisplay=document.getElementById('set-count');
+const setsGoalDisplay=document.getElementById('sets-goal');
+const inputWork=document.getElementById('input-work');
+const inputBreak=document.getElementById('input-break');
+const inputLongBreak=document.getElementById('input-long-break');
+const inputSets=document.getElementById('input-sets');
+const inputVolume=document.getElementById('input-volume');
+const volumeLabel=document.getElementById('volume-label');
+const saveBtn=document.getElementById('save-settings');
+inputVolume.value=volume;volumeLabel.textContent=volume+'%';
+
+function saveState(){localStorage.setItem('timeLeft',timeLeft);localStorage.setItem('isWorking',isWorking);localStorage.setItem('isLongBreak',isLongBreak);localStorage.setItem('completedSets',completedSets);}
+function playSound(type){
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();const vol=volume/100;
+    const p={work:[{f:880,t:0,d:.15},{f:1100,t:.2,d:.25}],break:[{f:660,t:0,d:.2},{f:528,t:.25,d:.3}],longBreak:[{f:660,t:0,d:.15},{f:528,t:.2,d:.15},{f:440,t:.4,d:.3}]};
+    (p[type]||p.work).forEach(({f,t,d})=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(vol,ctx.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+t+d);o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+d+.05);});
+}
+function displayTotalTime(){const h=Math.floor(totalStudyMinutes/60),m=totalStudyMinutes%60;const text=`${h}時間${String(m).padStart(2,'0')}分`;document.getElementById('total-time-display').textContent=text;document.getElementById('home-total-display').textContent=text;}
+function displayLogs(){
+    const list=document.getElementById('study-logs');if(!list)return;
+    const logs=JSON.parse(localStorage.getItem('studyLogs')||'[]');
+    if(logs.length===0){list.innerHTML=`<li class="py-10 text-center border-2 border-dashed border-slate-100 rounded-2xl"><p class="text-xs font-bold text-slate-300 italic">No records yet</p></li>`;return;}
+    list.innerHTML=logs.map(log=>`<li class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm"><div class="flex flex-col"><span class="text-[10px] font-bold text-slate-400 leading-none mb-1">${log.time}</span><span class="text-sm font-black text-slate-700">${log.type}終了</span></div><span class="text-xs font-black text-slate-500 bg-white px-3 py-1 rounded-lg border border-slate-100">${log.duration}分</span></li>`).join('');
+}
+function saveLog(type,duration){
+    const now=new Date();const ts=now.getHours()+":"+String(now.getMinutes()).padStart(2,'0');
+    const label={work:'集中',break:'休憩',longBreak:'長い休憩'}[type]||type;
+    const logs=JSON.parse(localStorage.getItem('studyLogs')||'[]');logs.unshift({time:ts,type:label,duration});
+    localStorage.setItem('studyLogs',JSON.stringify(logs.slice(0,5)));
+    if(type==='work'){totalStudyMinutes+=duration;localStorage.setItem('totalStudyMinutes',totalStudyMinutes);displayTotalTime();dbSaveWeekTime(duration);calRecordStudy(duration);}
+    displayLogs();
+}
+function updateDisplay(){const m=Math.floor(timeLeft/60),s=timeLeft%60;timerDisplay.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;setCountDisplay.textContent=completedSets;setsGoalDisplay.textContent=setsBeforeLongBreak;}
+function updateStatus(){if(isWorking){statusDisplay.textContent="集中タイム";statusDisplay.className="text-xl font-bold mb-4 text-orange-500";}else if(isLongBreak){statusDisplay.textContent="長い休憩タイム！";statusDisplay.className="text-xl font-bold mb-4 text-blue-500";}else{statusDisplay.textContent="休憩タイム";statusDisplay.className="text-xl font-bold mb-4 text-green-500";}}
+function startTimer(){
+    if(timerId){clearInterval(timerId);timerId=null;startBtn.textContent='再開';startBtn.classList.replace('bg-red-500','bg-indigo-600');localStorage.setItem('timerRunning','false');localStorage.setItem('timeLeft',timeLeft);}
+    else{startBtn.textContent='一時停止';startBtn.classList.replace('bg-indigo-600','bg-red-500');startTime=Date.now();startTimeLeft=timeLeft;localStorage.setItem('timerRunning','true');localStorage.setItem('timerStartTime',startTime);localStorage.setItem('timerStartTimeLeft',startTimeLeft);
+        timerId=setInterval(()=>{
+            const elapsed=Math.floor((Date.now()-startTime)/1000);timeLeft=startTimeLeft-elapsed;
+            if(timeLeft<=0){timeLeft=0;updateDisplay();clearInterval(timerId);timerId=null;localStorage.setItem('timerRunning','false');
+                if(isWorking){saveLog('work',workMinutes);completedSets++;if(completedSets%setsBeforeLongBreak===0){playSound('longBreak');isWorking=false;isLongBreak=true;timeLeft=longBreakMinutes*60;}else{playSound('break');isWorking=false;isLongBreak=false;timeLeft=breakMinutes*60;}}
+                else{playSound('work');saveLog(isLongBreak?'longBreak':'break',isLongBreak?longBreakMinutes:breakMinutes);isWorking=true;isLongBreak=false;timeLeft=workMinutes*60;}
+                saveState();updateDisplay();updateStatus();startTimer();return;}
+            saveState();updateDisplay();
+        },500);
+    }
+}
+function resetTimer(){clearInterval(timerId);timerId=null;isWorking=true;isLongBreak=false;completedSets=0;timeLeft=workMinutes*60;localStorage.setItem('timerRunning','false');localStorage.removeItem('timerStartTime');localStorage.removeItem('timerStartTimeLeft');saveState();startBtn.textContent='スタート';startBtn.className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";updateDisplay();updateStatus();}
+
+function showPage(pageId){
+    ['home','timer','settings','quiz','english','japanese','math','dashboard','calendar'].forEach(id=>{
+        document.getElementById(`page-${id}`).classList.add('hidden');
+        const nav=document.getElementById(`nav-${id}`);
+        if(nav){nav.classList.remove('text-indigo-600');nav.classList.add('text-slate-400');}
+    });
+    document.getElementById(`page-${pageId}`).classList.remove('hidden');
+    const an=document.getElementById(`nav-${pageId}`);
+    if(an){an.classList.add('text-indigo-600');an.classList.remove('text-slate-400');}
+    if(pageId==='settings'){inputWork.value=workMinutes;inputBreak.value=breakMinutes;inputLongBreak.value=longBreakMinutes;inputSets.value=setsBeforeLongBreak;inputVolume.value=volume;volumeLabel.textContent=volume+'%';}
+    if(pageId==='quiz')resetQuizToSetup();
+    if(pageId==='english'){
+        document.getElementById('eq-setup').classList.remove('hidden');
+        document.getElementById('eq-main').classList.add('hidden');
+        document.getElementById('eq-result').classList.add('hidden');
+        renderEqWordStats();
+    }
+    if(pageId==='japanese'){
+        document.getElementById('jq-setup').classList.remove('hidden');
+        document.getElementById('jq-main').classList.add('hidden');
+        document.getElementById('jq-result').classList.add('hidden');
+        renderJqWordStats();
+    }
+    if(pageId==='math'){
+        if(mathTimerId){clearInterval(mathTimerId);mathTimerId=null;mathRunning=false;}
+        document.getElementById('math-setup').classList.remove('hidden');
+        document.getElementById('math-main').classList.add('hidden');
+        document.getElementById('math-result').classList.add('hidden');
+        renderMathHighscores();
+    }
+    if(pageId==='dashboard') renderDashboard();
+    if(pageId==='calendar'){
+        calYear  = new Date().getFullYear();
+        calMonth = new Date().getMonth();
+        renderCalendar();
+    }
+}
+
+startBtn.addEventListener('click',startTimer);
+resetBtn.addEventListener('click',resetTimer);
+inputVolume.addEventListener('input',()=>{volume=parseInt(inputVolume.value);volumeLabel.textContent=volume+'%';});
+document.getElementById('reset-total-btn').addEventListener('click',()=>{if(!confirm('累計勉強時間をリセットしますか？'))return;totalStudyMinutes=0;localStorage.setItem('totalStudyMinutes',0);displayTotalTime();});
+document.getElementById('clear-logs-btn').addEventListener('click',()=>{if(!confirm('記録をすべて削除しますか？\n（累計勉強時間は削除されません）'))return;localStorage.removeItem('studyLogs');displayLogs();});
+document.getElementById('update-btn').addEventListener('click',()=>{caches.keys().then(k=>Promise.all(k.map(c=>caches.delete(c)))).then(()=>window.location.reload());});
+saveBtn.addEventListener('click',()=>{
+    let w=parseInt(inputWork.value),b=parseInt(inputBreak.value),lb=parseInt(inputLongBreak.value),s=parseInt(inputSets.value),v=parseInt(inputVolume.value);
+    if(isNaN(w)||w<0)w=0;if(isNaN(b)||b<0)b=0;if(isNaN(lb)||lb<0)lb=0;if(isNaN(s)||s<1)s=1;if(isNaN(v))v=80;
+    workMinutes=w;breakMinutes=b;longBreakMinutes=lb;setsBeforeLongBreak=s;volume=v;
+    localStorage.setItem('workMinutes',w);localStorage.setItem('breakMinutes',b);localStorage.setItem('longBreakMinutes',lb);localStorage.setItem('setsBeforeLongBreak',s);localStorage.setItem('volume',v);
+    resetTimer();alert("設定を保存しました");showPage('timer');
+});
+
+updateStatus();updateDisplay();displayLogs();displayTotalTime();
+if(wasRunning&&timeLeft>0){showPage('timer');startTimer();}
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').then(()=>console.log('SW success')).catch(()=>console.log('SW fail'));});}
+</script>
+</body>
+</html>12 + 34</p>
             <p id="math-feedback-text" class="text-xs font-bold h-4"></p>
         </div>
 
