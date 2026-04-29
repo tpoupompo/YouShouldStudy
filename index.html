@@ -101,61 +101,75 @@
 
 <!-- ホーム -->
 <section id="page-home">
-    <div class="flex justify-between items-start mb-8">
+    <div class="flex justify-between items-start mb-6">
         <h1 class="text-2xl font-bold text-slate-700">ホーム</h1>
-        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.7.2</span>
+        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.7.3</span>
     </div>
-    <div class="grid grid-cols-2 gap-4">
-        <button onclick="showPage('timer')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
-            <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <!-- 
+        grid-cols-2: スマホ（〜479px）→ 2列
+        sm:grid-cols-3: 小タブレット（480px〜）→ 3列
+        md:grid-cols-4: タブレット・PC（768px〜）→ 4列
+    -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+
+        <button onclick="showPage('timer')" class="home-icon-btn bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col items-center gap-2 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <span class="text-sm font-black text-slate-700">タイマー</span>
+            <span class="text-xs font-black text-slate-700 text-center leading-tight">タイマー</span>
         </button>
-        <button onclick="showPage('settings')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
-            <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+
+        <button onclick="showPage('settings')" class="home-icon-btn bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col items-center gap-2 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </div>
-            <span class="text-sm font-black text-slate-700">設定</span>
+            <span class="text-xs font-black text-slate-700 text-center leading-tight">設定</span>
         </button>
-        <button onclick="showPage('quiz')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
-            <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center">
+
+        <button onclick="showPage('quiz')" class="home-icon-btn bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col items-center gap-2 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <span class="text-2xl font-black text-emerald-600">He</span>
             </div>
-            <span class="text-sm font-black text-slate-700">元素クイズ</span>
+            <span class="text-xs font-black text-slate-700 text-center leading-tight">元素クイズ</span>
         </button>
-        <button onclick="showPage('english')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
-            <div class="w-16 h-16 bg-rose-100 rounded-2xl flex items-center justify-center">
+
+        <button onclick="showPage('english')" class="home-icon-btn bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col items-center gap-2 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-rose-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <span class="text-2xl font-black text-rose-500">英</span>
             </div>
-            <span class="text-sm font-black text-slate-700">英語力診断</span>
+            <span class="text-xs font-black text-slate-700 text-center leading-tight">英語力診断</span>
         </button>
-        <button onclick="showPage('japanese')" class="col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
-            <div class="w-16 h-16 bg-violet-100 rounded-2xl flex items-center justify-center">
+
+        <button onclick="showPage('japanese')" class="home-icon-btn bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col items-center gap-2 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-violet-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <span class="text-2xl font-black text-violet-600">語</span>
             </div>
-            <span class="text-sm font-black text-slate-700">日本語力診断</span>
+            <span class="text-xs font-black text-slate-700 text-center leading-tight">日本語力診断</span>
         </button>
-        <button onclick="showPage('math')" class="col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
-            <div class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center">
+
+        <button onclick="showPage('math')" class="home-icon-btn bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col items-center gap-2 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <span class="text-2xl font-black text-amber-500">⚡</span>
             </div>
-            <span class="text-sm font-black text-slate-700">暗算タイムアタック</span>
+            <span class="text-xs font-black text-slate-700 text-center leading-tight">暗算タイム<br>アタック</span>
         </button>
-        <button onclick="showPage('dashboard')" class="col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
-            <div class="w-16 h-16 bg-sky-100 rounded-2xl flex items-center justify-center">
+
+        <button onclick="showPage('dashboard')" class="home-icon-btn bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col items-center gap-2 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-sky-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <span class="text-2xl font-black text-sky-500">📊</span>
             </div>
-            <span class="text-sm font-black text-slate-700">学習ダッシュボード</span>
+            <span class="text-xs font-black text-slate-700 text-center leading-tight">学習<br>ダッシュボード</span>
         </button>
-        <button onclick="showPage('calendar')" class="col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
-            <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center">
+
+        <button onclick="showPage('calendar')" class="home-icon-btn bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col items-center gap-2 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <span class="text-2xl font-black text-teal-500">📅</span>
             </div>
-            <span class="text-sm font-black text-slate-700">学習カレンダー</span>
+            <span class="text-xs font-black text-slate-700 text-center leading-tight">学習<br>カレンダー</span>
         </button>
+
     </div>
-    <div class="mt-6 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
+    <div class="mt-5 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">累計勉強時間</p>
         <p id="home-total-display" class="text-3xl font-black text-indigo-600">0時間00分</p>
     </div>
@@ -694,6 +708,7 @@
                 <button class="sel-btn active border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 w-full text-left transition-all" data-diff="normal">📘　ふつう（2桁の四則演算）</button>
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 w-full text-left transition-all" data-diff="hard">🔥　むずかしい（3桁・複合演算）</button>
                 <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 w-full text-left transition-all" data-diff="extreme">💀　鬼（分数・二乗・混合）</button>
+                <button class="sel-btn border-2 border-slate-200 rounded-2xl py-3 px-5 text-sm font-bold text-slate-500 w-full text-left transition-all" data-diff="legend">☠️　伝説（異分母・負の数・複合）</button>
             </div>
         </div>
 
@@ -2785,41 +2800,96 @@ function updateMathInput(){
 }
 
 function generateQuestion(){
-    let a,b,op,ans,display;
-    const r=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+    const r   = (min,max) => Math.floor(Math.random()*(max-min+1))+min;
+    const pick = arr => arr[r(0,arr.length-1)];
+
+    // GCD（最大公約数）
+    const gcd = (a,b) => b===0 ? a : gcd(b, a%b);
+    // LCM（最小公倍数）
+    const lcm = (a,b) => a/gcd(a,b)*b;
+
+    let ans, display;
 
     if(mathDiff==='easy'){
-        op=['+','-'][r(0,1)];
-        a=r(1,9); b=r(1,9);
-        if(op==='-'&&a<b)[a,b]=[b,a];
-        ans=op==='+'?a+b:a-b;
-        display=`${a} ${op} ${b}`;
+        const op = pick(['+','-']);
+        let a = r(1,9), b = r(1,9);
+        if(op==='-' && a<b) [a,b]=[b,a];
+        ans = op==='+' ? a+b : a-b;
+        display = `${a} ${op} ${b}`;
+
     } else if(mathDiff==='normal'){
-        const ops=['+','-','×','÷'];
-        op=ops[r(0,3)];
-        if(op==='+'){a=r(10,99);b=r(10,99);ans=a+b;}
-        else if(op==='-'){a=r(20,99);b=r(10,a);ans=a-b;}
-        else if(op==='×'){a=r(2,12);b=r(2,12);ans=a*b;}
-        else{b=r(2,9);ans=r(2,12);a=ans*b;op='÷';}
-        display=`${a} ${op} ${b}`;
+        const type = r(0,3);
+        if(type===0){ const a=r(11,99),b=r(11,99); ans=a+b; display=`${a} + ${b}`; }
+        else if(type===1){ let a=r(21,99),b=r(10,a-1); ans=a-b; display=`${a} − ${b}`; }
+        else if(type===2){ const a=r(2,15),b=r(2,15); ans=a*b; display=`${a} × ${b}`; }
+        else { const b=r(2,9),ans2=r(2,15); ans=ans2; display=`${ans2*b} ÷ ${b}`; }
+
     } else if(mathDiff==='hard'){
-        const type=r(0,3);
-        if(type===0){a=r(10,99);b=r(10,99);const c=r(1,9);op='+';ans=a+b+c;display=`${a} + ${b} + ${c}`;}
-        else if(type===1){a=r(10,50);b=r(2,9);ans=a*b;display=`${a} × ${b}`;}
-        else if(type===2){a=r(100,999);b=r(10,99);ans=a+b;display=`${a} + ${b}`;}
-        else{a=r(2,9);ans=a*a;display=`${a}²`;}
-    } else { // extreme
-        const type=r(0,3);
-        if(type===0){// 分数
-            const d=r(2,9);const n1=r(1,d-1);const n2=r(1,d-1);
-            ans=n1+n2;// 分子の和（同分母）
-            display=`${n1}/${d} + ${n2}/${d} = ?/${d}`;
+        const type = r(0,5);
+        if(type===0){ const a=r(11,99),b=r(11,99),c=r(2,9); ans=a+b+c; display=`${a} + ${b} + ${c}`; }
+        else if(type===1){ const a=r(11,99),b=r(2,12); ans=a*b; display=`${a} × ${b}`; }
+        else if(type===2){ const a=r(101,999),b=r(11,99); ans=a+b; display=`${a} + ${b}`; }
+        else if(type===3){ const a=r(101,999),b=r(11,99); ans=a-b; display=`${a} − ${b}`; }
+        else if(type===4){ const a=r(2,12); ans=a*a; display=`${a}²`; }
+        else { const a=r(11,50),b=r(2,9),c=r(2,20); ans=a*b+c; display=`${a}×${b}+${c}`; }
+
+    } else if(mathDiff==='extreme'){
+        const type = r(0,5);
+        if(type===0){
+            // 同分母の分数（分母2〜12のランダム）
+            const d=r(2,12), n1=r(1,d-1), n2=r(1,d-1);
+            ans=n1+n2; display=`${n1}/${d} + ${n2}/${d} = ?/${d}`;
         } else if(type===1){
-            a=r(10,30);ans=a*a;display=`${a}²`;
+            const a=r(11,30); ans=a*a; display=`${a}²`;
         } else if(type===2){
-            a=r(2,9);b=r(2,9);const c=r(2,9);ans=a*b+c;display=`${a}×${b}+${c}`;
+            const a=r(2,12),b=r(2,12),c=r(2,15); ans=a*b+c; display=`${a}×${b}+${c}`;
+        } else if(type===3){
+            const a=r(2,12),b=r(2,12),c=r(2,15); ans=a*b-c; display=`${a}×${b}−${c}`;
+        } else if(type===4){
+            const a=r(101,999),b=r(11,99),c=r(2,9); ans=a+b+c; display=`${a}+${b}+${c}`;
         } else {
-            a=r(100,999);b=r(10,99);ans=a-b;display=`${a} − ${b}`;
+            // (a+b)×c
+            const a=r(2,15),b=r(2,15),c=r(2,9); ans=(a+b)*c; display=`(${a}+${b})×${c}`;
+        }
+
+    } else { // legend（伝説）
+        const type = r(0,6);
+        if(type===0){
+            // 異分母の分数加算（分母3〜7のランダム2つ）
+            const d1=r(2,7), d2=r(2,7);
+            const n1=r(1,d1-1), n2=r(1,d2-1);
+            const L=lcm(d1,d2);
+            ans = (n1*(L/d1)) + (n2*(L/d2));
+            display = `${n1}/${d1} + ${n2}/${d2} = ?/${L}`;
+        } else if(type===1){
+            // 異分母の分数減算
+            const d1=r(3,8), d2=r(2,d1-1);
+            const n1=r(2,d1-1), n2=r(1,d2-1);
+            const L=lcm(d1,d2);
+            ans = (n1*(L/d1)) - (n2*(L/d2));
+            display = `${n1}/${d1} − ${n2}/${d2} = ?/${L}`;
+        } else if(type===2){
+            // 負の数を含む計算
+            const a=r(1,20), b=r(a+1,a+15);
+            ans = a-b; // 必ず負
+            display = `${a} − ${b}`;
+        } else if(type===3){
+            // 負の数×正の数
+            const a=r(2,12), b=r(2,12);
+            ans = -(a*b);
+            display = `−${a} × ${b}`;
+        } else if(type===4){
+            // 3項の複合（括弧あり・負あり）
+            const a=r(2,10),b=r(2,10),c=r(2,10),d=r(2,5);
+            ans=(a-b)*c+d; display=`(${a}−${b})×${c}+${d}`;
+        } else if(type===5){
+            // 分数×整数
+            const n=r(1,5), d=r(n+1,9), m=r(2,9);
+            ans=n*m; display=`${n}/${d}×${d*m} =？`;
+        } else {
+            // 連続した計算 a² − b×c
+            const a=r(5,15), b=r(2,9), c=r(2,9);
+            ans=a*a - b*c; display=`${a}² − ${b}×${c}`;
         }
     }
 
@@ -2844,13 +2914,16 @@ function submitMathAnswer(){
         if(mathCombo>mathMaxCombo) mathMaxCombo=mathCombo;
 
         // スコア計算
-        const diffBonus={easy:1,normal:2,hard:4,extreme:7}[mathDiff];
+        const diffBonus={easy:1,normal:2,hard:4,extreme:7,legend:12}[mathDiff];
         const comboBonus=mathCombo>=3?Math.floor(mathCombo/3):0;
         const gained=diffBonus+comboBonus;
         mathScore+=gained;
 
         // 時間ボーナス
-        const timeBonus=0.5+(mathCombo>=5?0.5:0)+(mathCombo>=10?1.0:0);
+        // 難易度別の基本ボーナス秒数
+        const baseBonus={easy:0.2, normal:0.3, hard:0.4, extreme:0.5, legend:0.5}[mathDiff]||0.3;
+        const comboTimeBonus=(mathCombo>=5?0.3:0)+(mathCombo>=10?0.5:0);
+        const timeBonus=baseBonus+comboTimeBonus;
         mathTimeLeft=Math.min(mathTimeLeft+timeBonus, mathTimeLimit*1.5);
 
         fb.textContent=comboBonus>0?`✅ +${gained}点 コンボ+${comboBonus}！`:`✅ +${gained}点`;
@@ -2956,8 +3029,8 @@ function showMathResult(){
 
 function renderMathHighscores(){
     const el=document.getElementById('math-highscores');
-    const diffs=['easy','normal','hard','extreme'];
-    const diffLabels={easy:'かんたん',normal:'ふつう',hard:'むずかしい',extreme:'鬼'};
+    const diffs=['easy','normal','hard','extreme','legend'];
+    const diffLabels={easy:'かんたん',normal:'ふつう',hard:'むずかしい',extreme:'鬼',legend:'伝説'};
     const times=[30,60,120];
     let html='';
     diffs.forEach(d=>{
@@ -3238,8 +3311,8 @@ function renderDashboard(){
     }
 
     // 暗算 難易度別正答率
-    const diffLabels={easy:'かんたん',normal:'ふつう',hard:'むずかしい',extreme:'鬼'};
-    const diffColors={easy:'#34d399',normal:'#38bdf8',hard:'#f59e0b',extreme:'#f43f5e'};
+    const diffLabels={easy:'かんたん',normal:'ふつう',hard:'むずかしい',extreme:'鬼',legend:'伝説'};
+    const diffColors={easy:'#34d399',normal:'#38bdf8',hard:'#f59e0b',extreme:'#f43f5e',legend:'#7c3aed'};
     const diffMap={};
     mathR.forEach(r=>{
         if(!diffMap[r.diff]) diffMap[r.diff]={correct:0,total:0};

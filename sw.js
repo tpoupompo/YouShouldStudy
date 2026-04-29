@@ -1,4 +1,4 @@
-var cacheName = 'you-should-study-v1.7.2';
+var cacheName = 'you-should-study-v1.7.3';
 var filesToCache = ['./index.html'];
 
 self.addEventListener('install', function(e) {
