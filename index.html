@@ -103,7 +103,7 @@
 <section id="page-home">
     <div class="flex justify-between items-start mb-8">
         <h1 class="text-2xl font-bold text-slate-700">ホーム</h1>
-        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.7.1</span>
+        <span class="text-[10px] font-bold text-slate-300 mt-1">v1.7.2</span>
     </div>
     <div class="grid grid-cols-2 gap-4">
         <button onclick="showPage('timer')" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
@@ -147,6 +147,12 @@
                 <span class="text-2xl font-black text-sky-500">📊</span>
             </div>
             <span class="text-sm font-black text-slate-700">学習ダッシュボード</span>
+        </button>
+        <button onclick="showPage('calendar')" class="col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col items-center gap-3 active:scale-95 transition-all hover:shadow-md">
+            <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center">
+                <span class="text-2xl font-black text-teal-500">📅</span>
+            </div>
+            <span class="text-sm font-black text-slate-700">学習カレンダー</span>
         </button>
     </div>
     <div class="mt-6 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
@@ -385,9 +391,14 @@
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
             <p class="text-sm text-slate-500 leading-relaxed">問題に答えるほど診断の精度が上がります。いつでも「診断する」ボタンで結果を確認できます。</p>
             <div class="mt-4 space-y-2 text-xs text-slate-400">
-                <p>• 英検5級〜1級・TOEIC 300〜950+ を推定</p>
+                <p>• 英検5級〜超級★3・TOEIC 300〜950+ を推定</p>
                 <p>• 4択クイズ（英語→日本語 or 日本語→英語）</p>
                 <p>• 正答率と問題難易度から自動でレベルを調整</p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">収録語数</p>
+                <div id="eq-word-stats" class="grid grid-cols-2 gap-1 text-xs"></div>
+                <p class="text-right text-xs font-black text-rose-500 mt-2">合計: <span id="eq-word-total"></span>語</p>
             </div>
         </div>
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
@@ -531,6 +542,11 @@
                 <p>• 小学生〜超難読語（漢検1級超）を推定</p>
                 <p>• 4択クイズ（言葉→意味 or 意味→言葉）</p>
                 <p>• 正答率と難易度から自動レベル調整</p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">収録語数</p>
+                <div id="jq-word-stats" class="grid grid-cols-2 gap-1 text-xs"></div>
+                <p class="text-right text-xs font-black text-violet-500 mt-2">合計: <span id="jq-word-total"></span>語</p>
             </div>
         </div>
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
@@ -876,6 +892,93 @@
     <button id="db-clear-btn" class="w-full text-xs text-slate-300 hover:text-red-400 font-bold transition-colors py-3 px-3 rounded-xl border border-slate-100 hover:border-red-200">学習履歴をすべてリセット</button>
 </section>
 
+<!-- ===== 学習カレンダー ===== -->
+<section id="page-calendar" class="hidden">
+    <div class="flex items-center gap-3 mb-6">
+        <button onclick="showPage('home')" class="text-slate-400 hover:text-slate-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+        <h1 class="text-2xl font-bold text-slate-700">学習カレンダー</h1>
+    </div>
+
+    <!-- テストまでのカウントダウン -->
+    <div id="cal-countdown-area" class="space-y-3 mb-5"></div>
+
+    <!-- テスト追加ボタン -->
+    <button id="cal-add-exam-btn" class="w-full bg-white border-2 border-dashed border-teal-300 text-teal-500 font-bold py-3 rounded-2xl text-sm active:scale-95 transition-all mb-5">
+        ＋ テストの日を追加
+    </button>
+
+    <!-- テスト追加フォーム -->
+    <div id="cal-exam-form" class="hidden bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5 space-y-4">
+        <h3 class="text-sm font-black text-slate-600">テストを登録</h3>
+        <div>
+            <label class="block text-xs font-bold text-slate-400 mb-1">テスト名</label>
+            <input type="text" id="cal-exam-name" placeholder="例: 英検2級" class="w-full p-3 bg-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-400">
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-slate-400 mb-1">試験日</label>
+            <input type="date" id="cal-exam-date" class="w-full p-3 bg-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-400">
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-slate-400 mb-1">色</label>
+            <div class="flex gap-2" id="cal-color-picker">
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all ring-2 ring-offset-2 ring-teal-400" style="background:#14b8a6" data-color="#14b8a6"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#6366f1" data-color="#6366f1"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#f43f5e" data-color="#f43f5e"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#f59e0b" data-color="#f59e0b"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#8b5cf6" data-color="#8b5cf6"></button>
+                <button class="cal-color-btn w-8 h-8 rounded-full active:scale-90 transition-all" style="background:#10b981" data-color="#10b981"></button>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button id="cal-exam-cancel" class="flex-1 py-3 rounded-xl border border-slate-200 text-slate-400 font-bold text-sm active:scale-95 transition-all">キャンセル</button>
+            <button id="cal-exam-save" class="flex-1 py-3 rounded-xl bg-teal-500 text-white font-bold text-sm active:scale-95 transition-all">登録</button>
+        </div>
+    </div>
+
+    <!-- カレンダー本体 -->
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
+        <!-- 月ナビ -->
+        <div class="flex items-center justify-between mb-4">
+            <button id="cal-prev-month" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 active:scale-95 transition-all font-bold">‹</button>
+            <h2 id="cal-month-title" class="text-base font-black text-slate-700"></h2>
+            <button id="cal-next-month" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 active:scale-95 transition-all font-bold">›</button>
+        </div>
+        <!-- 曜日ヘッダー -->
+        <div class="grid grid-cols-7 mb-2">
+            <div class="text-center text-[10px] font-black text-red-400">日</div>
+            <div class="text-center text-[10px] font-black text-slate-400">月</div>
+            <div class="text-center text-[10px] font-black text-slate-400">火</div>
+            <div class="text-center text-[10px] font-black text-slate-400">水</div>
+            <div class="text-center text-[10px] font-black text-slate-400">木</div>
+            <div class="text-center text-[10px] font-black text-slate-400">金</div>
+            <div class="text-center text-[10px] font-black text-blue-400">土</div>
+        </div>
+        <!-- 日付グリッド -->
+        <div id="cal-grid" class="grid grid-cols-7 gap-y-1"></div>
+
+        <!-- 凡例 -->
+        <div class="flex items-center gap-4 mt-4 pt-4 border-t border-slate-100 flex-wrap">
+            <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-teal-400"></div><span class="text-[10px] text-slate-400 font-bold">勉強あり</span></div>
+            <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-slate-200"></div><span class="text-[10px] text-slate-400 font-bold">勉強なし</span></div>
+            <div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-indigo-100 border border-indigo-300"></div><span class="text-[10px] text-slate-400 font-bold">今日</span></div>
+            <div class="flex items-center gap-1"><span class="text-[10px]">★</span><span class="text-[10px] text-slate-400 font-bold">テスト</span></div>
+        </div>
+    </div>
+
+    <!-- 選択日の詳細 -->
+    <div id="cal-day-detail" class="hidden bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
+        <h3 id="cal-detail-date" class="text-sm font-black text-slate-600 mb-3"></h3>
+        <div id="cal-detail-content"></div>
+    </div>
+
+    <!-- テスト一覧 -->
+    <div id="cal-exam-list-area" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-5">
+        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">登録中のテスト</h3>
+        <div id="cal-exam-list" class="space-y-2"></div>
+        <p id="cal-exam-empty" class="text-xs text-slate-300 text-center py-4">テストが登録されていません</p>
+    </div>
+</section>
+
 </main>
 
 <!-- ナビゲーション -->
@@ -895,7 +998,6 @@
 </nav>
 
 <script>
-console.log("JavaScript loaded!");
 // ============================================================
 // 英単語データベース  level 1〜7 (各60語以上, 計約470語)
 // level: 1=英検5級, 2=英検4級, 3=英検3級, 4=英検準2級
@@ -1480,7 +1582,8 @@ const EQ_WORDS = [
 {e:'venal',j:'買収できる',l:7},{e:'verbose',j:'冗長な',l:7},{e:'vexation',j:'苛立ち',l:7},
 {e:'vicious',j:'悪意のある',l:7},{e:'vindictiveness',j:'報復心',l:7},{e:'vituperate',j:'罵倒する',l:7},
 {e:'wanton',j:'恣意的な',l:7},{e:'wily',j:'ずる賢い',l:7},{e:'xenophobia',j:'外国人嫌い',l:7},
-{e:'zealotry',j:'狂信',l:7},{e:'zenith',j:'頂点',l:7}];
+{e:'zealotry',j:'狂信',l:7},{e:'zenith',j:'頂点',l:7},
+];
 
 // ============================================================
 // 英語力診断ロジック
@@ -2867,6 +2970,72 @@ function renderMathHighscores(){
 }
 
 // ============================================================
+// 語数表示
+// ============================================================
+function renderEqWordStats(){
+    const statsEl = document.getElementById('eq-word-stats');
+    const totalEl = document.getElementById('eq-word-total');
+    if(!statsEl || !EQ_WORDS) return;
+
+    const labels = {
+        1:'英検5級', 2:'英検4級', 3:'英検3級', 4:'英検準2級',
+        5:'英検2級', 6:'英検準1級', 7:'英検1級',
+        8:'超級★1', 9:'超級★2', 10:'超級★3'
+    };
+    const colors = {
+        1:'#f87171',2:'#fb923c',3:'#fbbf24',4:'#a3e635',
+        5:'#34d399',6:'#38bdf8',7:'#818cf8',
+        8:'#c084fc',9:'#e879f9',10:'#f43f5e'
+    };
+
+    // レベルごとにカウント
+    const counts = {};
+    EQ_WORDS.forEach(w => { counts[w.l] = (counts[w.l]||0)+1; });
+    const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+    statsEl.innerHTML = Object.entries(counts)
+        .sort((a,b)=>parseInt(a[0])-parseInt(b[0]))
+        .map(([lv,cnt])=>`
+            <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${colors[lv]||'#94a3b8'}"></div>
+                <span class="text-slate-500 font-bold truncate">${labels[lv]||'Lv'+lv}</span>
+                <span class="ml-auto font-black text-slate-600">${cnt}語</span>
+            </div>`)
+        .join('');
+    totalEl.textContent = total.toLocaleString();
+}
+
+function renderJqWordStats(){
+    const statsEl = document.getElementById('jq-word-stats');
+    const totalEl = document.getElementById('jq-word-total');
+    if(!statsEl || !JQ_WORDS) return;
+
+    const labels = {
+        1:'小学低学年', 2:'小学高学年', 3:'中学生', 4:'高校生', 5:'大学・教養',
+        6:'漢検2級', 7:'漢検準1級', 8:'漢検1級', 9:'超難読★1', 10:'超難読★2'
+    };
+    const colors = {
+        1:'#f87171',2:'#fb923c',3:'#fbbf24',4:'#a3e635',5:'#34d399',
+        6:'#38bdf8',7:'#818cf8',8:'#c084fc',9:'#e879f9',10:'#f43f5e'
+    };
+
+    const counts = {};
+    JQ_WORDS.forEach(w => { counts[w.l] = (counts[w.l]||0)+1; });
+    const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+    statsEl.innerHTML = Object.entries(counts)
+        .sort((a,b)=>parseInt(a[0])-parseInt(b[0]))
+        .map(([lv,cnt])=>`
+            <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${colors[lv]||'#94a3b8'}"></div>
+                <span class="text-slate-500 font-bold truncate">${labels[lv]||'Lv'+lv}</span>
+                <span class="ml-auto font-black text-slate-600">${cnt}語</span>
+            </div>`)
+        .join('');
+    totalEl.textContent = total.toLocaleString();
+}
+
+// ============================================================
 // ダークモード
 // ============================================================
 function applyDarkMode(isDark) {
@@ -3148,6 +3317,285 @@ document.getElementById('db-clear-btn').addEventListener('click',()=>{
 });
 
 // ============================================================
+// 学習カレンダー
+// ============================================================
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth(); // 0-based
+let calSelectedColor = '#14b8a6';
+let calSelectedDay = null;
+
+const TODAY_STR = new Date().toISOString().slice(0,10);
+
+// --- データ ---
+function calLoadExams(){ return JSON.parse(localStorage.getItem('cal_exams')||'[]'); }
+function calSaveExams(exams){ localStorage.setItem('cal_exams', JSON.stringify(exams)); }
+function calLoadStudy(){ return JSON.parse(localStorage.getItem('db_week_time')||'{}'); }
+
+// 月の全勉強時間マップ（db_week_time は直近8日分しかないので cal_study_all で補完）
+function calLoadStudyAll(){ return JSON.parse(localStorage.getItem('cal_study_all')||'{}'); }
+function calSaveStudyAll(map){ localStorage.setItem('cal_study_all', JSON.stringify(map)); }
+
+// タイマーの勉強完了時にカレンダー用ストレージにも保存する関数（既存saveLogから呼ばれる）
+function calRecordStudy(minutes){
+    const map = calLoadStudyAll();
+    map[TODAY_STR] = (map[TODAY_STR]||0) + minutes;
+    calSaveStudyAll(map);
+}
+
+// --- カレンダー描画 ---
+function renderCalendar(){
+    const exams   = calLoadExams();
+    const studyMap = calLoadStudyAll();
+
+    // 今月の日数・開始曜日
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const lastDate  = new Date(calYear, calMonth+1, 0).getDate();
+
+    document.getElementById('cal-month-title').textContent =
+        `${calYear}年 ${calMonth+1}月`;
+
+    const grid = document.getElementById('cal-grid');
+    grid.innerHTML = '';
+
+    // テストを日付keyでマップ化
+    const examMap = {};
+    exams.forEach(ex => {
+        if(!examMap[ex.date]) examMap[ex.date] = [];
+        examMap[ex.date].push(ex);
+    });
+
+    // 空白セル
+    for(let i=0; i<firstDay; i++){
+        grid.insertAdjacentHTML('beforeend','<div></div>');
+    }
+
+    for(let d=1; d<=lastDate; d++){
+        const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isToday = dateStr === TODAY_STR;
+        const minutes = studyMap[dateStr]||0;
+        const dayExams= examMap[dateStr]||[];
+        const dow     = new Date(calYear,calMonth,d).getDay();
+        const isSun   = dow===0, isSat = dow===6;
+
+        // 勉強量に応じた色の濃さ
+        let bgStyle = '';
+        if(minutes > 0){
+            const intensity = Math.min(minutes/120, 1); // 120分で最大
+            const opacity   = 0.2 + intensity*0.75;
+            bgStyle = `background:rgba(20,184,166,${opacity.toFixed(2)})`;
+        }
+
+        // テストドット
+        let examDots = '';
+        if(dayExams.length > 0){
+            examDots = `<div class="flex justify-center gap-0.5 mt-0.5">${
+                dayExams.slice(0,3).map(ex=>`<div class="w-1.5 h-1.5 rounded-full" style="background:${ex.color}"></div>`).join('')
+            }</div>`;
+        }
+
+        const dateLabel = `<span class="text-[11px] font-black ${
+            isToday ? 'text-indigo-600' :
+            isSun   ? 'text-red-400' :
+            isSat   ? 'text-blue-400' : 'text-slate-600'
+        }">${d}</span>`;
+
+        const todayRing = isToday ? 'ring-2 ring-indigo-300' : '';
+
+        grid.insertAdjacentHTML('beforeend', `
+            <div class="cal-day flex flex-col items-center justify-start py-1 rounded-xl cursor-pointer active:scale-95 transition-all ${todayRing}"
+                style="${bgStyle}" data-date="${dateStr}">
+                ${dateLabel}
+                ${examDots}
+            </div>
+        `);
+    }
+
+    // クリックイベント
+    document.querySelectorAll('.cal-day').forEach(el => {
+        el.addEventListener('click', ()=> showDayDetail(el.dataset.date));
+    });
+
+    renderCountdown();
+    renderExamList();
+}
+
+// --- 日詳細 ---
+function showDayDetail(dateStr){
+    calSelectedDay = dateStr;
+    const exams    = calLoadExams().filter(ex=>ex.date===dateStr);
+    const studyMap = calLoadStudyAll();
+    const minutes  = studyMap[dateStr]||0;
+
+    const d = new Date(dateStr+'T00:00:00');
+    const label = `${d.getMonth()+1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`;
+
+    document.getElementById('cal-detail-date').textContent = label;
+
+    let html = '';
+    if(minutes > 0){
+        const h = Math.floor(minutes/60), m = minutes%60;
+        html += `<div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-teal-100 rounded-xl flex items-center justify-center">📚</div>
+            <div>
+                <p class="text-[10px] text-slate-400 font-bold">勉強時間</p>
+                <p class="text-sm font-black text-teal-600">${h>0?h+'時間':''}${m}分</p>
+            </div>
+        </div>`;
+    } else {
+        html += `<p class="text-xs text-slate-300 mb-3">この日の学習記録はありません</p>`;
+    }
+
+    if(exams.length > 0){
+        exams.forEach(ex=>{
+            html += `<div class="flex items-center gap-2 mb-2">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:${ex.color}22">
+                    <span style="color:${ex.color}" class="text-base">★</span>
+                </div>
+                <div class="flex-1">
+                    <p class="text-xs font-black text-slate-700">${ex.name}</p>
+                    <p class="text-[10px] text-slate-400">試験日</p>
+                </div>
+                <button class="text-[10px] text-red-300 hover:text-red-500 font-bold" onclick="calDeleteExam('${ex.id}')">削除</button>
+            </div>`;
+        });
+    }
+
+    document.getElementById('cal-detail-content').innerHTML = html;
+    document.getElementById('cal-day-detail').classList.remove('hidden');
+}
+
+// --- カウントダウン ---
+function renderCountdown(){
+    const exams = calLoadExams();
+    const now   = new Date(TODAY_STR+'T00:00:00');
+    const area  = document.getElementById('cal-countdown-area');
+
+    // 今日以降のテストを日付順に最大3件
+    const upcoming = exams
+        .map(ex => {
+            const d    = new Date(ex.date+'T00:00:00');
+            const diff = Math.round((d-now)/(86400000));
+            return {...ex, diff};
+        })
+        .filter(ex => ex.diff >= 0)
+        .sort((a,b) => a.diff-b.diff)
+        .slice(0,3);
+
+    if(upcoming.length === 0){
+        area.innerHTML = `<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 text-center">
+            <p class="text-xs text-slate-300 font-bold">テストが登録されていません</p>
+        </div>`;
+        return;
+    }
+
+    area.innerHTML = upcoming.map(ex=>{
+        const dayLabel = ex.diff===0 ? '🎯 今日！' : ex.diff===1 ? '⏰ 明日！' : `📅 あと ${ex.diff}日`;
+        const urgency  = ex.diff<=3 ? 'border-rose-200 bg-rose-50' :
+                         ex.diff<=7 ? 'border-amber-200 bg-amber-50' : 'border-slate-100 bg-white';
+        const textColor= ex.diff<=3 ? 'text-rose-600' :
+                         ex.diff<=7 ? 'text-amber-600' : 'text-teal-600';
+        return `<div class="rounded-2xl border ${urgency} shadow-sm p-4 flex items-center gap-4">
+            <div class="w-1 self-stretch rounded-full" style="background:${ex.color}"></div>
+            <div class="flex-1">
+                <p class="text-xs font-bold text-slate-400">${ex.date.replace(/-/g,'/')}</p>
+                <p class="text-base font-black text-slate-700">${ex.name}</p>
+            </div>
+            <p class="text-xl font-black ${textColor} whitespace-nowrap">${dayLabel}</p>
+        </div>`;
+    }).join('');
+}
+
+// --- テスト一覧 ---
+function renderExamList(){
+    const exams = calLoadExams().sort((a,b)=>a.date.localeCompare(b.date));
+    const list  = document.getElementById('cal-exam-list');
+    const empty = document.getElementById('cal-exam-empty');
+    if(exams.length===0){
+        list.innerHTML=''; empty.classList.remove('hidden'); return;
+    }
+    empty.classList.add('hidden');
+    const now = new Date(TODAY_STR+'T00:00:00');
+    list.innerHTML = exams.map(ex=>{
+        const d    = new Date(ex.date+'T00:00:00');
+        const diff = Math.round((d-now)/86400000);
+        const label= diff<0 ? '終了' : diff===0 ? '今日' : `${diff}日後`;
+        const past = diff<0 ? 'opacity-50' : '';
+        return `<div class="flex items-center gap-3 ${past}">
+            <div class="w-3 h-3 rounded-full flex-shrink-0" style="background:${ex.color}"></div>
+            <div class="flex-1">
+                <p class="text-sm font-black text-slate-700">${ex.name}</p>
+                <p class="text-[10px] text-slate-400">${ex.date.replace(/-/g,'/')}</p>
+            </div>
+            <span class="text-xs font-bold text-slate-400">${label}</span>
+            <button class="text-[10px] text-red-300 hover:text-red-500 font-bold px-1" onclick="calDeleteExam('${ex.id}')">✕</button>
+        </div>`;
+    }).join('');
+}
+
+// --- テスト削除 ---
+function calDeleteExam(id){
+    if(!confirm('このテストを削除しますか？')) return;
+    const exams = calLoadExams().filter(ex=>ex.id!==id);
+    calSaveExams(exams);
+    renderCalendar();
+    document.getElementById('cal-day-detail').classList.add('hidden');
+}
+
+// --- イベント登録 ---
+document.getElementById('cal-prev-month').addEventListener('click',()=>{
+    calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar();
+});
+document.getElementById('cal-next-month').addEventListener('click',()=>{
+    calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar();
+});
+
+document.getElementById('cal-add-exam-btn').addEventListener('click',()=>{
+    document.getElementById('cal-exam-form').classList.remove('hidden');
+    document.getElementById('cal-exam-date').value = TODAY_STR;
+    document.getElementById('cal-exam-name').value = '';
+});
+document.getElementById('cal-exam-cancel').addEventListener('click',()=>{
+    document.getElementById('cal-exam-form').classList.add('hidden');
+});
+
+document.querySelectorAll('.cal-color-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('.cal-color-btn').forEach(b=>{
+            b.classList.remove('ring-2','ring-offset-2'); b.style.outline='';
+        });
+        btn.classList.add('ring-2','ring-offset-2');
+        btn.style.outlineColor = btn.dataset.color;
+        calSelectedColor = btn.dataset.color;
+    });
+});
+
+document.getElementById('cal-exam-save').addEventListener('click',()=>{
+    const name = document.getElementById('cal-exam-name').value.trim();
+    const date = document.getElementById('cal-exam-date').value;
+    if(!name){ alert('テスト名を入力してください'); return; }
+    if(!date){ alert('試験日を選択してください'); return; }
+
+    const exams = calLoadExams();
+    exams.push({ id: Date.now().toString(), name, date, color: calSelectedColor });
+    calSaveExams(exams);
+    document.getElementById('cal-exam-form').classList.add('hidden');
+
+    // 試験月に移動
+    const d = new Date(date+'T00:00:00');
+    calYear  = d.getFullYear();
+    calMonth = d.getMonth();
+    renderCalendar();
+});
+
+// ダークモード対応追加
+function calApplyDark(){
+    const isDark = document.documentElement.classList.contains('dark');
+    document.querySelectorAll('.cal-day').forEach(el=>{
+        // 背景が設定されていないセルだけ対象
+    });
+}
+
+// ============================================================
 // タイマー
 // ============================================================
 let workMinutes=parseInt(localStorage.getItem('workMinutes'))||25;
@@ -3199,7 +3647,7 @@ function saveLog(type,duration){
     const label={work:'集中',break:'休憩',longBreak:'長い休憩'}[type]||type;
     const logs=JSON.parse(localStorage.getItem('studyLogs')||'[]');logs.unshift({time:ts,type:label,duration});
     localStorage.setItem('studyLogs',JSON.stringify(logs.slice(0,5)));
-    if(type==='work'){totalStudyMinutes+=duration;localStorage.setItem('totalStudyMinutes',totalStudyMinutes);displayTotalTime();dbSaveWeekTime(duration);}
+    if(type==='work'){totalStudyMinutes+=duration;localStorage.setItem('totalStudyMinutes',totalStudyMinutes);displayTotalTime();dbSaveWeekTime(duration);calRecordStudy(duration);}
     displayLogs();
 }
 function updateDisplay(){const m=Math.floor(timeLeft/60),s=timeLeft%60;timerDisplay.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;setCountDisplay.textContent=completedSets;setsGoalDisplay.textContent=setsBeforeLongBreak;}
@@ -3220,7 +3668,7 @@ function startTimer(){
 function resetTimer(){clearInterval(timerId);timerId=null;isWorking=true;isLongBreak=false;completedSets=0;timeLeft=workMinutes*60;localStorage.setItem('timerRunning','false');localStorage.removeItem('timerStartTime');localStorage.removeItem('timerStartTimeLeft');saveState();startBtn.textContent='スタート';startBtn.className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all";updateDisplay();updateStatus();}
 
 function showPage(pageId){
-    ['home','timer','settings','quiz','english','japanese','math','dashboard'].forEach(id=>{
+    ['home','timer','settings','quiz','english','japanese','math','dashboard','calendar'].forEach(id=>{
         document.getElementById(`page-${id}`).classList.add('hidden');
         const nav=document.getElementById(`nav-${id}`);
         if(nav){nav.classList.remove('text-indigo-600');nav.classList.add('text-slate-400');}
@@ -3230,8 +3678,18 @@ function showPage(pageId){
     if(an){an.classList.add('text-indigo-600');an.classList.remove('text-slate-400');}
     if(pageId==='settings'){inputWork.value=workMinutes;inputBreak.value=breakMinutes;inputLongBreak.value=longBreakMinutes;inputSets.value=setsBeforeLongBreak;inputVolume.value=volume;volumeLabel.textContent=volume+'%';}
     if(pageId==='quiz')resetQuizToSetup();
-    if(pageId==='english'){document.getElementById('eq-setup').classList.remove('hidden');document.getElementById('eq-main').classList.add('hidden');document.getElementById('eq-result').classList.add('hidden');}
-    if(pageId==='japanese'){document.getElementById('jq-setup').classList.remove('hidden');document.getElementById('jq-main').classList.add('hidden');document.getElementById('jq-result').classList.add('hidden');}
+    if(pageId==='english'){
+        document.getElementById('eq-setup').classList.remove('hidden');
+        document.getElementById('eq-main').classList.add('hidden');
+        document.getElementById('eq-result').classList.add('hidden');
+        renderEqWordStats();
+    }
+    if(pageId==='japanese'){
+        document.getElementById('jq-setup').classList.remove('hidden');
+        document.getElementById('jq-main').classList.add('hidden');
+        document.getElementById('jq-result').classList.add('hidden');
+        renderJqWordStats();
+    }
     if(pageId==='math'){
         if(mathTimerId){clearInterval(mathTimerId);mathTimerId=null;mathRunning=false;}
         document.getElementById('math-setup').classList.remove('hidden');
@@ -3240,6 +3698,11 @@ function showPage(pageId){
         renderMathHighscores();
     }
     if(pageId==='dashboard') renderDashboard();
+    if(pageId==='calendar'){
+        calYear  = new Date().getFullYear();
+        calMonth = new Date().getMonth();
+        renderCalendar();
+    }
 }
 
 startBtn.addEventListener('click',startTimer);
